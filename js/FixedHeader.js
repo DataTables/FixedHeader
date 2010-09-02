@@ -61,7 +61,8 @@ var FixedHeader = function ( mTable, oInit ) {
 			"iTableBottom": 0 /* note this is top+height, not actually "bottom" */
 		},
 		"nTable": null,
-		"bUseAbsPos": false
+		"bUseAbsPos": false,
+		"bFooter": false
 	};
 	
 	/*
@@ -147,6 +148,8 @@ FixedHeader.prototype = {
 		{
 			s.nTable = oTable;
 		}
+		
+		s.bFooter = ($('>tfoot', s.nTable).length > 0) ? true : false;
 		
 		/* "Detect" browsers that don't support absolute positioing - or have bugs */
 		s.bUseAbsPos = (jQuery.browser.msie && (jQuery.browser.version=="6.0"||jQuery.browser.version=="7.0"));
@@ -703,7 +706,11 @@ FixedHeader.prototype = {
 		/* Is this the most efficient way to do this - it looks horrible... */
 		nTable.appendChild( jQuery("thead", s.nTable).clone(true)[0] );
 		nTable.appendChild( jQuery("tbody", s.nTable).clone(true)[0] );
-		nTable.appendChild( jQuery("tfoot", s.nTable).clone(true)[0] );
+		if ( s.bFooter )
+		{
+			nTable.appendChild( jQuery("tfoot", s.nTable).clone(true)[0] );
+		}
+		
 		jQuery('thead tr th:gt(0)', nTable).remove();
 		jQuery('tbody tr td:not(:nth-child('+iCols+'n-'+(iCols-1)+'))', nTable).remove();
 		jQuery('tfoot tr th:gt(0)', nTable).remove();
@@ -742,7 +749,10 @@ FixedHeader.prototype = {
 		/* Is this the most efficient way to do this - it looks horrible... */
 		nTable.appendChild( jQuery("thead", s.nTable).clone(true)[0] );
 		nTable.appendChild( jQuery("tbody", s.nTable).clone(true)[0] );
-		nTable.appendChild( jQuery("tfoot", s.nTable).clone(true)[0] );
+		if ( s.bFooter )
+		{
+			nTable.appendChild( jQuery("tfoot", s.nTable).clone(true)[0] );
+		}
 		jQuery('thead tr th:not(:nth-child('+iCols+'n))', nTable).remove();
 		jQuery('tbody tr td:not(:nth-child('+iCols+'n))', nTable).remove();
 		jQuery('tfoot tr th:not(:nth-child('+iCols+'n))', nTable).remove();
