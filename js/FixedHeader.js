@@ -1,6 +1,6 @@
 /*
  * File:        FixedHeader.js
- * Version:     2.0.4
+ * Version:     2.0.5.dev
  * Description: "Fix" a header at the top of the table, so it scrolls with the table
  * Author:      Allan Jardine (www.sprymedia.co.uk)
  * Created:     Wed 16 Sep 2009 19:46:30 BST
@@ -88,6 +88,12 @@ var FixedHeader = function ( mTable, oInit ) {
 	
 	/* Let's do it */
 	this.fnInit( mTable, oInit );
+	
+	/* Store the instance on the DataTables object for easy access */
+	if ( typeof mTable.fnSettings == 'function' )
+	{
+		mTable._oPluginFixedHeader = this;
+	}
 };
 
 
