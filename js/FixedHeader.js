@@ -1,6 +1,6 @@
 /*
  * File:        FixedHeader.js
- * Version:     2.0.3
+ * Version:     2.0.4.dev
  * Description: "Fix" a header at the top of the table, so it scrolls with the table
  * Author:      Allan Jardine (www.sprymedia.co.uk)
  * Created:     Wed 16 Sep 2009 19:46:30 BST
@@ -696,6 +696,7 @@ FixedHeader.prototype = {
 		var s = this.fnGetSettings();
 		var nTable = oCache.nNode;
 		var iCols = jQuery('tbody tr:eq(0) td', s.nTable).length;
+		var bRubbishOldIE = ($.browser.msie && ($.browser.version == "6.0" || $.browser.version == "7.0"));
 		
 		/* Remove any children the cloned table has */
 		while ( nTable.childNodes.length > 0 )
@@ -712,16 +713,27 @@ FixedHeader.prototype = {
 		}
 		
 		jQuery('thead tr th:gt(0)', nTable).remove();
-		jQuery('tbody tr td:not(:nth-child('+iCols+'n-'+(iCols-1)+'))', nTable).remove();
 		jQuery('tfoot tr th:gt(0)', nTable).remove();
 		
-		/* Copy across heights */
-		//console.log( jQuery('tbody tr>td:eq(0)', s.nTable).length );
-		//jQuery("tbody tr td", nTable).each( function (i) {
-		//	/* xxx */
-		//	jQuery(this).height( jQuery('tbody tr:eq('+i+') td:eq(0)', s.nTable).outerHeight() );
-		//	jQuery(this).height( jQuery('tbody tr:eq('+i+') td:eq(0)', s.nTable).outerHeight() );
-		//} );
+		/* Basically the same as used in FixedColumns - remove and copy heights */
+		$('tbody tr', nTable).each( function (k) {
+			$('td:gt(0)', this).remove();
+			
+			/* Can we use some kind of object detection here?! This is very nasty - damn browsers */
+			if ( $.browser.mozilla || $.browser.opera )
+			{
+				$('td', this).height( $('tbody tr:eq('+k+')', that.dom.body).outerHeight() );
+			}
+			else
+			{
+				$('td', this).height( $('tbody tr:eq('+k+')', that.dom.body).outerHeight() - iBoxHack );
+			}
+			
+			if ( !bRubbishOldIE )
+			{
+				$('tbody tr:eq('+k+')', that.dom.body).height( $('tbody tr:eq('+k+')', that.dom.body).outerHeight() );		
+			}
+		} );
 		
 		var iWidth = jQuery('thead tr th:eq(0)', s.nTable).outerWidth();
 		nTable.style.width = iWidth+"px";
@@ -739,6 +751,7 @@ FixedHeader.prototype = {
 		var s = this.fnGetSettings();
 		var nTable = oCache.nNode;
 		var iCols = jQuery('tbody tr:eq(0) td', s.nTable).length;
+		var bRubbishOldIE = ($.browser.msie && ($.browser.version == "6.0" || $.browser.version == "7.0"));
 		
 		/* Remove any children the cloned table has */
 		while ( nTable.childNodes.length > 0 )
@@ -754,8 +767,27 @@ FixedHeader.prototype = {
 			nTable.appendChild( jQuery("tfoot", s.nTable).clone(true)[0] );
 		}
 		jQuery('thead tr th:not(:nth-child('+iCols+'n))', nTable).remove();
-		jQuery('tbody tr td:not(:nth-child('+iCols+'n))', nTable).remove();
 		jQuery('tfoot tr th:not(:nth-child('+iCols+'n))', nTable).remove();
+		
+		/* Basically the same as used in FixedColumns - remove and copy heights */
+		$('tbody tr', nTable).each( function (k) {
+			$('td:lt('+iCols-1+')', this).remove();
+			
+			/* Can we use some kind of object detection here?! This is very nasty - damn browsers */
+			if ( $.browser.mozilla || $.browser.opera )
+			{
+				$('td', this).height( $('tbody tr:eq('+k+')', that.dom.body).outerHeight() );
+			}
+			else
+			{
+				$('td', this).height( $('tbody tr:eq('+k+')', that.dom.body).outerHeight() - iBoxHack );
+			}
+			
+			if ( !bRubbishOldIE )
+			{
+				$('tbody tr:eq('+k+')', that.dom.body).height( $('tbody tr:eq('+k+')', that.dom.body).outerHeight() );		
+			}
+		} );
 		
 		var iWidth = jQuery('thead tr th:eq('+(iCols-1)+')', s.nTable).outerWidth();
 		nTable.style.width = iWidth+"px";
