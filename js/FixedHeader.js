@@ -268,6 +268,7 @@ FixedHeader.prototype = {
 		
 		/* Just a shallow clone will do - we only want the table node */
 		nCTable = s.nTable.cloneNode( false );
+		nCTable.removeAttribute( 'id' );
 		
 		var nDiv = document.createElement( 'div' );
 		nDiv.style.position = "absolute";
