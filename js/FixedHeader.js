@@ -702,7 +702,8 @@ FixedHeader.prototype = {
 	{
 		var s = this.fnGetSettings();
 		var nTable = oCache.nNode;
-		var iCols = jQuery('tbody tr:eq(0) td', s.nTable).length;
+		var nBody = $('tbody', s.nTable)[0];
+		var iCols = $('tbody tr:eq(0) td', s.nTable).length;
 		var bRubbishOldIE = ($.browser.msie && ($.browser.version == "6.0" || $.browser.version == "7.0"));
 		
 		/* Remove any children the cloned table has */
@@ -722,25 +723,12 @@ FixedHeader.prototype = {
 		jQuery('thead tr th:gt(0)', nTable).remove();
 		jQuery('tfoot tr th:gt(0)', nTable).remove();
 		
-		/* Basically the same as used in FixedColumns - remove and copy heights */
+		/* Remove unneeded cells */
 		$('tbody tr', nTable).each( function (k) {
 			$('td:gt(0)', this).remove();
-			
-			/* Can we use some kind of object detection here?! This is very nasty - damn browsers */
-			if ( $.browser.mozilla || $.browser.opera )
-			{
-				$('td', this).height( $('tbody tr:eq('+k+')', that.dom.body).outerHeight() );
-			}
-			else
-			{
-				$('td', this).height( $('tbody tr:eq('+k+')', that.dom.body).outerHeight() - iBoxHack );
-			}
-			
-			if ( !bRubbishOldIE )
-			{
-				$('tbody tr:eq('+k+')', that.dom.body).height( $('tbody tr:eq('+k+')', that.dom.body).outerHeight() );		
-			}
 		} );
+		
+		this.fnEqualiseHeights( 'tbody', nBody.parentNode, nTable );
 		
 		var iWidth = jQuery('thead tr th:eq(0)', s.nTable).outerWidth();
 		nTable.style.width = iWidth+"px";
@@ -756,6 +744,7 @@ FixedHeader.prototype = {
 	_fnCloneTRight: function ( oCache )
 	{
 		var s = this.fnGetSettings();
+		var nBody = $('tbody', s.nTable)[0];
 		var nTable = oCache.nNode;
 		var iCols = jQuery('tbody tr:eq(0) td', s.nTable).length;
 		var bRubbishOldIE = ($.browser.msie && ($.browser.version == "6.0" || $.browser.version == "7.0"));
@@ -776,29 +765,53 @@ FixedHeader.prototype = {
 		jQuery('thead tr th:not(:nth-child('+iCols+'n))', nTable).remove();
 		jQuery('tfoot tr th:not(:nth-child('+iCols+'n))', nTable).remove();
 		
-		/* Basically the same as used in FixedColumns - remove and copy heights */
+		/* Remove unneeded cells */
 		$('tbody tr', nTable).each( function (k) {
-			$('td:lt('+iCols-1+')', this).remove();
-			
-			/* Can we use some kind of object detection here?! This is very nasty - damn browsers */
-			if ( $.browser.mozilla || $.browser.opera )
-			{
-				$('td', this).height( $('tbody tr:eq('+k+')', that.dom.body).outerHeight() );
-			}
-			else
-			{
-				$('td', this).height( $('tbody tr:eq('+k+')', that.dom.body).outerHeight() - iBoxHack );
-			}
-			
-			if ( !bRubbishOldIE )
-			{
-				$('tbody tr:eq('+k+')', that.dom.body).height( $('tbody tr:eq('+k+')', that.dom.body).outerHeight() );		
-			}
+			$('td:lt('+(iCols-1)+')', this).remove();
 		} );
+		
+		this.fnEqualiseHeights( 'tbody', nBody.parentNode, nTable );
 		
 		var iWidth = jQuery('thead tr th:eq('+(iCols-1)+')', s.nTable).outerWidth();
 		nTable.style.width = iWidth+"px";
 		oCache.nWrapper.style.width = iWidth+"px";
+	},
+	
+	
+	/**
+	 * Equalise the heights of the rows in a given table node in a cross browser way. Note that this
+	 * is more or less lifted as is from FixedColumns
+	 *  @method  fnEqualiseHeights
+	 *  @returns void
+	 *  @param   {string} parent Node type - thead, tbody or tfoot
+	 *  @param   {element} original Original node to take the heights from
+	 *  @param   {element} clone Copy the heights to
+	 *  @private
+	 */
+	"fnEqualiseHeights": function ( parent, original, clone )
+	{
+		var that = this,
+			jqBoxHack = $(parent+' tr:eq(0)', original).children(':eq(0)'),
+			iBoxHack = jqBoxHack.outerHeight() - jqBoxHack.height(),
+			bRubbishOldIE = ($.browser.msie && ($.browser.version == "6.0" || $.browser.version == "7.0"));
+		
+		/* Remove cells which are not needed and copy the height from the original table */
+		$(parent+' tr', clone).each( function (k) {
+			/* Can we use some kind of object detection here?! This is very nasty - damn browsers */
+			if ( $.browser.mozilla || $.browser.opera )
+			{
+				$(this).children().height( $(parent+' tr:eq('+k+')', original).outerHeight() );
+			}
+			else
+			{
+				$(this).children().height( $(parent+' tr:eq('+k+')', original).outerHeight() - iBoxHack );
+			}
+			
+			if ( !bRubbishOldIE )
+			{
+				$(parent+' tr:eq('+k+')', original).height( $(parent+' tr:eq('+k+')', original).outerHeight() );		
+			}
+		} );
 	}
 };
 
