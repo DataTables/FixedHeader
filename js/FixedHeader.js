@@ -296,6 +296,9 @@ FixedHeader.prototype = {
 		{
 			nDiv.style.zIndex = s.oZIndexes.right;
 		}
+
+		/* remove margins since we are going to poistion it absolutely */
+		nCTable.style.margin = "0";
 		
 		/* Insert the newly cloned table into the DOM, on top of the "real" header */
 		nDiv.appendChild( nCTable );
@@ -654,12 +657,12 @@ FixedHeader.prototype = {
 		nTable.appendChild( nThead );
 		
 		/* Copy the widths across - apparently a clone isn't good enough for this */
-		jQuery("thead:eq(0)>tr th", s.nTable).each( function (i) {
-			jQuery("thead:eq(0)>tr th:eq("+i+")", nTable).width( jQuery(this).width() );
+		jQuery("thead>tr th", s.nTable).each( function (i) {
+			jQuery("thead>tr th:eq("+i+")", nTable).width( jQuery(this).width() );
 		} );
 		
-		jQuery("thead:eq(0)>tr td", s.nTable).each( function (i) {
-			jQuery("thead:eq(0)>tr th:eq("+i+")", nTable).width( jQuery(this).width() );
+		jQuery("thead>tr td", s.nTable).each( function (i) {
+			jQuery("thead>tr td:eq("+i+")", nTable).width( jQuery(this).width() );
 		} );
 	},
 	
