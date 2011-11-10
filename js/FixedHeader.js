@@ -659,7 +659,7 @@ FixedHeader.prototype = {
 		} );
 		
 		jQuery("thead:eq(0)>tr td", s.nTable).each( function (i) {
-			jQuery("thead:eq(0)>tr th:eq("+i+")", nTable)[0].style.width( jQuery(this).width() );
+			jQuery("thead:eq(0)>tr th:eq("+i+")", nTable).width( jQuery(this).width() );
 		} );
 	},
 	
