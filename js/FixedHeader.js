@@ -91,6 +91,16 @@ var FixedHeader = function ( mTable, oInit ) {
 		this._fnUpdatePositions();
 	};
 	
+	/*
+	 * Function: fnPosition
+	 * Purpose:  Update the positioning of the fixed elements
+	 * Returns:  -
+	 * Inputs:   -
+	 */
+	this.fnPosition = function () {
+		this._fnUpdatePositions();
+	};
+	
 	/* Let's do it */
 	this.fnInit( mTable, oInit );
 	
