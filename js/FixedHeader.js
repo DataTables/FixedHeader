@@ -287,6 +287,8 @@ FixedHeader.prototype = {
 		
 		var nDiv = document.createElement( 'div' );
 		nDiv.style.position = "absolute";
+		nDiv.style.top = "0px";
+		nDiv.style.left = "0px";
 		nDiv.className += " FixedHeader_Cloned "+sType+" "+sClass;
 		
 		/* Set the zIndexes */
