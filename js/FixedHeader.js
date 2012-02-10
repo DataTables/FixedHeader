@@ -584,8 +584,13 @@ FixedHeader.prototype = {
 			oWin = FixedHeader.oWin,
 			oDoc = FixedHeader.oDoc,
 			nTable = oCache.nWrapper,
-			iTbodyHeight = s.nTable.getElementsByTagName('tbody')[0].offsetHeight;
-		
+			iTbodyHeight = 0,
+			anTbodies = s.nTable.getElementsByTagName('tbody');
+
+		for (var i = 0; i < anTbodies.length; ++i) {
+			iTbodyHeight += anTbodies[i].offsetHeight;
+		}
+
 		if ( oMes.iTableTop > oWin.iScrollTop )
 		{
 			/* Above the table */
