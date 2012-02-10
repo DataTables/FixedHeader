@@ -903,6 +903,10 @@ FixedHeader.fnMeasure = function ()
 	oWin.iScrollBottom = oDoc.iHeight - oWin.iScrollTop - oWin.iHeight;
 };
 
+
+FixedHeader.VERSION = "2.0.6.dev";
+FixedHeader.prototype.VERSION = FixedHeader.VERSION;
+
 	
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * Global processing
