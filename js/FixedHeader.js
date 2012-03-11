@@ -65,6 +65,9 @@ var FixedHeader = function ( mTable, oInit ) {
 			"iTableTop": 0,
 			"iTableBottom": 0 /* note this is top+height, not actually "bottom" */
 		},
+		"oOffset": {
+			"top": 0
+		},
 		"nTable": null,
 		"bUseAbsPos": false,
 		"bFooter": false
@@ -250,6 +253,10 @@ FixedHeader.prototype = {
 			}
 			if ( typeof oInit.zRight != 'undefined' ) {
 				s.oZIndexes.right = oInit.zRight;
+			}
+
+			if ( typeof oInit.offsetTop != 'undefined' ) {
+				s.oOffset.top = oInit.offsetTop;
 			}
 		}
 		
@@ -591,14 +598,14 @@ FixedHeader.prototype = {
 			iTbodyHeight += anTbodies[i].offsetHeight;
 		}
 
-		if ( oMes.iTableTop > oWin.iScrollTop )
+		if ( oMes.iTableTop > oWin.iScrollTop + s.oOffset.top )
 		{
 			/* Above the table */
 			this._fnUpdateCache( oCache, 'sPosition', "absolute", 'position', nTable.style );
 			this._fnUpdateCache( oCache, 'sTop', oMes.iTableTop+"px", 'top', nTable.style );
 			this._fnUpdateCache( oCache, 'sLeft', oMes.iTableLeft+"px", 'left', nTable.style );
 		}
-		else if ( oWin.iScrollTop > oMes.iTableTop+iTbodyHeight )
+		else if ( oWin.iScrollTop + s.oOffset.top > oMes.iTableTop+iTbodyHeight )
 		{
 			/* At the bottom of the table */
 			this._fnUpdateCache( oCache, 'sPosition', "absolute", 'position', nTable.style );
@@ -617,7 +624,7 @@ FixedHeader.prototype = {
 			else
 			{
 				this._fnUpdateCache( oCache, 'sPosition', 'fixed', 'position', nTable.style );
-				this._fnUpdateCache( oCache, 'sTop', "0px", 'top', nTable.style );
+				this._fnUpdateCache( oCache, 'sTop', s.oOffset.top+"px", 'top', nTable.style );
 				this._fnUpdateCache( oCache, 'sLeft', (oMes.iTableLeft-oWin.iScrollLeft)+"px", 'left', nTable.style );
 			}
 		}
