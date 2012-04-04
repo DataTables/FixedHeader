@@ -728,7 +728,7 @@ FixedHeader.prototype = {
 	 * Function: _fnCloneTLeft
 	 * Purpose:  Clone the left column
 	 * Returns:  -
-	 * Inputs:   object:oCache - the cahced values for this fixed element
+	 * Inputs:   object:oCache - the cached values for this fixed element
 	 */
 	_fnCloneTLeft: function ( oCache )
 	{
@@ -752,10 +752,15 @@ FixedHeader.prototype = {
 			nTable.appendChild( jQuery("tfoot", s.nTable).clone(true)[0] );
 		}
 		
-		jQuery('thead tr th:gt(0)', nTable).remove();
-		jQuery('tfoot tr th:gt(0)', nTable).remove();
-		
 		/* Remove unneeded cells */
+		$('thead tr', nTable).each( function (k) {
+			$('th:gt(0)', this).remove();
+		} );
+
+		$('tfoot tr', nTable).each( function (k) {
+			$('th:gt(0)', this).remove();
+		} );
+
 		$('tbody tr', nTable).each( function (k) {
 			$('td:gt(0)', this).remove();
 		} );
