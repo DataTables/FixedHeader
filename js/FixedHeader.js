@@ -371,7 +371,7 @@ FixedHeader.prototype = {
 		var i = n[side];
 		while ( n = n.parentNode )
 		{
-			if ( n.nodeName != 'HTML' && n.nodeName != 'BODY' )
+			if ( n.nodeName == 'HTML' || n.nodeName == 'BODY' )
 			{
 				break;
 			}
