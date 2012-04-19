@@ -1,6 +1,6 @@
 /*
  * File:        FixedHeader.js
- * Version:     2.0.6
+ * Version:     2.0.7.dev
  * Description: "Fix" a header at the top of the table, so it scrolls with the table
  * Author:      Allan Jardine (www.sprymedia.co.uk)
  * Created:     Wed 16 Sep 2009 19:46:30 BST
@@ -159,7 +159,7 @@ FixedHeader.prototype = {
 			}
 			
 			s.nTable = oDtSettings.nTable;
-			oDtSettings.aoDrawCallback.push( {
+			oDtSettings.aoDrawCallback.unshift( {
 				"fn": function () {
 					FixedHeader.fnMeasure();
 					that._fnUpdateClones.call(that);
@@ -916,7 +916,7 @@ FixedHeader.fnMeasure = function ()
 };
 
 
-FixedHeader.VERSION = "2.0.6";
+FixedHeader.VERSION = "2.0.7.dev";
 FixedHeader.prototype.VERSION = FixedHeader.VERSION;
 
 	

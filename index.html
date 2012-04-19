@@ -15,7 +15,7 @@
 		<script type="text/javascript" charset="utf-8" src="js/FixedHeader.js"></script>
 		<script type="text/javascript" charset="utf-8">
 			$(document).ready( function () {
-				var oTable = $('#example').dataTable();
+				var oTable = $('#example').dataTable({bDeferRender:true});
 				new FixedHeader( oTable );
 			} );
 		</script>
