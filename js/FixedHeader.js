@@ -262,7 +262,7 @@ FixedHeader.prototype = {
 				s.oOffset.top = oInit.offsetTop;
 			}
 			if ( typeof oInit.cloneOnDraw != 'undefined' ) {
-				s.oOffset.bCloneOnDraw = oInit.cloneOnDraw;
+				s.bCloneOnDraw = oInit.cloneOnDraw;
 			}
 		}
 		
