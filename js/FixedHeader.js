@@ -70,6 +70,7 @@ var FixedHeader = function ( mTable, oInit ) {
 		},
 		"nTable": null,
 		"bUseAbsPos": false,
+		"bCloneOnDraw": true,
 		"bFooter": false
 	};
 	
@@ -162,7 +163,9 @@ FixedHeader.prototype = {
 			oDtSettings.aoDrawCallback.unshift( {
 				"fn": function () {
 					FixedHeader.fnMeasure();
-					that._fnUpdateClones.call(that);
+					if ( s.bCloneOnDraw ) {
+						that._fnUpdateClones.call(that);
+					}
 					that._fnUpdatePositions.call(that);
 				},
 				"sName": "FixedHeader"
@@ -257,6 +260,9 @@ FixedHeader.prototype = {
 
 			if ( typeof oInit.offsetTop != 'undefined' ) {
 				s.oOffset.top = oInit.offsetTop;
+			}
+			if ( typeof oInit.cloneOnDraw != 'undefined' ) {
+				s.oOffset.bCloneOnDraw = oInit.cloneOnDraw;
 			}
 		}
 		
