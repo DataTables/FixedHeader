@@ -737,12 +737,25 @@ FixedHeader.prototype = {
 		nTable.appendChild( nThead );
 		
 		/* Copy the widths across - apparently a clone isn't good enough for this */
-		$("thead>tr th", s.nTable).each( function (i) {
-			$("thead>tr th:eq("+i+")", nTable).width( $(this).width() );
+		var a = [];
+		var b = [];
+
+		jQuery("thead>tr th", s.nTable).each( function (i) {
+			a.push( jQuery(this).width() );
 		} );
 		
-		$("thead>tr td", s.nTable).each( function (i) {
-			$("thead>tr td:eq("+i+")", nTable).width( $(this).width() );
+		jQuery("thead>tr td", s.nTable).each( function (i) {
+			b.push( jQuery(this).width() );
+		} );
+
+		jQuery("thead>tr th", s.nTable).each( function (i) {
+			jQuery("thead>tr th:eq("+i+")", nTable).width( a[i] );
+			$(this).width( a[i] );
+		} );
+		
+		jQuery("thead>tr td", s.nTable).each( function (i) {
+			jQuery("thead>tr td:eq("+i+")", nTable).width( b[i] );
+			$(this).width( b[i] );
 		} );
 
 		// Stop DataTables 1.9 from putting a focus ring on the headers when
