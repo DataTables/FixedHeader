@@ -723,7 +723,9 @@ FixedHeader.prototype = {
 		}
 		
 		/* Set the wrapper width to match that of the cloned table */
-		oCache.nWrapper.style.width = $(s.nTable).outerWidth()+"px";
+		var iDtWidth = $(s.nTable).outerWidth();
+		oCache.nWrapper.style.width = iDtWidth+"px";
+		nTable.style.width = iDtWidth+"px";
 		
 		/* Remove any children the cloned table has */
 		while ( nTable.childNodes.length > 0 )
