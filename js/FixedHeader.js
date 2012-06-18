@@ -842,7 +842,9 @@ FixedHeader.prototype = {
 			$('td:gt(0)', this).remove();
 		} );
 		
+		this.fnEqualiseHeights( 'thead', nBody.parentNode, nTable );
 		this.fnEqualiseHeights( 'tbody', nBody.parentNode, nTable );
+		this.fnEqualiseHeights( 'tfoot', nBody.parentNode, nTable );
 		
 		var iWidth = $('thead tr th:eq(0)', s.nTable).outerWidth();
 		nTable.style.width = iWidth+"px";
@@ -884,7 +886,9 @@ FixedHeader.prototype = {
 			$('td:lt('+(iCols-1)+')', this).remove();
 		} );
 		
+		this.fnEqualiseHeights( 'thead', nBody.parentNode, nTable );
 		this.fnEqualiseHeights( 'tbody', nBody.parentNode, nTable );
+		this.fnEqualiseHeights( 'tfoot', nBody.parentNode, nTable );
 		
 		var iWidth = $('thead tr th:eq('+(iCols-1)+')', s.nTable).outerWidth();
 		nTable.style.width = iWidth+"px";
