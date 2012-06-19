@@ -33,8 +33,8 @@ var FixedHeader;
  *           object:oInit - initialisation settings, with the following properties (each optional)
  *             bool:top -    fix the header (default true)
  *             bool:bottom - fix the footer (default false)
- *             bool:left -   fix the left most column (default false)
- *             bool:right -  fix the right most column (default false)
+ *             int:left -    fix the left column(s) (default 0)
+ *             int:right -   fix the right column(s) (default 0)
  *             int:zTop -    fixed header zIndex
  *             int:zBottom - fixed footer zIndex
  *             int:zLeft -   fixed left zIndex
@@ -54,8 +54,8 @@ FixedHeader = function ( mTable, oInit ) {
 		"oSides": {
 			"top": true,
 			"bottom": false,
-			"left": false,
-			"right": false
+			"left": 0,
+			"right": 0
 		},
 		"oZIndexes": {
 			"top": 104,
@@ -202,11 +202,11 @@ FixedHeader.prototype = {
 		}
 		if ( s.oSides.left )
 		{
-			s.aoCache.push( that._fnCloneTable( "fixedLeft", "FixedHeader_Left", that._fnCloneTLeft ) );
+			s.aoCache.push( that._fnCloneTable( "fixedLeft", "FixedHeader_Left", that._fnCloneTLeft, s.oSides.left ) );
 		}
 		if ( s.oSides.right )
 		{
-			s.aoCache.push( that._fnCloneTable( "fixedRight", "FixedHeader_Right", that._fnCloneTRight ) );
+			s.aoCache.push( that._fnCloneTable( "fixedRight", "FixedHeader_Right", that._fnCloneTRight, s.oSides.right ) );
 		}
 		
 		/* Event listeners for window movement */
@@ -250,10 +250,14 @@ FixedHeader.prototype = {
 			if ( typeof oInit.bottom != 'undefined' ) {
 				s.oSides.bottom = oInit.bottom;
 			}
-			if ( typeof oInit.left != 'undefined' ) {
+			if ( typeof oInit.left == 'boolean' ) {
+				s.oSides.left = oInit.left ? 1 : 0;
+			} else if ( typeof oInit.left != 'undefined' ) {
 				s.oSides.left = oInit.left;
 			}
-			if ( typeof oInit.right != 'undefined' ) {
+			if ( typeof oInit.right == 'boolean' ) {
+				s.oSides.right = oInit.right ? 1 : 0;
+			} else if ( typeof oInit.right != 'undefined' ) {
 				s.oSides.right = oInit.right;
 			}
 			
@@ -301,7 +305,7 @@ FixedHeader.prototype = {
 	 * Returns:  -
 	 * Inputs:   -
 	 */
-	_fnCloneTable: function ( sType, sClass, fnClone )
+	_fnCloneTable: function ( sType, sClass, fnClone, iCells )
 	{
 		var s = this.fnGetSettings();
 		var nCTable;
@@ -357,7 +361,8 @@ FixedHeader.prototype = {
 			"sPosition": "",
 			"sTop": "",
 			"sLeft": "",
-			"fnClone": fnClone
+			"fnClone": fnClone,
+			"iCells": iCells
 		};
 	},
 	
@@ -803,7 +808,7 @@ FixedHeader.prototype = {
 	
 	/*
 	 * Function: _fnCloneTLeft
-	 * Purpose:  Clone the left column
+	 * Purpose:  Clone the left column(s)
 	 * Returns:  -
 	 * Inputs:   object:oCache - the cached values for this fixed element
 	 */
@@ -812,7 +817,6 @@ FixedHeader.prototype = {
 		var s = this.fnGetSettings();
 		var nTable = oCache.nNode;
 		var nBody = $('tbody', s.nTable)[0];
-		var iCols = $('tbody tr:eq(0) td', s.nTable).length;
 		var bRubbishOldIE = ($.browser.msie && ($.browser.version == "6.0" || $.browser.version == "7.0"));
 		
 		/* Remove any children the cloned table has */
@@ -830,30 +834,34 @@ FixedHeader.prototype = {
 		}
 		
 		/* Remove unneeded cells */
+		var sSelector = 'gt(' + (oCache.iCells - 1) + ')';
 		$('thead tr', nTable).each( function (k) {
-			$('th:gt(0)', this).remove();
+			$('th:' + sSelector, this).remove();
 		} );
 
 		$('tfoot tr', nTable).each( function (k) {
-			$('th:gt(0)', this).remove();
+			$('th:' + sSelector, this).remove();
 		} );
 
 		$('tbody tr', nTable).each( function (k) {
-			$('td:gt(0)', this).remove();
+			$('td:' + sSelector, this).remove();
 		} );
 		
 		this.fnEqualiseHeights( 'thead', nBody.parentNode, nTable );
 		this.fnEqualiseHeights( 'tbody', nBody.parentNode, nTable );
 		this.fnEqualiseHeights( 'tfoot', nBody.parentNode, nTable );
 		
-		var iWidth = $('thead tr th:eq(0)', s.nTable).outerWidth();
+		var iWidth = 0;
+		for (var i = 0; i < oCache.iCells; i++) {
+			iWidth += $('thead tr th:eq(' + i + ')', s.nTable).outerWidth();
+		}
 		nTable.style.width = iWidth+"px";
 		oCache.nWrapper.style.width = iWidth+"px";
 	},
 	
 	/*
 	 * Function: _fnCloneTRight
-	 * Purpose:  Clone the right most colun
+	 * Purpose:  Clone the right most column(s)
 	 * Returns:  -
 	 * Inputs:   object:oCache - the cached values for this fixed element
 	 */
@@ -878,19 +886,22 @@ FixedHeader.prototype = {
 		{
 			nTable.appendChild( $("tfoot", s.nTable).clone(true)[0] );
 		}
-		$('thead tr th:not(:nth-child('+iCols+'n))', nTable).remove();
-		$('tfoot tr th:not(:nth-child('+iCols+'n))', nTable).remove();
+		$('thead tr th:lt('+(iCols-oCache.iCells)+')', nTable).remove();
+		$('tfoot tr th:lt('+(iCols-oCache.iCells)+')', nTable).remove();
 		
 		/* Remove unneeded cells */
 		$('tbody tr', nTable).each( function (k) {
-			$('td:lt('+(iCols-1)+')', this).remove();
+			$('td:lt('+(iCols-oCache.iCells)+')', this).remove();
 		} );
 		
 		this.fnEqualiseHeights( 'thead', nBody.parentNode, nTable );
 		this.fnEqualiseHeights( 'tbody', nBody.parentNode, nTable );
 		this.fnEqualiseHeights( 'tfoot', nBody.parentNode, nTable );
 		
-		var iWidth = $('thead tr th:eq('+(iCols-1)+')', s.nTable).outerWidth();
+		var iWidth = 0;
+		for (var i = 0; i < oCache.iCells; i++) {
+			iWidth += $('thead tr th:eq('+(iCols-1-i)+')', s.nTable).outerWidth();
+		}
 		nTable.style.width = iWidth+"px";
 		oCache.nWrapper.style.width = iWidth+"px";
 	},
