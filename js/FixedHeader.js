@@ -189,7 +189,7 @@ FixedHeader.prototype = {
 		s.bFooter = ($('>tfoot', s.nTable).length > 0) ? true : false;
 		
 		/* "Detect" browsers that don't support absolute positioing - or have bugs */
-		s.bUseAbsPos = ($.browser.msie && ($.browser.version=="6.0"||$.browser.version=="7.0"));
+		s.bUseAbsPos = ($.browser && $.browser.msie && ($.browser.version=="6.0"||$.browser.version=="7.0"));
 		
 		/* Add the 'sides' that are fixed */
 		if ( s.oSides.top )
@@ -295,7 +295,7 @@ FixedHeader.prototype = {
 		 * This is much slower since the position must be updated for each scroll, but widens
 		 * compatibility
 		 */
-		s.bUseAbsPos = ($.browser.msie && 
+		s.bUseAbsPos = ($.browser && $.browser.msie && 
 			($.browser.version=="6.0"||$.browser.version=="7.0"));
 	},
 	
@@ -817,7 +817,7 @@ FixedHeader.prototype = {
 		var s = this.fnGetSettings();
 		var nTable = oCache.nNode;
 		var nBody = $('tbody', s.nTable)[0];
-		var bRubbishOldIE = ($.browser.msie && ($.browser.version == "6.0" || $.browser.version == "7.0"));
+		var bRubbishOldIE = ($.browser && $.browser.msie && ($.browser.version == "6.0" || $.browser.version == "7.0"));
 		
 		/* Remove any children the cloned table has */
 		while ( nTable.childNodes.length > 0 )
@@ -871,7 +871,7 @@ FixedHeader.prototype = {
 		var nBody = $('tbody', s.nTable)[0];
 		var nTable = oCache.nNode;
 		var iCols = $('tbody tr:eq(0) td', s.nTable).length;
-		var bRubbishOldIE = ($.browser.msie && ($.browser.version == "6.0" || $.browser.version == "7.0"));
+		var bRubbishOldIE = ($.browser && $.browser.msie && ($.browser.version == "6.0" || $.browser.version == "7.0"));
 		
 		/* Remove any children the cloned table has */
 		while ( nTable.childNodes.length > 0 )
@@ -922,19 +922,11 @@ FixedHeader.prototype = {
 		var that = this,
 			jqBoxHack = $(parent+' tr:eq(0)', original).children(':eq(0)'),
 			iBoxHack = jqBoxHack.outerHeight() - jqBoxHack.height(),
-			bRubbishOldIE = ($.browser.msie && ($.browser.version == "6.0" || $.browser.version == "7.0"));
+			bRubbishOldIE = ($.browser && $.browser.msie && ($.browser.version == "6.0" || $.browser.version == "7.0"));
 		
 		/* Remove cells which are not needed and copy the height from the original table */
 		$(parent+' tr', clone).each( function (k) {
-			/* Can we use some kind of object detection here?! This is very nasty - damn browsers */
-			if ( $.browser.mozilla || $.browser.opera )
-			{
-				$(this).children().height( $(parent+' tr:eq('+k+')', original).outerHeight() );
-			}
-			else
-			{
-				$(this).children().height( $(parent+' tr:eq('+k+')', original).outerHeight() - iBoxHack );
-			}
+			$(this).children().height( $(parent+' tr:eq('+k+')', original).outerHeight() );
 			
 			if ( !bRubbishOldIE )
 			{
