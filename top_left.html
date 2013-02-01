@@ -16,7 +16,7 @@
 		<script type="text/javascript" charset="utf-8">
 			$(document).ready( function () {
 				var oTable = $('#example').dataTable();
-				new FixedHeader( oTable, { "left": true } );
+				new FixedHeader( oTable, { "left": 1 } );
 			} );
 		</script>
 	</head>
@@ -27,8 +27,9 @@
 			</div>
 			
 			<h1>Preamble</h1>
-			<p>This example shows how tivial it is to fix the left hand column of the table as well as the header. In fact, the header, footer, left and right columns can all be fixed in exactly the same manner. The header is the only one to be fixed by default.</p>
+			<p>This example shows how trivial it is to fix the left hand column of the table as well as the header. In fact, the header, footer, left and right columns can all be fixed in exactly the same manner. The header is the only one to be fixed by default.</p>
 			<p>Note that the window has of course been made artificially wide to show the fixed left column in action.</p>
+			<p>The <i>left</i> and <i>right</i> initialisation parameters can be booleans (set to <i>true</i> to fix one column) or integers (to specify how many columns to fix).</p>
 			
 			<h1>Live example</h1>
 			<div id="demo">
@@ -464,7 +465,7 @@
 			<h1>Initialisation code</h1>
 			<pre>$(document).ready( function () {
 	var oTable = $('#example').dataTable();
-	new FixedHeader( oTable, { "left": true } );
+	new FixedHeader( oTable, { "left": 1 } );
 } );</pre>
 
 			<h1>Examples</h1>
