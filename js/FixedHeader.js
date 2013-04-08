@@ -8,7 +8,7 @@
  * License:     GPL v2 or BSD 3 point style
  * Project:     Just a little bit of fun - enjoy :-)
  * Contact:     www.sprymedia.co.uk/contact
- * 
+ *
  * Copyright 2009-2012 Allan Jardine, all rights reserved.
  *
  * This source file is free software, under either the GPL v2 license or a
@@ -47,7 +47,7 @@ FixedHeader = function ( mTable, oInit ) {
 		alert( "FixedHeader warning: FixedHeader must be initialised with the 'new' keyword." );
 		return;
 	}
-	
+
 	var that = this;
 	var oSettings = {
 		"aoCache": [],
@@ -84,7 +84,7 @@ FixedHeader = function ( mTable, oInit ) {
 		"bFooter": false,
 		"bInitComplete": false
 	};
-	
+
 	/*
 	 * Function: fnGetSettings
 	 * Purpose:  Get the settings for this object
@@ -94,7 +94,7 @@ FixedHeader = function ( mTable, oInit ) {
 	this.fnGetSettings = function () {
 		return oSettings;
 	};
-	
+
 	/*
 	 * Function: fnUpdate
 	 * Purpose:  Update the positioning and copies of the fixed elements
@@ -105,7 +105,7 @@ FixedHeader = function ( mTable, oInit ) {
 		this._fnUpdateClones();
 		this._fnUpdatePositions();
 	};
-	
+
 	/*
 	 * Function: fnPosition
 	 * Purpose:  Update the positioning of the fixed elements
@@ -115,10 +115,10 @@ FixedHeader = function ( mTable, oInit ) {
 	this.fnPosition = function () {
 		this._fnUpdatePositions();
 	};
-	
+
 	/* Let's do it */
 	this.fnInit( mTable, oInit );
-	
+
 	/* Store the instance on the DataTables object for easy access */
 	if ( typeof mTable.fnSettings == 'function' )
 	{
@@ -136,7 +136,7 @@ FixedHeader.prototype = {
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 * Initialisation
 	 */
-	
+
 	/*
 	 * Function: fnInit
 	 * Purpose:  The "constructor"
@@ -147,10 +147,10 @@ FixedHeader.prototype = {
 	{
 		var s = this.fnGetSettings();
 		var that = this;
-		
+
 		/* Record the user definable settings */
 		this.fnInitSettings( s, oInit );
-		
+
 		/* DataTables specific stuff */
 		if ( typeof oTable.fnSettings == 'function' )
 		{
@@ -161,15 +161,15 @@ FixedHeader.prototype = {
 					"Please upgrade your DataTables installation" );
 				return;
 			}
-			
+
 			var oDtSettings = oTable.fnSettings();
-			
+
 			if ( oDtSettings.oScroll.sX != "" || oDtSettings.oScroll.sY != "" )
 			{
 				alert( "FixedHeader 2 is not supported with DataTables' scrolling mode at this time" );
 				return;
 			}
-			
+
 			s.nTable = oDtSettings.nTable;
 			oDtSettings.aoDrawCallback.unshift( {
 				"fn": function () {
@@ -184,9 +184,9 @@ FixedHeader.prototype = {
 		{
 			s.nTable = oTable;
 		}
-		
+
 		s.bFooter = ($('>tfoot', s.nTable).length > 0) ? true : false;
-		
+
 		/* Add the 'sides' that are fixed */
 		if ( s.oSides.top )
 		{
@@ -204,18 +204,18 @@ FixedHeader.prototype = {
 		{
 			s.aoCache.push( that._fnCloneTable( "fixedRight", "FixedHeader_Right", that._fnCloneTRight, s.oSides.right ) );
 		}
-		
+
 		/* Event listeners for window movement */
 		FixedHeader.afnScroll.push( function () {
 			that._fnUpdatePositions.call(that);
 		} );
-		
+
 		$(window).resize( function () {
 			FixedHeader.fnMeasure();
 			that._fnUpdateClones.call(that);
 			that._fnUpdatePositions.call(that);
 		} );
-		
+
 		/* Get things right to start with */
 		FixedHeader.fnMeasure();
 		that._fnUpdateClones();
@@ -223,12 +223,12 @@ FixedHeader.prototype = {
 
 		s.bInitComplete = true;
 	},
-	
-	
+
+
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 * Support functions
 	 */
-	
+
 	/*
 	 * Function: fnInitSettings
 	 * Purpose:  Take the user's settings and copy them to our local store
@@ -256,7 +256,7 @@ FixedHeader.prototype = {
 			} else if ( typeof oInit.right != 'undefined' ) {
 				s.oSides.right = oInit.right;
 			}
-			
+
 			if ( typeof oInit.zTop != 'undefined' ) {
 				s.oZIndexes.top = oInit.zTop;
 			}
@@ -287,7 +287,7 @@ FixedHeader.prototype = {
 			}
 		}
 	},
-	
+
 	/*
 	 * Function: _fnCloneTable
 	 * Purpose:  Clone the table node and do basic initialisation
@@ -298,7 +298,7 @@ FixedHeader.prototype = {
 	{
 		var s = this.fnGetSettings();
 		var nCTable;
-		
+
 		/* We know that the table _MUST_ has a DIV wrapped around it, because this is simply how
 		 * DataTables works. Therefore, we can set this to be relatively position (if it is not
 		 * alreadu absolute, and use this as the base point for the cloned header
@@ -307,17 +307,17 @@ FixedHeader.prototype = {
 		{
 			s.nTable.parentNode.style.position = "relative";
 		}
-		
+
 		/* Just a shallow clone will do - we only want the table node */
 		nCTable = s.nTable.cloneNode( false );
 		nCTable.removeAttribute( 'id' );
-		
+
 		var nDiv = document.createElement( 'div' );
 		nDiv.style.position = "absolute";
 		nDiv.style.top = "0px";
 		nDiv.style.left = "0px";
 		nDiv.className += " FixedHeader_Cloned "+sType+" "+sClass;
-		
+
 		/* Set the zIndexes */
 		if ( sType == "fixedHeader" )
 		{
@@ -338,11 +338,11 @@ FixedHeader.prototype = {
 
 		/* remove margins since we are going to position it absolutely */
 		nCTable.style.margin = "0";
-		
+
 		/* Insert the newly cloned table into the DOM, on top of the "real" header */
 		nDiv.appendChild( nCTable );
 		document.body.appendChild( nDiv );
-		
+
 		return {
 			"nNode": nCTable,
 			"nWrapper": nDiv,
@@ -354,7 +354,7 @@ FixedHeader.prototype = {
 			"iCells": iCells
 		};
 	},
-	
+
 	/*
 	 * Function: _fnUpdatePositions
 	 * Purpose:  Get the current positioning of the table in the DOM
@@ -370,7 +370,7 @@ FixedHeader.prototype = {
 			oOffset = jqTable.offset(),
 			iParentScrollTop = this._fnSumScroll( s.nTable.parentNode, 'scrollTop' ),
 			iParentScrollLeft = this._fnSumScroll( s.nTable.parentNode, 'scrollLeft' );
-		
+
 		m.iTableWidth = jqTable.outerWidth();
 		m.iTableHeight = jqTable.outerHeight();
 		m.iTableLeft = oOffset.left + s.nTable.parentNode.scrollLeft;
@@ -379,7 +379,7 @@ FixedHeader.prototype = {
 		m.iTableRight = FixedHeader.oDoc.iWidth - m.iTableLeft - m.iTableWidth;
 		m.iTableBottom = FixedHeader.oDoc.iHeight - m.iTableTop - m.iTableHeight;
 	},
-	
+
 	/*
 	 * Function: _fnSumScroll
 	 * Purpose:  Sum node parameters all the way to the top
@@ -400,7 +400,7 @@ FixedHeader.prototype = {
 		}
 		return i;
 	},
-	
+
 	/*
 	 * Function: _fnUpdatePositions
 	 * Purpose:  Loop over the fixed elements for this table and update their positions
@@ -411,7 +411,7 @@ FixedHeader.prototype = {
 	{
 		var s = this.fnGetSettings();
 		this._fnMeasure();
-		
+
 		for ( var i=0, iLen=s.aoCache.length ; i<iLen ; i++ )
 		{
 			if ( s.aoCache[i].sType == "fixedHeader" )
@@ -432,7 +432,7 @@ FixedHeader.prototype = {
 			}
 		}
 	},
-	
+
 	/*
 	 * Function: _fnUpdateClones
 	 * Purpose:  Loop over the fixed elements for this table and call their cloning functions
@@ -447,12 +447,12 @@ FixedHeader.prototype = {
 			s.aoCache[i].fnClone.call( this, s.aoCache[i] );
 		}
 	},
-	
-	
+
+
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 * Scrolling functions
 	 */
-	
+
 	/*
 	 * Function: _fnScrollHorizontalLeft
 	 * Purpose:  Update the positioning of the scrolling elements
@@ -468,13 +468,13 @@ FixedHeader.prototype = {
 			oDoc = FixedHeader.oDoc,
 			nTable = oCache.nWrapper,
 			iFixedWidth = $(nTable).outerWidth();
-		
+
 		if ( oWin.iScrollRight < oMes.iTableRight )
 		{
 			/* Fully right aligned */
 			this._fnUpdateCache( oCache, 'sPosition', 'absolute', 'position', nTable.style );
 			this._fnUpdateCache( oCache, 'sTop', oMes.iTableTop+"px", 'top', nTable.style );
-			this._fnUpdateCache( oCache, 'sLeft', (oMes.iTableLeft+oMes.iTableWidth-iFixedWidth)+"px", 'left', nTable.style );	
+			this._fnUpdateCache( oCache, 'sLeft', (oMes.iTableLeft+oMes.iTableWidth-iFixedWidth)+"px", 'left', nTable.style );
 		}
 		else if ( oMes.iTableLeft < oDoc.iWidth-oWin.iScrollRight-iFixedWidth )
 		{
@@ -488,10 +488,10 @@ FixedHeader.prototype = {
 			/* Fully left aligned */
 			this._fnUpdateCache( oCache, 'sPosition', 'absolute', 'position', nTable.style );
 			this._fnUpdateCache( oCache, 'sTop', oMes.iTableTop+"px", 'top', nTable.style );
-			this._fnUpdateCache( oCache, 'sLeft', oMes.iTableLeft+"px", 'left', nTable.style );	
+			this._fnUpdateCache( oCache, 'sLeft', oMes.iTableLeft+"px", 'left', nTable.style );
 		}
 	},
-	
+
 	/*
 	 * Function: _fnScrollHorizontalLeft
 	 * Purpose:  Update the positioning of the scrolling elements
@@ -507,13 +507,13 @@ FixedHeader.prototype = {
 			oDoc = FixedHeader.oDoc,
 			nTable = oCache.nWrapper,
 			iCellWidth = $(nTable).outerWidth();
-		
+
 		if ( oWin.iScrollLeft < oMes.iTableLeft )
 		{
 			/* Fully left align */
 			this._fnUpdateCache( oCache, 'sPosition', 'absolute', 'position', nTable.style );
 			this._fnUpdateCache( oCache, 'sTop', oMes.iTableTop+"px", 'top', nTable.style );
-			this._fnUpdateCache( oCache, 'sLeft', oMes.iTableLeft+"px", 'left', nTable.style );	
+			this._fnUpdateCache( oCache, 'sLeft', oMes.iTableLeft+"px", 'left', nTable.style );
 		}
 		else if ( oWin.iScrollLeft < oMes.iTableLeft+oMes.iTableWidth-iCellWidth )
 		{
@@ -526,10 +526,10 @@ FixedHeader.prototype = {
 			/* Fully right align */
 			this._fnUpdateCache( oCache, 'sPosition', 'absolute', 'position', nTable.style );
 			this._fnUpdateCache( oCache, 'sTop', oMes.iTableTop+"px", 'top', nTable.style );
-			this._fnUpdateCache( oCache, 'sLeft', (oMes.iTableLeft+oMes.iTableWidth-iCellWidth)+"px", 'left', nTable.style );	
+			this._fnUpdateCache( oCache, 'sLeft', (oMes.iTableLeft+oMes.iTableWidth-iCellWidth)+"px", 'left', nTable.style );
 		}
 	},
-	
+
 	/*
 	 * Function: _fnScrollFixedFooter
 	 * Purpose:  Update the positioning of the scrolling elements
@@ -546,29 +546,29 @@ FixedHeader.prototype = {
 			nTable = oCache.nWrapper,
 			iTheadHeight = $("thead", s.nTable).outerHeight(),
 			iCellHeight = $(nTable).outerHeight();
-		
+
 		if ( oWin.iScrollBottom < oMes.iTableBottom )
 		{
 			/* Below */
 			this._fnUpdateCache( oCache, 'sPosition', 'absolute', 'position', nTable.style );
 			this._fnUpdateCache( oCache, 'sTop', (oMes.iTableTop+oMes.iTableHeight-iCellHeight)+"px", 'top', nTable.style );
-			this._fnUpdateCache( oCache, 'sLeft', oMes.iTableLeft+"px", 'left', nTable.style );	
+			this._fnUpdateCache( oCache, 'sLeft', oMes.iTableLeft+"px", 'left', nTable.style );
 		}
 		else if ( oWin.iScrollBottom < oMes.iTableBottom+oMes.iTableHeight-iCellHeight-iTheadHeight )
 		{
 			this._fnUpdateCache( oCache, 'sPosition', 'fixed', 'position', nTable.style );
 			this._fnUpdateCache( oCache, 'sTop', (oWin.iHeight-iCellHeight)+"px", 'top', nTable.style );
-			this._fnUpdateCache( oCache, 'sLeft', (oMes.iTableLeft-oWin.iScrollLeft)+"px", 'left', nTable.style );	
+			this._fnUpdateCache( oCache, 'sLeft', (oMes.iTableLeft-oWin.iScrollLeft)+"px", 'left', nTable.style );
 		}
 		else
 		{
 			/* Above */
 			this._fnUpdateCache( oCache, 'sPosition', 'absolute', 'position', nTable.style );
 			this._fnUpdateCache( oCache, 'sTop', (oMes.iTableTop+iCellHeight)+"px", 'top', nTable.style );
-			this._fnUpdateCache( oCache, 'sLeft', oMes.iTableLeft+"px", 'left', nTable.style );	
+			this._fnUpdateCache( oCache, 'sLeft', oMes.iTableLeft+"px", 'left', nTable.style );
 		}
 	},
-	
+
 	/*
 	 * Function: _fnScrollFixedHeader
 	 * Purpose:  Update the positioning of the scrolling elements
@@ -612,7 +612,7 @@ FixedHeader.prototype = {
 			this._fnUpdateCache( oCache, 'sLeft', (oMes.iTableLeft-oWin.iScrollLeft)+"px", 'left', nTable.style );
 		}
 	},
-	
+
 	/*
 	 * Function: _fnUpdateCache
 	 * Purpose:  Check the cache and update cache and value if needed
@@ -631,7 +631,7 @@ FixedHeader.prototype = {
 			oCache[sCache] = sSet;
 		}
 	},
-	
+
 
 
 	/**
@@ -645,7 +645,7 @@ FixedHeader.prototype = {
 	{
 		var that = this;
 
-		if ( source.nodeName.toUpperCase() === "TR" || source.nodeName.toUpperCase() === "TH" || 
+		if ( source.nodeName.toUpperCase() === "TR" || source.nodeName.toUpperCase() === "TH" ||
 			 source.nodeName.toUpperCase() === "TD" || source.nodeName.toUpperCase() === "SPAN" )
 		{
 			dest.className = source.className;
@@ -655,12 +655,12 @@ FixedHeader.prototype = {
 			that._fnClassUpdate( $(source).children()[i], $(dest).children()[i] );
 		} );
 	},
-	
-	
+
+
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 * Cloning functions
 	 */
-	
+
 	/*
 	 * Function: _fnCloneThead
 	 * Purpose:  Clone the thead element
@@ -677,23 +677,23 @@ FixedHeader.prototype = {
 			this._fnClassUpdate( $('thead', s.nTable)[0], $('thead', nTable)[0] );
 			return;
 		}
-		
+
 		/* Set the wrapper width to match that of the cloned table */
 		var iDtWidth = $(s.nTable).outerWidth();
 		oCache.nWrapper.style.width = iDtWidth+"px";
 		nTable.style.width = iDtWidth+"px";
-		
+
 		/* Remove any children the cloned table has */
 		while ( nTable.childNodes.length > 0 )
 		{
 			$('thead th', nTable).unbind( 'click' );
 			nTable.removeChild( nTable.childNodes[0] );
 		}
-		
+
 		/* Clone the DataTables header */
 		var nThead = $('thead', s.nTable).clone(true)[0];
 		nTable.appendChild( nThead );
-		
+
 		/* Copy the widths across - apparently a clone isn't good enough for this */
 		var a = [];
 		var b = [];
@@ -701,7 +701,7 @@ FixedHeader.prototype = {
 		$("thead>tr th", s.nTable).each( function (i) {
 			a.push( $(this).width() );
 		} );
-		
+
 		$("thead>tr td", s.nTable).each( function (i) {
 			b.push( $(this).width() );
 		} );
@@ -710,7 +710,7 @@ FixedHeader.prototype = {
 			$("thead>tr th:eq("+i+")", nTable).width( a[i] );
 			$(this).width( a[i] );
 		} );
-		
+
 		$("thead>tr td", s.nTable).each( function (i) {
 			$("thead>tr td:eq("+i+")", nTable).width( b[i] );
 			$(this).width( b[i] );
@@ -722,7 +722,7 @@ FixedHeader.prototype = {
 			this.blur();
 		} );
 	},
-	
+
 	/*
 	 * Function: _fnCloneTfoot
 	 * Purpose:  Clone the tfoot element
@@ -733,30 +733,30 @@ FixedHeader.prototype = {
 	{
 		var s = this.fnGetSettings();
 		var nTable = oCache.nNode;
-		
+
 		/* Set the wrapper width to match that of the cloned table */
 		oCache.nWrapper.style.width = $(s.nTable).outerWidth()+"px";
-		
+
 		/* Remove any children the cloned table has */
 		while ( nTable.childNodes.length > 0 )
 		{
 			nTable.removeChild( nTable.childNodes[0] );
 		}
-		
+
 		/* Clone the DataTables footer */
 		var nTfoot = $('tfoot', s.nTable).clone(true)[0];
 		nTable.appendChild( nTfoot );
-		
+
 		/* Copy the widths across - apparently a clone isn't good enough for this */
 		$("tfoot:eq(0)>tr th", s.nTable).each( function (i) {
 			$("tfoot:eq(0)>tr th:eq("+i+")", nTable).width( $(this).width() );
 		} );
-		
+
 		$("tfoot:eq(0)>tr td", s.nTable).each( function (i) {
 			$("tfoot:eq(0)>tr th:eq("+i+")", nTable)[0].style.width( $(this).width() );
 		} );
 	},
-	
+
 	/*
 	 * Function: _fnCloneTLeft
 	 * Purpose:  Clone the left column(s)
@@ -768,13 +768,13 @@ FixedHeader.prototype = {
 		var s = this.fnGetSettings();
 		var nTable = oCache.nNode;
 		var nBody = $('tbody', s.nTable)[0];
-		
+
 		/* Remove any children the cloned table has */
 		while ( nTable.childNodes.length > 0 )
 		{
 			nTable.removeChild( nTable.childNodes[0] );
 		}
-		
+
 		/* Is this the most efficient way to do this - it looks horrible... */
 		nTable.appendChild( $("thead", s.nTable).clone(true)[0] );
 		nTable.appendChild( $("tbody", s.nTable).clone(true)[0] );
@@ -782,7 +782,7 @@ FixedHeader.prototype = {
 		{
 			nTable.appendChild( $("tfoot", s.nTable).clone(true)[0] );
 		}
-		
+
 		/* Remove unneeded cells */
 		var sSelector = 'gt(' + (oCache.iCells - 1) + ')';
 		$('thead tr', nTable).each( function (k) {
@@ -796,11 +796,11 @@ FixedHeader.prototype = {
 		$('tbody tr', nTable).each( function (k) {
 			$('td:' + sSelector, this).remove();
 		} );
-		
+
 		this.fnEqualiseHeights( 'thead', nBody.parentNode, nTable );
 		this.fnEqualiseHeights( 'tbody', nBody.parentNode, nTable );
 		this.fnEqualiseHeights( 'tfoot', nBody.parentNode, nTable );
-		
+
 		var iWidth = 0;
 		for (var i = 0; i < oCache.iCells; i++) {
 			iWidth += $('thead tr th:eq(' + i + ')', s.nTable).outerWidth();
@@ -808,7 +808,7 @@ FixedHeader.prototype = {
 		nTable.style.width = iWidth+"px";
 		oCache.nWrapper.style.width = iWidth+"px";
 	},
-	
+
 	/*
 	 * Function: _fnCloneTRight
 	 * Purpose:  Clone the right most column(s)
@@ -821,13 +821,13 @@ FixedHeader.prototype = {
 		var nBody = $('tbody', s.nTable)[0];
 		var nTable = oCache.nNode;
 		var iCols = $('tbody tr:eq(0) td', s.nTable).length;
-		
+
 		/* Remove any children the cloned table has */
 		while ( nTable.childNodes.length > 0 )
 		{
 			nTable.removeChild( nTable.childNodes[0] );
 		}
-		
+
 		/* Is this the most efficient way to do this - it looks horrible... */
 		nTable.appendChild( $("thead", s.nTable).clone(true)[0] );
 		nTable.appendChild( $("tbody", s.nTable).clone(true)[0] );
@@ -837,16 +837,16 @@ FixedHeader.prototype = {
 		}
 		$('thead tr th:lt('+(iCols-oCache.iCells)+')', nTable).remove();
 		$('tfoot tr th:lt('+(iCols-oCache.iCells)+')', nTable).remove();
-		
+
 		/* Remove unneeded cells */
 		$('tbody tr', nTable).each( function (k) {
 			$('td:lt('+(iCols-oCache.iCells)+')', this).remove();
 		} );
-		
+
 		this.fnEqualiseHeights( 'thead', nBody.parentNode, nTable );
 		this.fnEqualiseHeights( 'tbody', nBody.parentNode, nTable );
 		this.fnEqualiseHeights( 'tfoot', nBody.parentNode, nTable );
-		
+
 		var iWidth = 0;
 		for (var i = 0; i < oCache.iCells; i++) {
 			iWidth += $('thead tr th:eq('+(iCols-1-i)+')', s.nTable).outerWidth();
@@ -854,8 +854,8 @@ FixedHeader.prototype = {
 		nTable.style.width = iWidth+"px";
 		oCache.nWrapper.style.width = iWidth+"px";
 	},
-	
-	
+
+
 	/**
 	 * Equalise the heights of the rows in a given table node in a cross browser way. Note that this
 	 * is more or less lifted as is from FixedColumns
@@ -871,7 +871,7 @@ FixedHeader.prototype = {
 		var that = this,
 			jqBoxHack = $(parent+' tr:eq(0)', original).children(':eq(0)'),
 			iBoxHack = jqBoxHack.outerHeight() - jqBoxHack.height();
-		
+
 		/* Remove cells which are not needed and copy the height from the original table */
 		$(parent+' tr', clone).each( function (k) {
 			$(this).children().height( $(parent+' tr:eq('+k+')', original).outerHeight() );
@@ -879,7 +879,7 @@ FixedHeader.prototype = {
 	}
 };
 
-	
+
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * Static properties and methods
  *   We use these for speed! This information is common to all instances of FixedHeader, so no
@@ -930,10 +930,10 @@ FixedHeader.fnMeasure = function ()
 		jqDoc = $(document),
 		oWin = FixedHeader.oWin,
 		oDoc = FixedHeader.oDoc;
-	
+
 	oDoc.iHeight = jqDoc.height();
 	oDoc.iWidth = jqDoc.width();
-	
+
 	oWin.iHeight = jqWin.height();
 	oWin.iWidth = jqWin.width();
 	oWin.iScrollTop = jqWin.scrollTop();
@@ -946,7 +946,7 @@ FixedHeader.fnMeasure = function ()
 FixedHeader.VERSION = "2.1.0.dev";
 FixedHeader.prototype.VERSION = FixedHeader.VERSION;
 
-	
+
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * Global processing
  */
