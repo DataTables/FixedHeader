@@ -42,7 +42,7 @@ var FixedHeader;
  */
 FixedHeader = function ( mTable, oInit ) {
 	/* Sanity check - you just know it will happen */
-	if ( typeof this.fnInit != 'function' )
+	if ( ! this instanceof FixedHeader )
 	{
 		alert( "FixedHeader warning: FixedHeader must be initialised with the 'new' keyword." );
 		return;
@@ -164,7 +164,7 @@ FixedHeader.prototype = {
 
 			var oDtSettings = oTable.fnSettings();
 
-			if ( oDtSettings.oScroll.sX != "" || oDtSettings.oScroll.sY != "" )
+			if ( oDtSettings.oScroll.sX !== "" || oDtSettings.oScroll.sY !== "" )
 			{
 				alert( "FixedHeader 2 is not supported with DataTables' scrolling mode at this time" );
 				return;
@@ -238,51 +238,53 @@ FixedHeader.prototype = {
 	 */
 	fnInitSettings: function ( s, oInit )
 	{
-		if ( typeof oInit != 'undefined' )
+		if ( oInit !== undefined )
 		{
-			if ( typeof oInit.top != 'undefined' ) {
+			if ( oInit.top !== undefined ) {
 				s.oSides.top = oInit.top;
 			}
-			if ( typeof oInit.bottom != 'undefined' ) {
+			if ( oInit.bottom !== undefined ) {
 				s.oSides.bottom = oInit.bottom;
 			}
 			if ( typeof oInit.left == 'boolean' ) {
 				s.oSides.left = oInit.left ? 1 : 0;
-			} else if ( typeof oInit.left != 'undefined' ) {
+			}
+			else if ( oInit.left !== undefined ) {
 				s.oSides.left = oInit.left;
 			}
 			if ( typeof oInit.right == 'boolean' ) {
 				s.oSides.right = oInit.right ? 1 : 0;
-			} else if ( typeof oInit.right != 'undefined' ) {
+			}
+			else if ( oInit.right !== undefined ) {
 				s.oSides.right = oInit.right;
 			}
 
-			if ( typeof oInit.zTop != 'undefined' ) {
+			if ( oInit.zTop !== undefined ) {
 				s.oZIndexes.top = oInit.zTop;
 			}
-			if ( typeof oInit.zBottom != 'undefined' ) {
+			if ( oInit.zBottom !== undefined ) {
 				s.oZIndexes.bottom = oInit.zBottom;
 			}
-			if ( typeof oInit.zLeft != 'undefined' ) {
+			if ( oInit.zLeft !== undefined ) {
 				s.oZIndexes.left = oInit.zLeft;
 			}
-			if ( typeof oInit.zRight != 'undefined' ) {
+			if ( oInit.zRight !== undefined ) {
 				s.oZIndexes.right = oInit.zRight;
 			}
 
-			if ( typeof oInit.offsetTop != 'undefined' ) {
+			if ( oInit.offsetTop !== undefined ) {
 				s.oOffset.top = oInit.offsetTop;
 			}
-			if ( typeof oInit.alwaysCloneTop != 'undefined' ) {
+			if ( oInit.alwaysCloneTop !== undefined ) {
 				s.oCloneOnDraw.top = oInit.alwaysCloneTop;
 			}
-			if ( typeof oInit.alwaysCloneBottom != 'undefined' ) {
+			if ( oInit.alwaysCloneBottom !== undefined ) {
 				s.oCloneOnDraw.bottom = oInit.alwaysCloneBottom;
 			}
-			if ( typeof oInit.alwaysCloneLeft != 'undefined' ) {
+			if ( oInit.alwaysCloneLeft !== undefined ) {
 				s.oCloneOnDraw.left = oInit.alwaysCloneLeft;
 			}
-			if ( typeof oInit.alwaysCloneRight != 'undefined' ) {
+			if ( oInit.alwaysCloneRight !== undefined ) {
 				s.oCloneOnDraw.right = oInit.alwaysCloneRight;
 			}
 		}
