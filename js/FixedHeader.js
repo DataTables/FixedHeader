@@ -1,6 +1,6 @@
 /*
  * File:        FixedHeader.js
- * Version:     2.1.0.dev
+ * Version:     2.1.0-dev
  * Description: "Fix" a header at the top of the table, so it scrolls with the table
  * Author:      Allan Jardine (www.sprymedia.co.uk)
  * Created:     Wed 16 Sep 2009 19:46:30 BST
@@ -9,7 +9,7 @@
  * Project:     Just a little bit of fun - enjoy :-)
  * Contact:     www.sprymedia.co.uk/contact
  *
- * Copyright 2009-2012 Allan Jardine, all rights reserved.
+ * Copyright 2009-2013 Allan Jardine, all rights reserved.
  *
  * This source file is free software, under either the GPL v2 license or a
  * BSD style license, available at:
@@ -945,7 +945,7 @@ FixedHeader.fnMeasure = function ()
 };
 
 
-FixedHeader.VERSION = "2.1.0.dev";
+FixedHeader.VERSION = "2.1.0-dev";
 FixedHeader.prototype.VERSION = FixedHeader.VERSION;
 
 
