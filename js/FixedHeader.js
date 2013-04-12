@@ -692,6 +692,10 @@ FixedHeader.prototype = {
 			nTable.removeChild( nTable.childNodes[0] );
 		}
 
+		/* Clone the colgroups */
+		var nColgroup = $('colgroup', s.nTable).clone(true);
+		$(nTable).append( nColgroup );
+
 		/* Clone the DataTables header */
 		var nThead = $('thead', s.nTable).clone(true)[0];
 		nTable.appendChild( nThead );
@@ -967,5 +971,4 @@ $(window).scroll( function () {
 
 
 }(window, document, jQuery));
-
 
