@@ -755,7 +755,7 @@ FixedHeader.prototype = {
 		} );
 
 		$("tfoot:eq(0)>tr td", s.nTable).each( function (i) {
-			$("tfoot:eq(0)>tr th:eq("+i+")", nTable)[0].style.width( $(this).width() );
+			$("tfoot:eq(0)>tr td:eq("+i+")", nTable).width( $(this).width() );
 		} );
 	},
 
