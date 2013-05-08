@@ -216,6 +216,18 @@ FixedHeader.prototype = {
 			that._fnUpdatePositions.call(that);
 		} );
 
+		$(s.nTable)
+			.on('column-reorder', function () {
+				FixedHeader.fnMeasure();
+				that._fnUpdateClones( true );
+				that._fnUpdatePositions();
+			} )
+			.on('column-visibility', function () {
+				FixedHeader.fnMeasure();
+				that._fnUpdateClones( true );
+				that._fnUpdatePositions();
+			} );
+
 		/* Get things right to start with */
 		FixedHeader.fnMeasure();
 		that._fnUpdateClones();
@@ -441,12 +453,24 @@ FixedHeader.prototype = {
 	 * Returns:  -
 	 * Inputs:   -
 	 */
-	_fnUpdateClones: function ()
+	_fnUpdateClones: function ( full )
 	{
 		var s = this.fnGetSettings();
+
+		if ( full ) {
+			// This is a little bit of a hack to force a full clone draw. When
+			// `full` is set to true, we want to reclone the source elements,
+			// regardless of the clone-on-draw settings
+			s.bInitComplete = false;
+		}
+
 		for ( var i=0, iLen=s.aoCache.length ; i<iLen ; i++ )
 		{
 			s.aoCache[i].fnClone.call( this, s.aoCache[i] );
+		}
+
+		if ( full ) {
+			s.bInitComplete = true;
 		}
 	},
 
