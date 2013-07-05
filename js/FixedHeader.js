@@ -155,7 +155,7 @@ FixedHeader = function ( mTable, oInit ) {
 	};
 
 	/*
-	 * Function: fnDisable
+	 * Function: fnToggle
 	 * Purpose:  Toggles the FixedHeader between enabled and disabled.
 	 * Returns:  -
 	 * Inputs:   -
