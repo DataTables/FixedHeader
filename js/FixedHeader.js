@@ -31,14 +31,17 @@ var FixedHeader;
  *					   1. DataTable object - when using FixedHeader with DataTables, or
  *					   2. HTML table node - when using FixedHeader without DataTables
  *           object:oInit - initialisation settings, with the following properties (each optional)
- *             bool:top -    fix the header (default true)
- *             bool:bottom - fix the footer (default false)
- *             int:left -    fix the left column(s) (default 0)
- *             int:right -   fix the right column(s) (default 0)
- *             int:zTop -    fixed header zIndex
- *             int:zBottom - fixed footer zIndex
- *             int:zLeft -   fixed left zIndex
- *             int:zRight -  fixed right zIndex
+ *             bool:top      fix the header (default true)
+ *             bool:bottom   fix the footer (default false)
+ *             int:left      fix the left column(s) (default 0)
+ *             int:right     fix the right column(s) (default 0)
+ *             int:zTop      fixed header zIndex
+ *             int:zBottom   fixed footer zIndex
+ *             int:zLeft     fixed left zIndex
+ *             int:zRight    fixed right zIndex
+ *             int:offsetTop offset from the top that the fixed header should be
+ *             bool:alwaysClone[Top|Bottom|Left|Right]
+ *                           the specified section will always reclone when updated.
  */
 FixedHeader = function ( mTable, oInit ) {
 	/* Sanity check - you just know it will happen */
