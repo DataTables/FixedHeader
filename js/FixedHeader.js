@@ -370,7 +370,7 @@ FixedHeader.prototype = {
 	},
 
 	/*
-	 * Function: _fnUpdatePositions
+	 * Function: _fnMeasure
 	 * Purpose:  Get the current positioning of the table in the DOM
 	 * Returns:  -
 	 * Inputs:   -
