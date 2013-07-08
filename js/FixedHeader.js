@@ -168,6 +168,8 @@ FixedHeader = function ( mTable, oInit ) {
 		} else {
 			this.fnEnable();
 		}
+
+		return s.bEnabled;
 	};
 
 	/* Let's do it */
