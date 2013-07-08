@@ -30,15 +30,18 @@ var FixedHeader;
  * Inputs:   mixed:mTable - target table
  *					   1. DataTable object - when using FixedHeader with DataTables, or
  *					   2. HTML table node - when using FixedHeader without DataTables
- *           object:oInit - initialisation settings, with the following properties (each optional)
- *             bool:top -    fix the header (default true)
- *             bool:bottom - fix the footer (default false)
- *             int:left -    fix the left column(s) (default 0)
- *             int:right -   fix the right column(s) (default 0)
- *             int:zTop -    fixed header zIndex
- *             int:zBottom - fixed footer zIndex
- *             int:zLeft -   fixed left zIndex
- *             int:zRight -  fixed right zIndex
+ * 		     object:oInit - initialisation settings, with the following properties (each optional)
+ *			  bool:top      fix the header (default true)
+ *			  bool:bottom   fix the footer (default false)
+ *			  int:left      fix the left column(s) (default 0)
+ *			  int:right     fix the right column(s) (default 0)
+ *			  int:zTop      fixed header zIndex
+ *			  int:zBottom   fixed footer zIndex
+ *			  int:zLeft     fixed left zIndex
+ *			  int:zRight    fixed right zIndex
+ *			  int:offsetTop offset from the top that the fixed header should be
+ *			  bool:alwaysClone[Top|Bottom|Left|Right]
+ *						   the specified section will always reclone when updated.
  */
 FixedHeader = function ( mTable, oInit ) {
 	/* Sanity check - you just know it will happen */
@@ -82,7 +85,8 @@ FixedHeader = function ( mTable, oInit ) {
 		},
 		"nTable": null,
 		"bFooter": false,
-		"bInitComplete": false
+		"bInitComplete": false,
+		"bEnabled": true,
 	};
 
 	/*
@@ -114,6 +118,58 @@ FixedHeader = function ( mTable, oInit ) {
 	 */
 	this.fnPosition = function () {
 		this._fnUpdatePositions();
+	};
+
+	/*
+	 * Function: fnEnable
+	 * Purpose:  Enables the FixedHeader. They will be visible and be updated as expected.
+	 * Returns:  -
+	 * Inputs:   -
+	 */
+	this.fnEnable = function() {
+		var s = this.fnGetSettings();
+		s.bEnabled = true;
+		
+		for ( var i=0, iLen=s.aoCache.length ; i<iLen ; i++ )
+		{
+			s.aoCache[i].nWrapper.style.visibility = 'visible';
+		}
+
+		this.fnUpdate();
+	};
+
+	/*
+	 * Function: fnDisable
+	 * Purpose:  Disabled the FixedHeader from updating and hides them. 
+	 * Returns:  -
+	 * Inputs:   -
+	 */
+	this.fnDisable = function() {
+		var s = this.fnGetSettings();
+		s.bEnabled = false;
+
+		for ( var i=0, iLen=s.aoCache.length ; i<iLen ; i++ )
+		{
+			s.aoCache[i].nWrapper.style.visibility = 'hidden';
+		}
+	};
+
+	/*
+	 * Function: fnToggle
+	 * Purpose:  Toggles the FixedHeader between enabled and disabled.
+	 * Returns:  -
+	 * Inputs:   -
+	 */
+	this.fnToggle = function() {
+		var s = this.fnGetSettings();
+
+		if (s.bEnabled) {
+			this.fnDisable();
+		} else {
+			this.fnEnable();
+		}
+
+		return s.bEnabled;
 	};
 
 	/* Let's do it */
@@ -155,7 +211,7 @@ FixedHeader.prototype = {
 		if ( typeof oTable.fnSettings == 'function' )
 		{
 			if ( typeof oTable.fnVersionCheck == 'functon' &&
-			     oTable.fnVersionCheck( '1.6.0' ) !== true )
+				oTable.fnVersionCheck( '1.6.0' ) !== true )
 			{
 				alert( "FixedHeader 2 required DataTables 1.6.0 or later. "+
 					"Please upgrade your DataTables installation" );
@@ -246,7 +302,7 @@ FixedHeader.prototype = {
 	 * Purpose:  Take the user's settings and copy them to our local store
 	 * Returns:  -
 	 * Inputs:   object:s - the local settings object
-	 *           object:oInit - the user's settings object
+	 *		     object:oInit - the user's settings object
 	 */
 	fnInitSettings: function ( s, oInit )
 	{
@@ -301,7 +357,7 @@ FixedHeader.prototype = {
 			}
 		}
 	},
-
+	
 	/*
 	 * Function: _fnCloneTable
 	 * Purpose:  Clone the table node and do basic initialisation
@@ -406,7 +462,7 @@ FixedHeader.prototype = {
 		var i = n[side];
 		while ( n = n.parentNode )
 		{
-			if ( n.nodeName == 'HTML' || n.nodeName == 'BODY' )
+			if ( n.nodeName.toUpperCase() == 'HTML' || n.nodeName.toUpperCase() == 'BODY' )
 			{
 				break;
 			}
@@ -424,6 +480,9 @@ FixedHeader.prototype = {
 	_fnUpdatePositions: function ()
 	{
 		var s = this.fnGetSettings();
+
+		if (!s.bEnabled) {return;}
+
 		this._fnMeasure();
 
 		for ( var i=0, iLen=s.aoCache.length ; i<iLen ; i++ )
@@ -456,6 +515,8 @@ FixedHeader.prototype = {
 	_fnUpdateClones: function ( full )
 	{
 		var s = this.fnGetSettings();
+
+	    if (!s.bEnabled) {return;}
 
 		if ( full ) {
 			// This is a little bit of a hack to force a full clone draw. When
@@ -991,5 +1052,6 @@ $(window).scroll( function () {
 
 
 }(window, document, jQuery));
+
 
 
