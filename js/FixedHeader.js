@@ -132,7 +132,7 @@ FixedHeader = function ( mTable, oInit ) {
 		
 		for ( var i=0, iLen=s.aoCache.length ; i<iLen ; i++ )
 		{
-			s.aoCache[i].nWrapper.style.visibilty = 'visible';
+			s.aoCache[i].nWrapper.style.visibility = 'visible';
 		}
 
 		this.fnUpdate();
@@ -150,7 +150,7 @@ FixedHeader = function ( mTable, oInit ) {
 
 		for ( var i=0, iLen=s.aoCache.length ; i<iLen ; i++ )
 		{
-			s.aoCache[i].nWrapper.style.visibilty = 'hidden';
+			s.aoCache[i].nWrapper.style.visibility = 'hidden';
 		}
 	};
 
