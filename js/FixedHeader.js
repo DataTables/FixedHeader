@@ -894,13 +894,11 @@ FixedHeader.prototype = {
 	 */
 	"fnEqualiseHeights": function ( parent, original, clone )
 	{
-		var that = this,
-			jqBoxHack = $(parent+' tr:eq(0)', original).children(':eq(0)'),
-			iBoxHack = jqBoxHack.outerHeight() - jqBoxHack.height();
+		var that = this;
+		var originals = $(parent +' tr', original);
 
-		/* Remove cells which are not needed and copy the height from the original table */
 		$(parent+' tr', clone).each( function (k) {
-			$(this).children().height( $(parent+' tr:eq('+k+')', original).outerHeight() );
+			$(this).height( originals.eq( k ).css('height') );
 		} );
 	}
 };
