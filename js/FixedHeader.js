@@ -896,9 +896,16 @@ FixedHeader.prototype = {
 	{
 		var that = this;
 		var originals = $(parent +' tr', original);
+		var height;
 
 		$(parent+' tr', clone).each( function (k) {
-			$(this).height( originals.eq( k ).css('height') );
+			height = originals.eq( k ).css('height');
+			$(this).css( 'height', height );
+
+			// For Firefox to work, we need to also set the height of the
+			// original row, to the value that we read from it! Otherwise there
+			// is a sub-pixel rounding error
+			originals.eq( k ).css( 'height', height );
 		} );
 	}
 };
