@@ -900,6 +900,15 @@ FixedHeader.prototype = {
 
 		$(parent+' tr', clone).each( function (k) {
 			height = originals.eq( k ).css('height');
+
+			// This is nasty :-(. IE has a sub-pixel error even when setting
+			// the height below (the Firefox fix) which causes the fixed column
+			// to go out of alignment. Need to add a pixel before the assignment
+			// Can this be feature detected? Not sure how...
+			if ( navigator.appName == 'Microsoft Internet Explorer' ) {
+				height = parseInt( height, 10 ) + 1;
+			}
+
 			$(this).css( 'height', height );
 
 			// For Firefox to work, we need to also set the height of the
