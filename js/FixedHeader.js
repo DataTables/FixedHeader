@@ -31,14 +31,18 @@ var FixedHeader;
  *					   1. DataTable object - when using FixedHeader with DataTables, or
  *					   2. HTML table node - when using FixedHeader without DataTables
  *           object:oInit - initialisation settings, with the following properties (each optional)
- *             bool:top -    fix the header (default true)
- *             bool:bottom - fix the footer (default false)
- *             int:left -    fix the left column(s) (default 0)
- *             int:right -   fix the right column(s) (default 0)
- *             int:zTop -    fixed header zIndex
- *             int:zBottom - fixed footer zIndex
- *             int:zLeft -   fixed left zIndex
- *             int:zRight -  fixed right zIndex
+ *             bool:top -         fix the header (default true)
+ *             bool:bottom -      fix the footer (default false)
+ *             int:left -         fix the left column(s) (default 0)
+ *             int:right -        fix the right column(s) (default 0)
+ *             int:zTop -         fixed header zIndex
+ *             int:zBottom -      fixed footer zIndex
+ *             int:zLeft -        fixed left zIndex
+ *             int:zRight -       fixed right zIndex
+ *             int:zTopLeft -     fixed top left corner zIndex
+ *             int:zTopRight -    fixed top right corner zIndex
+ *             int:zBottomLeft -  fixed bottom left corner zIndex
+ *             int:zBottomRight - fixed bottom right corner zIndex
  */
 FixedHeader = function ( mTable, oInit ) {
 	/* Sanity check - you just know it will happen */
@@ -61,7 +65,11 @@ FixedHeader = function ( mTable, oInit ) {
 			"top": 104,
 			"bottom": 103,
 			"left": 102,
-			"right": 101
+			"right": 101,
+			"topleft": 105, /* corner element */
+			"topright": 105, /* corner element */
+			"bottomright": 105, /* corner element */
+			"bottomleft": 105 /* corner element */
 		},
 		"oCloneOnDraw": {
 			"top": false,
@@ -204,6 +212,24 @@ FixedHeader.prototype = {
 		{
 			s.aoCache.push( that._fnCloneTable( "fixedRight", "FixedHeader_Right", that._fnCloneTRight, s.oSides.right ) );
 		}
+		
+		/* Add the 'corners' that are fixed */
+		if ( s.oSides.top && s.oSides.left)
+		{
+			s.aoCache.push( that._fnCloneTable("fixedTopLeft", "FixedHeader_TopLeft", that._fnCloneTTopLeft, s.oSides.left) );
+		}
+		if ( s.oSides.top && s.oSides.right)
+		{
+			s.aoCache.push( that._fnCloneTable("fixedTopRight", "FixedHeader_TopRight", that._fnCloneTTopRight, s.oSides.right) );
+		}
+		if ( s.oSides.bottom && s.oSides.left)
+		{
+			s.aoCache.push( that._fnCloneTable("fixedBottomLeft", "FixedHeader_BottomLeft", that._fnCloneTBottomLeft, s.oSides.left) );
+		}
+		if ( s.oSides.bottom && s.oSides.right)
+		{
+			s.aoCache.push( that._fnCloneTable("fixedBottomRight", "FixedHeader_BottomRight", that._fnCloneTBottomRight, s.oSides.right) );
+		}
 
 		/* Event listeners for window movement */
 		FixedHeader.afnScroll.push( function () {
@@ -283,6 +309,20 @@ FixedHeader.prototype = {
 			if ( oInit.zRight !== undefined ) {
 				s.oZIndexes.right = oInit.zRight;
 			}
+			
+			// Corner element settings
+			if ( oInit.zTopRight !== undefined ) {
+				s.oZIndexes.topright = oInit.zTopRight;
+			}
+			if ( oInit.zTopLeft !== undefined ) {
+				s.oZIndexes.topleft = oInit.zTopLeft;
+			}
+			if ( oInit.zBottomRight !== undefined ) {
+				s.oZIndexes.bottomright = oInit.zBottomRight;
+			}
+			if ( oInit.zBottomLeft !== undefined ) {
+				s.oZIndexes.bottomleft = oInit.zBottomLeft;
+			}
 
 			if ( oInit.offsetTop !== undefined ) {
 				s.oOffset.top = oInit.offsetTop;
@@ -315,7 +355,7 @@ FixedHeader.prototype = {
 
 		/* We know that the table _MUST_ has a DIV wrapped around it, because this is simply how
 		 * DataTables works. Therefore, we can set this to be relatively position (if it is not
-		 * alreadu absolute, and use this as the base point for the cloned header
+		 * already absolute, and use this as the base point for the cloned header.
 		 */
 		if ( $(s.nTable.parentNode).css('position') != "absolute" )
 		{
@@ -345,9 +385,25 @@ FixedHeader.prototype = {
 		{
 			nDiv.style.zIndex = s.oZIndexes.left;
 		}
-		else if ( sType == "fixedRight" )
+		if ( sType == "fixedRight" )
 		{
 			nDiv.style.zIndex = s.oZIndexes.right;
+		}
+		if ( sType == "fixedTopLeft" )
+		{
+			nDiv.style.zIndex = s.oZIndexes.topleft;
+		}
+		if ( sType == "fixedTopRight" )
+		{
+			nDiv.style.zIndex = s.oZIndexes.topright;
+		}
+		if ( sType == "fixedBottomLeft" )
+		{
+			nDiv.style.zIndex = s.oZIndexes.bottomleft;
+		}
+		if ( sType == "fixedBottomRight" )
+		{
+			nDiv.style.zIndex = s.oZIndexes.bottomright;
 		}
 
 		/* remove margins since we are going to position it absolutely */
@@ -440,9 +496,25 @@ FixedHeader.prototype = {
 			{
 				this._fnScrollHorizontalLeft( s.aoCache[i] );
 			}
-			else
+			else if ( s.aoCache[i].sType == "fixedRight" )
 			{
 				this._fnScrollHorizontalRight( s.aoCache[i] );
+			}
+			else if ( s.aoCache[i].sType == "fixedTopLeft" )
+			{
+				this._fnScrollTopLeft( s.aoCache[i] );
+			}
+			else if (s.aoCache[i].sType == "fixedTopRight" )
+			{
+				this._fnScrollTopRight (s.aoCache[i] );
+			}
+			else if (s.aoCache[i].sType == "fixedBottomLeft" )
+			{
+				this._fnScrollBottomLeft( s.aoCache[i] );
+			}
+			else if (s.aoCache[i].sType == "fixedBottomRight" )
+			{
+				this._fnScrollBottomRight( s.aoCache[i] );
 			}
 		}
 	},
@@ -636,6 +708,327 @@ FixedHeader.prototype = {
 			this._fnUpdateCache( oCache, 'sPosition', 'fixed', 'position', nTable.style );
 			this._fnUpdateCache( oCache, 'sTop', s.oOffset.top+"px", 'top', nTable.style );
 			this._fnUpdateCache( oCache, 'sLeft', (oMes.iTableLeft-oWin.iScrollLeft)+"px", 'left', nTable.style );
+
+		}
+	},
+	
+	/*
+	 * Function: _fnScrollTopLeft
+	 * Purpose:  Update the positioning of the top-left corner element.
+	 * Returns:  -
+	 * Inputs:   object:oCache - the cached values for this fixed element
+	 */
+	_fnScrollTopLeft: function ( oCache )
+	{
+		var
+			s = this.fnGetSettings(),
+			oMes = s.oMes,
+			oWin = FixedHeader.oWin,
+			nTable = oCache.nWrapper, 
+			iTbodyHeight = 0,
+			anTbodies = s.nTable.getElementsByTagName('tbody'),
+			iCellWidth = $(nTable).outerWidth(),
+			bUseAbsolutePositions = true,
+			iVPos = 0,
+			iHPos = 0;
+
+		for (var i = 0; i < anTbodies.length; ++i) {
+			iTbodyHeight += anTbodies[i].offsetHeight;
+		}
+		
+		/* Compute absolute values, which can become fixed values by subtraction of iScrollTop/iScrollLeft */
+		
+		/* Figure out the absolute vertical position */
+		if ( oMes.iTableTop > oWin.iScrollTop + s.oOffset.top )
+		{
+			/* Above the table */
+			iVPos = oMes.iTableTop; 
+		}
+		else if ( oWin.iScrollTop + s.oOffset.top > oMes.iTableTop+iTbodyHeight )
+		{
+			/* At the bottom of the table */
+			iVPos = oMes.iTableTop+iTbodyHeight; 
+		}
+		else
+		{
+			/* In the middle of the table */
+			bUseAbsolutePositions = false;
+			iVPos = s.oOffset.top+oWin.iScrollTop; 
+		}
+		
+		/* Figure out the absolute horizontal position */
+		if ( oWin.iScrollLeft < oMes.iTableLeft )
+		{
+			/* Fully left align */
+			iHPos = oMes.iTableLeft; 
+		}
+		else if ( oWin.iScrollLeft < oMes.iTableLeft+oMes.iTableWidth-iCellWidth )
+		{
+			/* In the middle of the table */
+			bUseAbsolutePositions = false;
+			iHPos = oWin.iScrollLeft; 
+		}
+		else
+		{
+			// Fully right align 
+			iHPos = oMes.iTableLeft+oMes.iTableWidth-iCellWidth; 
+		}
+		
+		if (bUseAbsolutePositions)
+		{
+			/* If we're OK using absolute positions don't change any of the computed values */
+			this._fnUpdateCache( oCache, 'sPosition', "absolute", 'position', nTable.style );
+			this._fnUpdateCache( oCache, 'sTop', iVPos+"px", 'top', nTable.style );
+			this._fnUpdateCache( oCache, 'sLeft', iHPos+"px", 'left', nTable.style );
+		}
+		else
+		{
+			/* If we have to use fixed positions subtract the viewport location */
+			this._fnUpdateCache( oCache, 'sPosition', "fixed", 'position', nTable.style );
+			this._fnUpdateCache( oCache, 'sTop', (iVPos-oWin.iScrollTop)+"px", 'top', nTable.style );
+			this._fnUpdateCache( oCache, 'sLeft', (iHPos-oWin.iScrollLeft)+"px", 'left', nTable.style );
+		}
+	},
+	
+	/*
+	 * Function: _fnScrollTopRight
+	 * Purpose:  Update the positioning of the top-right corner element.
+	 * Returns:  -
+	 * Inputs:   object:oCache - the cached values for this fixed element
+	 */
+	_fnScrollTopRight: function ( oCache )
+	{
+		var
+			s = this.fnGetSettings(),
+			oMes = s.oMes,
+			oWin = FixedHeader.oWin,
+			oDoc = FixedHeader.oDoc,
+			nTable = oCache.nWrapper, 
+			iTbodyHeight = 0,
+			anTbodies = s.nTable.getElementsByTagName('tbody'),
+			iCellWidth = $(nTable).outerWidth(),
+			bUseAbsolutePositions = true,
+			iVPos = 0,
+			iHPos = 0;
+
+		for (var i = 0; i < anTbodies.length; ++i) {
+			iTbodyHeight += anTbodies[i].offsetHeight;
+		}
+		
+		/* Compute absolute values, which can become fixed values by subtraction of iScrollTop/iScrollLeft */
+		
+		/* Figure out the absolute vertical position */
+		if ( oMes.iTableTop > oWin.iScrollTop + s.oOffset.top )
+		{
+			/* Above the table */
+			iVPos = oMes.iTableTop;
+		}
+		else if ( oWin.iScrollTop + s.oOffset.top > oMes.iTableTop+iTbodyHeight )
+		{
+			/* At the bottom of the table */
+			iVPos = oMes.iTableTop+iTbodyHeight;
+		}
+		else
+		{
+			/* In the middle of the table */
+			bUseAbsolutePositions = false;
+			iVPos = s.oOffset.top+oWin.iScrollTop; 
+		}
+
+			
+		/* Figure out the absolute horizontal position */
+		if ( oWin.iScrollRight < oMes.iTableRight )
+		{
+			// Fully right align 
+			iHPos = oMes.iTableLeft+oMes.iTableWidth-iCellWidth;
+		}
+		else if ( oMes.iTableLeft < oDoc.iWidth-oWin.iScrollRight-iCellWidth )
+		{
+			/* In the middle of the table */
+			bUseAbsolutePositions = false;
+			iHPos = oWin.iWidth-iCellWidth+oWin.iScrollLeft;
+		}
+		else
+		{
+			/* Fully left align */
+			iHPos = oMes.iTableLeft;
+		}
+		
+		if (bUseAbsolutePositions)
+		{
+			/* If we're OK using absolute positions don't change any of the computed values */
+			this._fnUpdateCache( oCache, 'sPosition', "absolute", 'position', nTable.style );
+			this._fnUpdateCache( oCache, 'sTop', iVPos+"px", 'top', nTable.style );
+			this._fnUpdateCache( oCache, 'sLeft', iHPos+"px", 'left', nTable.style );
+		}
+		else
+		{
+			/* If we have to use fixed positions subtract the viewport location */
+			this._fnUpdateCache( oCache, 'sPosition', "fixed", 'position', nTable.style );
+			this._fnUpdateCache( oCache, 'sTop', (iVPos-oWin.iScrollTop)+"px", 'top', nTable.style );
+			this._fnUpdateCache( oCache, 'sLeft', (iHPos-oWin.iScrollLeft)+"px", 'left', nTable.style );
+		}
+		
+	},
+	
+	/*
+	 * Function: _fnScrollBottomLeft
+	 * Purpose:  Update the positioning of the bottom-left corner element.
+	 * Returns:  -
+	 * Inputs:   object:oCache - the cached values for this fixed element
+	 */
+	_fnScrollBottomLeft: function ( oCache )
+	{
+		var
+			s = this.fnGetSettings(),
+			oMes = s.oMes,
+			oWin = FixedHeader.oWin,
+			nTable = oCache.nWrapper, 
+			iTbodyHeight = 0,
+			anTbodies = s.nTable.getElementsByTagName('tbody'),
+			iCellWidth = $(nTable).outerWidth(),
+			bUseAbsolutePositions = true,
+			iTheadHeight = $("thead", s.nTable).outerHeight(),
+			iCellHeight = $(nTable).outerHeight();
+			iVPos = 0,
+			iHPos = 0;
+
+		for (var i = 0; i < anTbodies.length; ++i) {
+			iTbodyHeight += anTbodies[i].offsetHeight;
+		}
+		
+		/* Compute absolute values, which can become fixed values by subtraction of iScrollTop/iScrollLeft */
+
+		/* Figure out the absolute vertical position */
+		if ( oWin.iScrollBottom < oMes.iTableBottom )
+		{
+			/* At the bottom of the table */
+			iVPos = oMes.iTableTop+oMes.iTableHeight-iCellHeight;
+		}
+		else if ( oWin.iScrollBottom < oMes.iTableBottom+oMes.iTableHeight-iCellHeight-iTheadHeight )
+		{
+			/* In the middle of the table */
+			bUseAbsolutePositions = false;
+			iVPos = oWin.iHeight-iCellHeight+oWin.iScrollTop;
+		}
+		else
+		{
+			/* Above the table */
+			iVPos = oMes.iTableTop+iCellHeight;
+		}
+		
+		/* Figure out the absolute horizontal position */
+		if ( oWin.iScrollLeft < oMes.iTableLeft )
+		{
+			/* Fully left align */
+			iHPos = oMes.iTableLeft;
+		}
+		else if ( oWin.iScrollLeft < oMes.iTableLeft+oMes.iTableWidth-iCellWidth )
+		{
+			/* In the middle of the table */
+			bUseAbsolutePositions = false;
+			iHPos = oWin.iScrollLeft;
+		}
+		else
+		{
+			// Fully right align 
+			iHPos = oMes.iTableLeft+oMes.iTableWidth-iCellWidth;
+		}
+		
+		if (bUseAbsolutePositions)
+		{
+			/* If we're OK using absolute positions don't change any of the computed values */
+			this._fnUpdateCache( oCache, 'sPosition', "absolute", 'position', nTable.style );
+			this._fnUpdateCache( oCache, 'sTop', iVPos+"px", 'top', nTable.style );
+			this._fnUpdateCache( oCache, 'sLeft', iHPos+"px", 'left', nTable.style );
+		}
+		else
+		{
+			/* If we have to use fixed positions subtract the viewport location */
+			this._fnUpdateCache( oCache, 'sPosition', "fixed", 'position', nTable.style );
+			this._fnUpdateCache( oCache, 'sTop', (iVPos-oWin.iScrollTop)+"px", 'top', nTable.style );
+			this._fnUpdateCache( oCache, 'sLeft', (iHPos-oWin.iScrollLeft)+"px", 'left', nTable.style );
+		}
+	},
+	
+	/*
+	 * Function: _fnScrollBottomRight
+	 * Purpose:  Update the positioning of the bottom-right corner element.
+	 * Returns:  -
+	 * Inputs:   object:oCache - the cached values for this fixed element
+	 */
+	_fnScrollBottomRight: function ( oCache )
+	{
+		var
+			s = this.fnGetSettings(),
+			oMes = s.oMes,
+			oWin = FixedHeader.oWin,
+			oDoc = FixedHeader.oDoc,
+			nTable = oCache.nWrapper, 
+			iTbodyHeight = 0,
+			anTbodies = s.nTable.getElementsByTagName('tbody'),
+			iCellWidth = $(nTable).outerWidth(),
+			bUseAbsolutePositions = true,
+			iTheadHeight = $("thead", s.nTable).outerHeight(),
+			iCellHeight = $(nTable).outerHeight();
+			iVPos = 0,
+			iHPos = 0;
+
+		for (var i = 0; i < anTbodies.length; ++i) {
+			iTbodyHeight += anTbodies[i].offsetHeight;
+		}
+		
+		/* Compute absolute values, which can become fixed values by subtraction of iScrollTop/iScrollLeft */
+
+		/* Figure out the absolute vertical position */
+		if ( oWin.iScrollBottom < oMes.iTableBottom )
+		{
+			/* At the bottom of the table */
+			iVPos = oMes.iTableTop+oMes.iTableHeight-iCellHeight;
+		}
+		else if ( oWin.iScrollBottom < oMes.iTableBottom+oMes.iTableHeight-iCellHeight-iTheadHeight )
+		{
+			/* In the middle of the table */
+			bUseAbsolutePositions = false;
+			iVPos = oWin.iHeight-iCellHeight+oWin.iScrollTop;
+		}
+		else
+		{
+			/* Above the table */
+			iVPos = oMes.iTableTop+iCellHeight; 
+		}
+		
+		/* Figure out the absolute horizontal position */
+		if ( oWin.iScrollRight < oMes.iTableRight )
+		{
+			// Fully right align 
+			iHPos = oMes.iTableLeft+oMes.iTableWidth-iCellWidth;
+		}
+		else if ( oMes.iTableLeft < oDoc.iWidth-oWin.iScrollRight-iCellWidth )
+		{
+			/* In the middle of the table */
+			bUseAbsolutePositions = false;
+			iHPos = oWin.iWidth-iCellWidth+oWin.iScrollLeft;
+		}
+		else
+		{
+			/* Fully left align */
+			iHPos = oMes.iTableLeft;
+		}
+		
+		if (bUseAbsolutePositions)
+		{
+			/* If we're OK using absolute positions don't change any of the computed values */
+			this._fnUpdateCache( oCache, 'sPosition', "absolute", 'position', nTable.style );
+			this._fnUpdateCache( oCache, 'sTop', iVPos+"px", 'top', nTable.style );
+			this._fnUpdateCache( oCache, 'sLeft', iHPos+"px", 'left', nTable.style );
+		}
+		else
+		{
+			/* If we have to use fixed positions subtract the viewport location */
+			this._fnUpdateCache( oCache, 'sPosition', "fixed", 'position', nTable.style );
+			this._fnUpdateCache( oCache, 'sTop', (iVPos-oWin.iScrollTop)+"px", 'top', nTable.style );
+			this._fnUpdateCache( oCache, 'sLeft', (iHPos-oWin.iScrollLeft)+"px", 'left', nTable.style );
 		}
 	},
 
@@ -703,7 +1096,7 @@ FixedHeader.prototype = {
 			this._fnClassUpdate( $('thead', s.nTable)[0], $('thead', nTable)[0] );
 			return;
 		}
-
+		
 		/* Set the wrapper width to match that of the cloned table */
 		var iDtWidth = $(s.nTable).outerWidth();
 		oCache.nWrapper.style.width = iDtWidth+"px";
@@ -778,6 +1171,7 @@ FixedHeader.prototype = {
 			$("tfoot:eq(0)>tr th:eq("+i+")", nTable).width( $(this).width() );
 		} );
 
+
 		$("tfoot:eq(0)>tr td", s.nTable).each( function (i) {
 			$("tfoot:eq(0)>tr td:eq("+i+")", nTable).width( $(this).width() );
 		} );
@@ -827,6 +1221,7 @@ FixedHeader.prototype = {
 		this.fnEqualiseHeights( 'tbody', nBody.parentNode, nTable );
 		this.fnEqualiseHeights( 'tfoot', nBody.parentNode, nTable );
 
+		/* Set the wrapper width -- potential border-collapse issues */
 		var iWidth = 0;
 		for (var i = 0; i < oCache.iCells; i++) {
 			iWidth += $('thead tr th:eq(' + i + ')', s.nTable).outerWidth();
@@ -873,12 +1268,278 @@ FixedHeader.prototype = {
 		this.fnEqualiseHeights( 'tbody', nBody.parentNode, nTable );
 		this.fnEqualiseHeights( 'tfoot', nBody.parentNode, nTable );
 
-		var iWidth = 0;
+		var iWidth = 0; 
 		for (var i = 0; i < oCache.iCells; i++) {
 			iWidth += $('thead tr th:eq('+(iCols-1-i)+')', s.nTable).outerWidth();
 		}
 		nTable.style.width = iWidth+"px";
 		oCache.nWrapper.style.width = iWidth+"px";
+	},
+	
+	/*
+	 * Function: _fnCloneTTopLeft
+	 * Purpose:  Clone the top-left overlapping corner.
+	 * Returns:  -
+	 * Inputs:   object:oCache - the cached values for this fixed element
+	 */
+	_fnCloneTTopLeft: function ( oCache )
+	{
+		var s = this.fnGetSettings();
+		var nTable = oCache.nNode;
+
+		/* Remove any children the cloned table has */
+		while ( nTable.childNodes.length > 0 )
+		{
+			$('thead th', nTable).unbind( 'click' );
+			nTable.removeChild( nTable.childNodes[0] );
+		}
+
+		/* Clone the DataTables header */
+		var nThead = $('thead', s.nTable).clone(true)[0];
+		nTable.appendChild( nThead );
+		
+		/* Remove unneeded cells */
+		var sSelector = 'gt(' + (oCache.iCells - 1) + ')';
+		$('thead tr', nTable).each( function (k) {
+			$('th:' + sSelector, this).remove();
+		} );
+
+
+		/* Copy the widths across - apparently a clone isn't good enough for this */
+		var sInverseSelector = 'lt(' + (oCache.iCells) + ')';
+		var a = [];
+		var b = [];
+		var aOuterTotal = 0;
+
+		$("thead>tr th:" + sInverseSelector, s.nTable).each( function (i) {
+			a.push( $(this).width() );
+			aOuterTotal += $(this).outerWidth();
+		} );
+
+		$("thead>tr td:" + sInverseSelector, s.nTable).each( function (i) {
+			b.push( $(this).width() );
+		} );
+
+		/* Set the wrapper width -- potential border-collapse issues */
+		oCache.nWrapper.style.width = aOuterTotal + "px";
+		nTable.style.width = aOuterTotal + "px";
+
+		$("thead>tr th:" + sInverseSelector, s.nTable).each( function (i) {
+			$("thead>tr th:eq("+i+")", nTable).width( a[i] );
+			$(this).width( a[i] );
+		} );
+
+		$("thead>tr td:" + sInverseSelector, s.nTable).each( function (i) {
+			$("thead>tr td:eq("+i+")", nTable).width( b[i] );
+			$(this).width( b[i] );
+		} );
+
+		// Stop DataTables 1.9 from putting a focus ring on the headers when
+		// clicked to sort
+		$('th.sorting, th.sorting_desc, th.sorting_asc', nTable).bind( 'click', function () {
+			this.blur();
+		} );
+	},
+	
+	 /* 
+	 * Function: _fnCloneTTopRight
+	 * Purpose:  Clone the top-right overlapping corner.
+	 * Returns:  -
+	 * Inputs:   object:oCache - the cached values for this fixed element
+	 */
+	_fnCloneTTopRight: function ( oCache )
+	{
+		var s = this.fnGetSettings();
+		var nTable = oCache.nNode;
+		var iCols = $('tbody tr:eq(0) td', s.nTable).length;
+
+		/* Remove any children the cloned table has */
+		while ( nTable.childNodes.length > 0 )
+		{
+			$('thead th', nTable).unbind( 'click' );
+			nTable.removeChild( nTable.childNodes[0] );
+		}
+
+		/* Clone the DataTables header */
+		var nThead = $('thead', s.nTable).clone(true)[0];
+		nTable.appendChild( nThead );
+		
+		/* Remove unneeded cells */
+		var sSelector = 'lt(' + (iCols-oCache.iCells) + ')';
+		$('thead tr', nTable).each( function (k) {
+			$('th:' + sSelector, this).remove();
+		} );
+
+
+		/* Copy the widths across - apparently a clone isn't good enough for this */
+		var sInverseSelector = 'gt(' + (iCols-oCache.iCells - 1) + ')';
+		var a = [];
+		var b = [];
+		var aOuterTotal = 0;
+
+		$("thead>tr th:" + sInverseSelector, s.nTable).each( function (i) {
+			a.push( $(this).width() );
+			aOuterTotal += $(this).outerWidth();
+		} );
+		
+		$("thead>tr td:" + sInverseSelector, s.nTable).each( function (i) {
+			b.push( $(this).width() );
+		} );
+
+		/* Set the wrapper width -- potential border-collapse issues */
+		oCache.nWrapper.style.width = aOuterTotal + "px";
+		nTable.style.width = aOuterTotal + "px";
+
+		$("thead>tr th:" + sInverseSelector, s.nTable).each( function (i) {
+			$("thead>tr th:eq("+i+")", nTable).width( a[i] );
+			$(this).width( a[i] );
+		} );
+
+		$("thead>tr td:" + sInverseSelector, s.nTable).each( function (i) {
+			$("thead>tr td:eq("+i+")", nTable).width( b[i] );
+			$(this).width( b[i] );
+		} );
+
+		// Stop DataTables 1.9 from putting a focus ring on the headers when
+		// clicked to sort
+		$('th.sorting, th.sorting_desc, th.sorting_asc', nTable).bind( 'click', function () {
+			this.blur();
+		} );
+	},
+	
+
+	 /* 
+	 * Function: _fnCloneTBottomLeft
+	 * Purpose:  Clone the bottom-left overlapping corner.
+	 * Returns:  -
+	 * Inputs:   object:oCache - the cached values for this fixed element
+	 */
+	_fnCloneTBottomLeft: function ( oCache )
+	{
+		var s = this.fnGetSettings();
+		var nTable = oCache.nNode;
+
+		/* Remove any children the cloned table has */
+		while ( nTable.childNodes.length > 0 )
+		{
+			$('tfoot th', nTable).unbind( 'click' );
+			nTable.removeChild( nTable.childNodes[0] );
+		}
+
+		/* Clone the DataTables header */
+		var nThead = $('tfoot', s.nTable).clone(true)[0];
+		nTable.appendChild( nThead );
+		
+		/* Remove unneeded cells */
+		var sSelector = 'gt(' + (oCache.iCells - 1) + ')';
+		$('tfoot tr', nTable).each( function (k) {
+			$('th:' + sSelector, this).remove();
+		} );
+
+
+		/* Copy the widths across - apparently a clone isn't good enough for this */
+		var sInverseSelector = 'lt(' + (oCache.iCells ) + ')';
+		var a = [];
+		var b = [];
+		var aOuterTotal = 0;
+
+		$("tfoot>tr th:" + sInverseSelector, s.nTable).each( function (i) {
+			a.push( $(this).width() );
+			aOuterTotal += $(this).outerWidth();
+		} );
+
+		$("tfoot>tr td:" + sInverseSelector, s.nTable).each( function (i) {
+			b.push( $(this).width() );
+		} );
+
+		/* Set the wrapper width -- potential border-collapse issues */
+		oCache.nWrapper.style.width = aOuterTotal + "px";
+		nTable.style.width = aOuterTotal + "px";
+
+		$("tfoot>tr th:" + sInverseSelector, s.nTable).each( function (i) {
+			$("tfoot>tr th:eq("+i+")", nTable).width( a[i] );
+			$(this).width( a[i] );
+		} );
+
+		$("tfoot>tr td:" + sInverseSelector, s.nTable).each( function (i) {
+			$("tfoot>tr td:eq("+i+")", nTable).width( b[i] );
+			$(this).width( b[i] );
+		} );
+
+		// Stop DataTables 1.9 from putting a focus ring on the headers when
+		// clicked to sort
+		$('th.sorting, th.sorting_desc, th.sorting_asc', nTable).bind( 'click', function () {
+			this.blur();
+		} );
+	},
+	
+	 /* 
+	 * Function: _fnCloneTBottomRight
+	 * Purpose:  Clone the bottom-right overlapping corner.
+	 * Returns:  -
+	 * Inputs:   object:oCache - the cached values for this fixed element
+	 */
+	_fnCloneTBottomRight: function ( oCache )
+	{
+		var s = this.fnGetSettings();
+		var nTable = oCache.nNode;
+
+		var iCols = $('tbody tr:eq(0) td', s.nTable).length;
+
+
+		/* Remove any children the cloned table has */
+		while ( nTable.childNodes.length > 0 )
+		{
+			$('tfoot th', nTable).unbind( 'click' );
+			nTable.removeChild( nTable.childNodes[0] );
+		}
+
+		/* Clone the DataTables header */
+		var nThead = $('tfoot', s.nTable).clone(true)[0];
+		nTable.appendChild( nThead );
+		
+		/* Remove unneeded cells */
+		var sSelector = 'lt(' + (iCols - oCache.iCells) + ')';
+		$('tfoot tr', nTable).each( function (k) {
+			$('th:' + sSelector, this).remove();
+		} );
+
+
+		/* Copy the widths across - apparently a clone isn't good enough for this */
+		var sInverseSelector = 'gt(' + (iCols - oCache.iCells - 1) + ')';
+		var a = [];
+		var b = [];
+		var aOuterTotal = 0;
+
+		$("tfoot>tr th:" + sInverseSelector, s.nTable).each( function (i) {
+			a.push( $(this).width() );
+			aOuterTotal += $(this).outerWidth();
+		} );
+
+		$("tfoot>tr td:" + sInverseSelector, s.nTable).each( function (i) {
+			b.push( $(this).width() );
+		} );
+
+		/* Set the wrapper width -- potential border-collapse issues */
+		oCache.nWrapper.style.width = aOuterTotal + "px";
+		nTable.style.width = aOuterTotal + "px";
+
+		$("tfoot>tr th:" + sInverseSelector, s.nTable).each( function (i) {
+			$("tfoot>tr th:eq("+i+")", nTable).width( a[i] );
+			$(this).width( a[i] );
+		} );
+
+		$("tfoot>tr td:" + sInverseSelector, s.nTable).each( function (i) {
+			$("tfoot>tr td:eq("+i+")", nTable).width( b[i] );
+			$(this).width( b[i] );
+		} );
+
+		// Stop DataTables 1.9 from putting a focus ring on the headers when
+		// clicked to sort
+		$('th.sorting, th.sorting_desc, th.sorting_asc', nTable).bind( 'click', function () {
+			this.blur();
+		} );
+
 	},
 
 
