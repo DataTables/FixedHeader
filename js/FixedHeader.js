@@ -383,12 +383,13 @@ FixedHeader.prototype = {
 			jqTable = $(s.nTable),
 			oOffset = jqTable.offset(),
 			iParentScrollTop = this._fnSumScroll( s.nTable.parentNode, 'scrollTop' ),
-			iParentScrollLeft = this._fnSumScroll( s.nTable.parentNode, 'scrollLeft' );
+			iParentScrollLeft = this._fnSumScroll( s.nTable.parentNode, 'scrollLeft' ),
+            mpTable = parseInt(jqTable.css('margin-top')) + parseInt(jqTable.css('padding-top'));
 
 		m.iTableWidth = jqTable.outerWidth();
 		m.iTableHeight = jqTable.outerHeight();
 		m.iTableLeft = oOffset.left + s.nTable.parentNode.scrollLeft;
-		m.iTableTop = oOffset.top + iParentScrollTop;
+		m.iTableTop = oOffset.top + iParentScrollTop - mpTable;
 		m.iTableRight = m.iTableLeft + m.iTableWidth;
 		m.iTableRight = FixedHeader.oDoc.iWidth - m.iTableLeft - m.iTableWidth;
 		m.iTableBottom = FixedHeader.oDoc.iHeight - m.iTableTop - m.iTableHeight;
