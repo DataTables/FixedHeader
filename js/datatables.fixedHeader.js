@@ -116,14 +116,16 @@ FixedHeader = function ( mTable, oInit ) {
 		this._fnUpdatePositions();
 	};
 
-	/* Let's do it */
-	this.fnInit( mTable, oInit );
 
-	/* Store the instance on the DataTables object for easy access */
-	if ( typeof mTable.fnSettings == 'function' )
-	{
-		mTable._oPluginFixedHeader = this;
-	}
+	var dt = $.fn.dataTable.Api ?
+		new $.fn.dataTable.Api( mTable ).settings()[0] :
+		mTable.fnSettings();
+
+	dt._oPluginFixedHeader = this;
+
+	/* Let's do it */
+	this.fnInit( dt, oInit );
+
 };
 
 
@@ -143,7 +145,7 @@ FixedHeader.prototype = {
 	 * Returns:  -
 	 * Inputs:   {as FixedHeader function}
 	 */
-	fnInit: function ( oTable, oInit )
+	fnInit: function ( oDtSettings, oInit )
 	{
 		var s = this.fnGetSettings();
 		var that = this;
@@ -151,39 +153,21 @@ FixedHeader.prototype = {
 		/* Record the user definable settings */
 		this.fnInitSettings( s, oInit );
 
-		/* DataTables specific stuff */
-		if ( typeof oTable.fnSettings == 'function' )
+		if ( oDtSettings.oScroll.sX !== "" || oDtSettings.oScroll.sY !== "" )
 		{
-			if ( typeof oTable.fnVersionCheck == 'functon' &&
-			     oTable.fnVersionCheck( '1.6.0' ) !== true )
-			{
-				alert( "FixedHeader 2 required DataTables 1.6.0 or later. "+
-					"Please upgrade your DataTables installation" );
-				return;
-			}
-
-			var oDtSettings = oTable.fnSettings();
-
-			if ( oDtSettings.oScroll.sX !== "" || oDtSettings.oScroll.sY !== "" )
-			{
-				alert( "FixedHeader 2 is not supported with DataTables' scrolling mode at this time" );
-				return;
-			}
-
-			s.nTable = oDtSettings.nTable;
-			oDtSettings.aoDrawCallback.unshift( {
-				"fn": function () {
-					FixedHeader.fnMeasure();
-					that._fnUpdateClones.call(that);
-					that._fnUpdatePositions.call(that);
-				},
-				"sName": "FixedHeader"
-			} );
+			alert( "FixedHeader 2 is not supported with DataTables' scrolling mode at this time" );
+			return;
 		}
-		else
-		{
-			s.nTable = oTable;
-		}
+
+		s.nTable = oDtSettings.nTable;
+		oDtSettings.aoDrawCallback.unshift( {
+			"fn": function () {
+				FixedHeader.fnMeasure();
+				that._fnUpdateClones.call(that);
+				that._fnUpdatePositions.call(that);
+			},
+			"sName": "FixedHeader"
+		} );
 
 		s.bFooter = ($('>tfoot', s.nTable).length > 0) ? true : false;
 
@@ -997,11 +981,15 @@ FixedHeader.prototype.VERSION = FixedHeader.VERSION;
  */
 $(window).scroll( function () {
 	FixedHeader.fnMeasure();
-	for ( var i=0, iLen=FixedHeader.afnScroll.length ; i<iLen ; i++ )
-	{
+
+	for ( var i=0, iLen=FixedHeader.afnScroll.length ; i<iLen ; i++ ) {
 		FixedHeader.afnScroll[i]();
 	}
 } );
+
+
+$.fn.dataTable.FixedHeader = FixedHeader;
+$.fn.DataTable.FixedHeader = FixedHeader;
 
 
 }(window, document, jQuery));
