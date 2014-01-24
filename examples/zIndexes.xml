@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<dt-example table-type="html" table-class="stripe row-border order-column" order="1">
+<dt-example table-type="html" table-class="stripe row-border order-column" order="5">
 
 <css lib="datatables fixedheader">
 	div.dataTables_wrapper {
