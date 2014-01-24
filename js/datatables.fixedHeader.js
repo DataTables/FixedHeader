@@ -29,8 +29,11 @@
 /* Global scope for FixedColumns */
 var FixedHeader;
 
+(function(window, document, undefined) {
 
-(function(window, document, $) {
+
+var factory = function( $, DataTable ) {
+"use strict";
 
 /*
  * Function: FixedHeader
@@ -976,8 +979,7 @@ FixedHeader.fnMeasure = function ()
 };
 
 
-FixedHeader.VERSION = "2.1.0-dev";
-FixedHeader.prototype.VERSION = FixedHeader.VERSION;
+FixedHeader.version = "2.1.0-dev";
 
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -1001,6 +1003,19 @@ $.fn.dataTable.FixedHeader = FixedHeader;
 $.fn.DataTable.FixedHeader = FixedHeader;
 
 
-}(window, document, jQuery));
+return FixedHeader;
+}; // /factory
 
+
+// Define as an AMD module if possible
+if ( typeof define === 'function' && define.amd ) {
+	define( 'datatables-fixedheader', ['jquery', 'datatables'], factory );
+}
+else if ( jQuery && !jQuery.fn.dataTable.FixedHeader ) {
+	// Otherwise simply initialise as normal, stopping multiple evaluation
+	factory( jQuery, jQuery.fn.dataTable );
+}
+
+
+})(window, document);
 
