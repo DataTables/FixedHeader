@@ -22,3 +22,6 @@ js_compress $OUT_DIR/js/dataTables.fixedHeader.js
 rsync -r examples $OUT_DIR
 examples_process $OUT_DIR
 
+# Readme
+cp Readme.txt $OUT_DIR
+
