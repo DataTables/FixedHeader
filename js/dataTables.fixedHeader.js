@@ -37,20 +37,23 @@ var factory = function( $, DataTable ) {
 
 /*
  * Function: FixedHeader
- * Purpose:  Provide 'fixed' header, footer and columns on an HTML table
+ * Purpose:  Provide 'fixed' header, footer and columns for a DataTable
  * Returns:  object:FixedHeader - must be called with 'new'
  * Inputs:   mixed:mTable - target table
- *					   1. DataTable object - when using FixedHeader with DataTables, or
- *					   2. HTML table node - when using FixedHeader without DataTables
- *           object:oInit - initialisation settings, with the following properties (each optional)
- *             bool:top -    fix the header (default true)
- *             bool:bottom - fix the footer (default false)
- *             int:left -    fix the left column(s) (default 0)
- *             int:right -   fix the right column(s) (default 0)
- *             int:zTop -    fixed header zIndex
- *             int:zBottom - fixed footer zIndex
- *             int:zLeft -   fixed left zIndex
- *             int:zRight -  fixed right zIndex
+ *  @param {object} dt DataTables instance or HTML table node. With DataTables
+ *    1.10 this can also be a jQuery collection (with just a single table in its
+ *    result set), a jQuery selector, DataTables API instance or settings
+ *    object.
+ *  @param {object} [oInit] initialisation settings, with the following
+ *    properties (each optional)
+ *    * bool:top -    fix the header (default true)
+ *    * bool:bottom - fix the footer (default false)
+ *    * int:left -    fix the left column(s) (default 0)
+ *    * int:right -   fix the right column(s) (default 0)
+ *    * int:zTop -    fixed header zIndex
+ *    * int:zBottom - fixed footer zIndex
+ *    * int:zLeft -   fixed left zIndex
+ *    * int:zRight -  fixed right zIndex
  */
 FixedHeader = function ( mTable, oInit ) {
 	/* Sanity check - you just know it will happen */
