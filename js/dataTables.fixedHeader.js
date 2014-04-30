@@ -812,6 +812,7 @@ FixedHeader.prototype = {
 		var sSelector = 'gt(' + (oCache.iCells - 1) + ')';
 		$('thead tr', nTable).each( function (k) {
 			$('th:' + sSelector, this).remove();
+			$('td:' + sSelector, this).remove();
 		} );
 
 		$('tfoot tr', nTable).each( function (k) {
@@ -861,6 +862,7 @@ FixedHeader.prototype = {
 			nTable.appendChild( $("tfoot", s.nTable).clone(true)[0] );
 		}
 		$('thead tr th:lt('+(iCols-oCache.iCells)+')', nTable).remove();
+		$('thead tr td:lt('+(iCols-oCache.iCells)+')', nTable).remove();
 		$('tfoot tr th:lt('+(iCols-oCache.iCells)+')', nTable).remove();
 
 		/* Remove unneeded cells */
