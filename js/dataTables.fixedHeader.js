@@ -6,7 +6,7 @@
  * @summary     FixedHeader
  * @description Fix a table's header or footer, so it is always visible while
  *              Scrolling
- * @version     2.1.1
+ * @version     2.1.2.beta
  * @file        dataTables.fixedHeader.js
  * @author      SpryMedia Ltd (www.sprymedia.co.uk)
  * @contact     www.sprymedia.co.uk/contact
@@ -1016,7 +1016,7 @@ FixedHeader.fnMeasure = function ()
 };
 
 
-FixedHeader.version = "2.1.1";
+FixedHeader.version = "2.1.2.beta";
 
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
