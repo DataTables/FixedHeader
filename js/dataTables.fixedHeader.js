@@ -6,7 +6,7 @@
  * @summary     FixedHeader
  * @description Fix a table's header or footer, so it is always visible while
  *              Scrolling
- * @version     2.1.1
+ * @version     2.1.2.beta
  * @file        dataTables.fixedHeader.js
  * @author      SpryMedia Ltd (www.sprymedia.co.uk)
  * @contact     www.sprymedia.co.uk/contact
@@ -686,6 +686,24 @@ FixedHeader.prototype = {
 	 * Cloning functions
 	 */
 
+	_getWidth: function(source)
+	{
+		// return $(source).width();
+		if (!(source instanceof jQuery))
+			source = $(source);
+			
+		return source.css("width");
+	},
+	
+	_setWidth: function(target, value)
+	{
+		// $(target).width(value);
+		if (!(target instanceof jQuery))
+			target = $(target);
+
+		target.css("width", value);
+	},
+
 	/*
 	 * Function: _fnCloneThead
 	 * Purpose:  Clone the thead element
@@ -694,6 +712,8 @@ FixedHeader.prototype = {
 	 */
 	_fnCloneThead: function ( oCache )
 	{
+		var that = this;
+
 		var s = this.fnGetSettings();
 		var nTable = oCache.nNode;
 
@@ -703,10 +723,29 @@ FixedHeader.prototype = {
 			return;
 		}
 
+		var visible = $(s.nTable).css("display") != "none";
+		if (visible)
+		{
+			// http://stackoverflow.com/a/19873734/2626313
+			$(s.nTable).hide();
+		}
+
+		/* Copy the widths across - apparently a clone isn't good enough for this */
+		var a = [];
+		var b = [];
+
+		$("thead>tr th", s.nTable).each( function (i) {
+			a.push( that._getWidth(this) );
+		} );
+
+		$("thead>tr td", s.nTable).each( function (i) {
+			b.push( that._getWidth(this) );
+		} );
+
 		/* Set the wrapper width to match that of the cloned table */
-		var iDtWidth = $(s.nTable).outerWidth();
-		oCache.nWrapper.style.width = iDtWidth+"px";
-		nTable.style.width = iDtWidth+"px";
+		var iDtWidth = that._getWidth(s.nTable);
+		that._setWidth(oCache.nWrapper, iDtWidth);;
+		that._setWidth(nTable, iDtWidth);
 
 		/* Remove any children the cloned table has */
 		while ( nTable.childNodes.length > 0 )
@@ -719,26 +758,14 @@ FixedHeader.prototype = {
 		var nThead = $('thead', s.nTable).clone(true)[0];
 		nTable.appendChild( nThead );
 
-		/* Copy the widths across - apparently a clone isn't good enough for this */
-		var a = [];
-		var b = [];
-
 		$("thead>tr th", s.nTable).each( function (i) {
-			a.push( $(this).width() );
+			that._setWidth( $("thead>tr th:eq("+i+")", nTable), a[i] );
+			that._setWidth( this, a[i] );
 		} );
 
 		$("thead>tr td", s.nTable).each( function (i) {
-			b.push( $(this).width() );
-		} );
-
-		$("thead>tr th", s.nTable).each( function (i) {
-			$("thead>tr th:eq("+i+")", nTable).width( a[i] );
-			$(this).width( a[i] );
-		} );
-
-		$("thead>tr td", s.nTable).each( function (i) {
-			$("thead>tr td:eq("+i+")", nTable).width( b[i] );
-			$(this).width( b[i] );
+			that._setWidth( $("thead>tr td:eq("+i+")", nTable), b[i] );
+			that._setWidth( this, b[i] );
 		} );
 
 		// Stop DataTables 1.9 from putting a focus ring on the headers when
@@ -746,6 +773,11 @@ FixedHeader.prototype = {
 		$('th.sorting, th.sorting_desc, th.sorting_asc', nTable).bind( 'click', function () {
 			this.blur();
 		} );
+		
+		if (visible)
+		{
+			$(s.nTable).show();
+		}
 	},
 
 	/*
@@ -756,11 +788,13 @@ FixedHeader.prototype = {
 	 */
 	_fnCloneTfoot: function ( oCache )
 	{
+		var that = this;
+
 		var s = this.fnGetSettings();
 		var nTable = oCache.nNode;
 
 		/* Set the wrapper width to match that of the cloned table */
-		oCache.nWrapper.style.width = $(s.nTable).outerWidth()+"px";
+		that._setWidth(oCache.nWrapper, that._getWidth(s.nTable));
 
 		/* Remove any children the cloned table has */
 		while ( nTable.childNodes.length > 0 )
@@ -774,11 +808,11 @@ FixedHeader.prototype = {
 
 		/* Copy the widths across - apparently a clone isn't good enough for this */
 		$("tfoot:eq(0)>tr th", s.nTable).each( function (i) {
-			$("tfoot:eq(0)>tr th:eq("+i+")", nTable).width( $(this).width() );
+			that._setWidth( $("tfoot:eq(0)>tr th:eq("+i+")", nTable), that._getWidth( this) );
 		} );
 
 		$("tfoot:eq(0)>tr td", s.nTable).each( function (i) {
-			$("tfoot:eq(0)>tr td:eq("+i+")", nTable).width( $(this).width() );
+			that._setWidth( $("tfoot:eq(0)>tr td:eq("+i+")", nTable), that._getWidth( this ) );
 		} );
 	},
 
@@ -982,7 +1016,7 @@ FixedHeader.fnMeasure = function ()
 };
 
 
-FixedHeader.version = "2.1.1";
+FixedHeader.version = "2.1.2.beta";
 
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
