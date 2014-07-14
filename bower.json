@@ -1,6 +1,6 @@
 {
 	"name": "datatables-fixedheader",
-	"version": "2.1.1",
+	"version": "2.1.2",
 	"main": [
 		"js/dataTables.fixedHeader.js",
 		"css/dataTables.fixedHeader.css"
