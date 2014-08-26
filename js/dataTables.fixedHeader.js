@@ -1,4 +1,4 @@
-/*! FixedHeader 2.1.2
+/*! FixedHeader 2.1.3.dev
  * ©2010-2014 SpryMedia Ltd - datatables.net/license
  */
 
@@ -6,7 +6,7 @@
  * @summary     FixedHeader
  * @description Fix a table's header or footer, so it is always visible while
  *              Scrolling
- * @version     2.1.2
+ * @version     2.1.3.dev
  * @file        dataTables.fixedHeader.js
  * @author      SpryMedia Ltd (www.sprymedia.co.uk)
  * @contact     www.sprymedia.co.uk/contact
@@ -65,6 +65,7 @@ FixedHeader = function ( mTable, oInit ) {
 
 	var that = this;
 	var oSettings = {
+		"enable": true,
 		"aoCache": [],
 		"oSides": {
 			"top": true,
@@ -129,6 +130,38 @@ FixedHeader = function ( mTable, oInit ) {
 	 */
 	this.fnPosition = function () {
 		this._fnUpdatePositions();
+	};
+
+	/*
+	 * Function: fnEnable
+	 * Purpose:  Enable the fixed header elements
+	 * Returns:  -
+	 * Inputs:   -
+	 */
+	this.fnEnable = function () {
+		oSettings.enable = true;
+
+		var cache = oSettings.aoCache;
+		for ( var i=0, ien=cache.length ; i<ien ; i++ ) {
+			cache[i].nWrapper.style.display = 'block';
+		}
+
+		this._fnUpdatePositions();
+	};
+
+	/*
+	 * Function: fnDisable
+	 * Purpose:  Disable the fixed header elements
+	 * Returns:  -
+	 * Inputs:   -
+	 */
+	this.fnDisable = function () {
+		oSettings.enable = false;
+
+		var cache = oSettings.aoCache;
+		for ( var i=0, ien=cache.length ; i<ien ; i++ ) {
+			cache[i].nWrapper.style.display = 'none';
+		}
 	};
 
 
@@ -423,6 +456,11 @@ FixedHeader.prototype = {
 	_fnUpdatePositions: function ()
 	{
 		var s = this.fnGetSettings();
+
+		if ( ! s.enable ) {
+			return;
+		}
+
 		this._fnMeasure();
 
 		for ( var i=0, iLen=s.aoCache.length ; i<iLen ; i++ )
@@ -982,7 +1020,7 @@ FixedHeader.fnMeasure = function ()
 };
 
 
-FixedHeader.version = "2.1.2";
+FixedHeader.version = "2.1.3.dev";
 
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
