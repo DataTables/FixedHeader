@@ -417,7 +417,7 @@ FixedHeader.prototype = {
 			iParentScrollTop = this._fnSumScroll( s.nTable.parentNode, 'scrollTop' ),
 			iParentScrollLeft = this._fnSumScroll( s.nTable.parentNode, 'scrollLeft' );
 
-		m.iTableWidth = jqTable.outerWidth();
+		m.iTableWidth = jqTable.outerWidth(true);
 		m.iTableHeight = jqTable.outerHeight();
 		m.iTableLeft = oOffset.left + s.nTable.parentNode.scrollLeft;
 		m.iTableTop = oOffset.top + iParentScrollTop;
@@ -530,7 +530,7 @@ FixedHeader.prototype = {
 			oWin = FixedHeader.oWin,
 			oDoc = FixedHeader.oDoc,
 			nTable = oCache.nWrapper,
-			iFixedWidth = $(nTable).outerWidth();
+			iFixedWidth = $(nTable).outerWidth(true);
 
 		if ( oWin.iScrollRight < oMes.iTableRight )
 		{
@@ -569,7 +569,7 @@ FixedHeader.prototype = {
 			oWin = FixedHeader.oWin,
 			oDoc = FixedHeader.oDoc,
 			nTable = oCache.nWrapper,
-			iCellWidth = $(nTable).outerWidth();
+			iCellWidth = $(nTable).outerWidth(true);
 
 		if ( oWin.iScrollLeft < oMes.iTableLeft )
 		{
@@ -742,7 +742,7 @@ FixedHeader.prototype = {
 		}
 
 		/* Set the wrapper width to match that of the cloned table */
-		var iDtWidth = $(s.nTable).outerWidth();
+		var iDtWidth = $(s.nTable).outerWidth(true);
 		oCache.nWrapper.style.width = iDtWidth+"px";
 		nTable.style.width = iDtWidth+"px";
 
@@ -798,7 +798,7 @@ FixedHeader.prototype = {
 		var nTable = oCache.nNode;
 
 		/* Set the wrapper width to match that of the cloned table */
-		oCache.nWrapper.style.width = $(s.nTable).outerWidth()+"px";
+		oCache.nWrapper.style.width = $(s.nTable).outerWidth(true)+"px";
 
 		/* Remove any children the cloned table has */
 		while ( nTable.childNodes.length > 0 )
@@ -866,7 +866,7 @@ FixedHeader.prototype = {
 
 		var iWidth = 0;
 		for (var i = 0; i < oCache.iCells; i++) {
-			iWidth += $('thead tr th:eq(' + i + ')', s.nTable).outerWidth();
+			iWidth += $('thead tr th:eq(' + i + ')', s.nTable).outerWidth(true);
 		}
 		nTable.style.width = iWidth+"px";
 		oCache.nWrapper.style.width = iWidth+"px";
@@ -912,7 +912,7 @@ FixedHeader.prototype = {
 
 		var iWidth = 0;
 		for (var i = 0; i < oCache.iCells; i++) {
-			iWidth += $('thead tr th:eq('+(iCols-1-i)+')', s.nTable).outerWidth();
+			iWidth += $('thead tr th:eq('+(iCols-1-i)+')', s.nTable).outerWidth(true);
 		}
 		nTable.style.width = iWidth+"px";
 		oCache.nWrapper.style.width = iWidth+"px";
