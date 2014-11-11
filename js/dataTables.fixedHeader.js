@@ -735,16 +735,16 @@ FixedHeader.prototype = {
 		var s = this.fnGetSettings();
 		var nTable = oCache.nNode;
 
+		/* Set the wrapper width to match that of the cloned table */
+		var iDtWidth = $(s.nTable).outerWidth();
+		oCache.nWrapper.style.width = iDtWidth+"px";
+		nTable.style.width = iDtWidth+"px";
+
 		if ( s.bInitComplete && !s.oCloneOnDraw.top )
 		{
 			this._fnClassUpdate( $('thead', s.nTable)[0], $('thead', nTable)[0] );
 			return;
 		}
-
-		/* Set the wrapper width to match that of the cloned table */
-		var iDtWidth = $(s.nTable).outerWidth();
-		oCache.nWrapper.style.width = iDtWidth+"px";
-		nTable.style.width = iDtWidth+"px";
 
 		/* Remove any children the cloned table has */
 		while ( nTable.childNodes.length > 0 )
