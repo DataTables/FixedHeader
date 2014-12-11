@@ -121,6 +121,17 @@ FixedHeader = function ( mTable, oInit ) {
 		this._fnUpdateClones();
 		this._fnUpdatePositions();
 	};
+	
+	/*
+	 * Function: fnDestroy
+	 * Purpose:  Destroy and remove fixed header from dom
+	 * Returns:  -
+	 * Inputs:   -
+	 */
+	this.fnDestroy = function () {
+		this._fnRemoveEventHandlers();
+		this._fnRemoveElements();
+	};
 
 	/*
 	 * Function: fnPosition
@@ -236,17 +247,27 @@ FixedHeader.prototype = {
 		{
 			s.aoCache.push( that._fnCloneTable( "fixedRight", "FixedHeader_Right", that._fnCloneTRight, s.oSides.right ) );
 		}
+		
+		$(s.nTable).addClass('fixed-header-attached');
 
-		/* Event listeners for window movement */
-		FixedHeader.afnScroll.push( function () {
+		var scrollHandler = function () {
 			that._fnUpdatePositions.call(that);
-		} );
-
-		$(window).resize( function () {
+		};
+		
+		var resizeHandler = function () {
 			FixedHeader.fnMeasure();
 			that._fnUpdateClones.call(that);
 			that._fnUpdatePositions.call(that);
-		} );
+		};
+		
+		// Keep track of event handlers for possible removal later
+		this.resizeHandler = resizeHandler;
+		this.scrollHandler = scrollHandler;
+
+		/* Event listeners for window movement */
+		FixedHeader.afnScroll.push( scrollHandler );
+		
+		$(window).resize( resizeHandler );
 
 		$(s.nTable)
 			.on('column-reorder.dt', function () {
@@ -267,7 +288,6 @@ FixedHeader.prototype = {
 
 		s.bInitComplete = true;
 	},
-
 
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 * Support functions
@@ -770,12 +790,12 @@ FixedHeader.prototype = {
 		} );
 
 		$("thead>tr th", s.nTable).each( function (i) {
-			$("thead>tr th:eq("+i+")", nTable).width( a[i] );
+			$("thead>tr th:eq("+i+")", nTable).width( a[i] ).css('min-width', a[i]);
 			$(this).width( a[i] );
 		} );
 
 		$("thead>tr td", s.nTable).each( function (i) {
-			$("thead>tr td:eq("+i+")", nTable).width( b[i] );
+			$("thead>tr td:eq("+i+")", nTable).width( b[i] ).css('min-width', b[i]);;
 			$(this).width( b[i] );
 		} );
 
@@ -917,7 +937,31 @@ FixedHeader.prototype = {
 		nTable.style.width = iWidth+"px";
 		oCache.nWrapper.style.width = iWidth+"px";
 	},
-
+	
+	_fnRemoveEventHandlers: function () {
+		if (this.resizeHandler) {
+			$(window).unbind('resize', this.resizeHandler);
+		}
+		
+		if (this.scrollHandler) {
+			var idx = jQuery.inArray(this.scrollHandler, FixedHeader.afnScroll);
+			if (idx >= 0) {
+				FixedHeader.afnScroll.splice( idx );
+			}
+		}
+	},
+	
+	_fnRemoveElements: function () {
+		var settings = this.fnGetSettings();
+		var aoCache = settings.aoCache;
+		
+		for (var i = 0; i < aoCache.length; i++) {
+			$(aoCache[i].nWrapper).remove();
+			$(aoCache[i].nNode).remove();
+		}
+		
+		$(settings.nTable).removeClass('fixed-header-attached');
+	},
 
 	/**
 	 * Equalise the heights of the rows in a given table node in a cross browser way. Note that this
@@ -1063,4 +1107,3 @@ else if ( jQuery && !jQuery.fn.dataTable.FixedHeader ) {
 
 
 })(window, document);
-
