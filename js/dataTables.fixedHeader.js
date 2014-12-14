@@ -263,13 +263,11 @@ FixedHeader.prototype = {
 
 		$(s.nTable)
 			.on('column-reorder.dt' + this._eventNamespace, function () {
-				console.log('reorder handler for fixed header #' + counter);
 				FixedHeader.fnMeasure();
 				that._fnUpdateClones( true );
 				that._fnUpdatePositions();
 			} )
 			.on('column-visibility.dt' + this._eventNamespace, function () {
-				console.log('visibility handler for fixed header #' + counter);
 				FixedHeader.fnMeasure();
 				that._fnUpdateClones( true );
 				that._fnUpdatePositions();
