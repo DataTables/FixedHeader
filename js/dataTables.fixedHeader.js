@@ -121,17 +121,6 @@ FixedHeader = function ( mTable, oInit ) {
 		this._fnUpdateClones();
 		this._fnUpdatePositions();
 	};
-	
-	/*
-	 * Function: fnDestroy
-	 * Purpose:  Destroy and remove fixed header from dom
-	 * Returns:  -
-	 * Inputs:   -
-	 */
-	this.fnDestroy = function () {
-		this._fnRemoveEventHandlers();
-		this._fnRemoveElements();
-	};
 
 	/*
 	 * Function: fnPosition
@@ -181,6 +170,9 @@ FixedHeader = function ( mTable, oInit ) {
 		mTable.fnSettings();
 
 	dt._oPluginFixedHeader = this;
+
+	/* Register our destructor with parent DataTable */
+	dt.oApi._fnCallbackReg(dt, 'aoDestroyCallback', $.proxy(this._fnDestroy, this), 'FixedHeader');
 
 	/* Let's do it */
 	this.fnInit( dt, oInit );
@@ -247,8 +239,9 @@ FixedHeader.prototype = {
 		{
 			s.aoCache.push( that._fnCloneTable( "fixedRight", "FixedHeader_Right", that._fnCloneTRight, s.oSides.right ) );
 		}
-		
-		$(s.nTable).addClass('fixed-header-attached');
+
+		var counter = ++FixedHeader.counter;
+		this._eventNamespace = '.fh-' + counter;
 
 		var scrollHandler = function () {
 			that._fnUpdatePositions.call(that);
@@ -259,23 +252,24 @@ FixedHeader.prototype = {
 			that._fnUpdateClones.call(that);
 			that._fnUpdatePositions.call(that);
 		};
-		
-		// Keep track of event handlers for possible removal later
-		this.resizeHandler = resizeHandler;
+
+		/* Keep track of event handler for possible removal later */
 		this.scrollHandler = scrollHandler;
 
 		/* Event listeners for window movement */
 		FixedHeader.afnScroll.push( scrollHandler );
-		
-		$(window).resize( resizeHandler );
+
+		$(window).on('resize' + this._eventNamespace, resizeHandler);
 
 		$(s.nTable)
-			.on('column-reorder.dt', function () {
+			.on('column-reorder.dt' + this._eventNamespace, function () {
+				console.log('reorder handler for fixed header #' + counter);
 				FixedHeader.fnMeasure();
 				that._fnUpdateClones( true );
 				that._fnUpdatePositions();
 			} )
-			.on('column-visibility.dt', function () {
+			.on('column-visibility.dt' + this._eventNamespace, function () {
+				console.log('visibility handler for fixed header #' + counter);
 				FixedHeader.fnMeasure();
 				that._fnUpdateClones( true );
 				that._fnUpdatePositions();
@@ -790,12 +784,12 @@ FixedHeader.prototype = {
 		} );
 
 		$("thead>tr th", s.nTable).each( function (i) {
-			$("thead>tr th:eq("+i+")", nTable).width( a[i] ).css('min-width', a[i]);
+			$("thead>tr th:eq("+i+")", nTable).width( a[i] );
 			$(this).width( a[i] );
 		} );
 
 		$("thead>tr td", s.nTable).each( function (i) {
-			$("thead>tr td:eq("+i+")", nTable).width( b[i] ).css('min-width', b[i]);;
+			$("thead>tr td:eq("+i+")", nTable).width( b[i] );
 			$(this).width( b[i] );
 		} );
 
@@ -939,10 +933,12 @@ FixedHeader.prototype = {
 	},
 	
 	_fnRemoveEventHandlers: function () {
-		if (this.resizeHandler) {
-			$(window).unbind('resize', this.resizeHandler);
-		}
-		
+		var settings = this.fnGetSettings();
+		var $dt = $(settings.nTable);
+
+		$dt.off(this._eventNamespace);
+		$(window).off( 'resize' + this._eventNamespace );
+
 		if (this.scrollHandler) {
 			var idx = jQuery.inArray(this.scrollHandler, FixedHeader.afnScroll);
 			if (idx >= 0) {
@@ -959,8 +955,11 @@ FixedHeader.prototype = {
 			$(aoCache[i].nWrapper).remove();
 			$(aoCache[i].nNode).remove();
 		}
-		
-		$(settings.nTable).removeClass('fixed-header-attached');
+	},
+
+	_fnDestroy: function () {
+		this._fnRemoveEventHandlers();
+		this._fnRemoveElements();
 	},
 
 	/**
@@ -1063,6 +1062,12 @@ FixedHeader.fnMeasure = function ()
 	oWin.iScrollBottom = oDoc.iHeight - oWin.iScrollTop - oWin.iHeight;
 };
 
+/*
+ * Variable: counter
+ * Purpose:  Global counter for FixedHeader instances, used for namespacing events
+ * Scope:    FixedHeader
+ */
+FixedHeader.counter = 0;
 
 FixedHeader.version = "2.1.3-dev";
 
