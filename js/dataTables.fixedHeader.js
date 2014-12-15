@@ -171,6 +171,9 @@ FixedHeader = function ( mTable, oInit ) {
 
 	dt._oPluginFixedHeader = this;
 
+	/* Register our destructor with parent DataTable */
+	dt.oApi._fnCallbackReg(dt, 'aoDestroyCallback', $.proxy(this._fnDestroy, this), 'FixedHeader');
+
 	/* Let's do it */
 	this.fnInit( dt, oInit );
 
@@ -237,24 +240,34 @@ FixedHeader.prototype = {
 			s.aoCache.push( that._fnCloneTable( "fixedRight", "FixedHeader_Right", that._fnCloneTRight, s.oSides.right ) );
 		}
 
-		/* Event listeners for window movement */
-		FixedHeader.afnScroll.push( function () {
-			that._fnUpdatePositions.call(that);
-		} );
+		var counter = ++FixedHeader.counter;
+		this._eventNamespace = '.fh-' + counter;
 
-		$(window).resize( function () {
+		var scrollHandler = function () {
+			that._fnUpdatePositions.call(that);
+		};
+		
+		var resizeHandler = function () {
 			FixedHeader.fnMeasure();
 			that._fnUpdateClones.call(that);
 			that._fnUpdatePositions.call(that);
-		} );
+		};
+
+		/* Keep track of event handler for possible removal later */
+		this.scrollHandler = scrollHandler;
+
+		/* Event listeners for window movement */
+		FixedHeader.afnScroll.push( scrollHandler );
+
+		$(window).on('resize' + this._eventNamespace, resizeHandler);
 
 		$(s.nTable)
-			.on('column-reorder.dt', function () {
+			.on('column-reorder.dt' + this._eventNamespace, function () {
 				FixedHeader.fnMeasure();
 				that._fnUpdateClones( true );
 				that._fnUpdatePositions();
 			} )
-			.on('column-visibility.dt', function () {
+			.on('column-visibility.dt' + this._eventNamespace, function () {
 				FixedHeader.fnMeasure();
 				that._fnUpdateClones( true );
 				that._fnUpdatePositions();
@@ -267,7 +280,6 @@ FixedHeader.prototype = {
 
 		s.bInitComplete = true;
 	},
-
 
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 * Support functions
@@ -917,7 +929,36 @@ FixedHeader.prototype = {
 		nTable.style.width = iWidth+"px";
 		oCache.nWrapper.style.width = iWidth+"px";
 	},
+	
+	_fnRemoveEventHandlers: function () {
+		var settings = this.fnGetSettings();
+		var $dt = $(settings.nTable);
 
+		$dt.off(this._eventNamespace);
+		$(window).off( 'resize' + this._eventNamespace );
+
+		if (this.scrollHandler) {
+			var idx = jQuery.inArray(this.scrollHandler, FixedHeader.afnScroll);
+			if (idx >= 0) {
+				FixedHeader.afnScroll.splice( idx );
+			}
+		}
+	},
+	
+	_fnRemoveElements: function () {
+		var settings = this.fnGetSettings();
+		var aoCache = settings.aoCache;
+		
+		for (var i = 0; i < aoCache.length; i++) {
+			$(aoCache[i].nWrapper).remove();
+			$(aoCache[i].nNode).remove();
+		}
+	},
+
+	_fnDestroy: function () {
+		this._fnRemoveEventHandlers();
+		this._fnRemoveElements();
+	},
 
 	/**
 	 * Equalise the heights of the rows in a given table node in a cross browser way. Note that this
@@ -1019,6 +1060,12 @@ FixedHeader.fnMeasure = function ()
 	oWin.iScrollBottom = oDoc.iHeight - oWin.iScrollTop - oWin.iHeight;
 };
 
+/*
+ * Variable: counter
+ * Purpose:  Global counter for FixedHeader instances, used for namespacing events
+ * Scope:    FixedHeader
+ */
+FixedHeader.counter = 0;
 
 FixedHeader.version = "2.1.3-dev";
 
@@ -1063,4 +1110,3 @@ else if ( jQuery && !jQuery.fn.dataTable.FixedHeader ) {
 
 
 })(window, document);
-
