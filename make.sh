@@ -23,5 +23,5 @@ rsync -r examples $OUT_DIR
 examples_process $OUT_DIR
 
 # Readme
-cp Readme.txt $OUT_DIR
+cp Readme.md $OUT_DIR
 
