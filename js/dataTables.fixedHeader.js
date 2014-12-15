@@ -171,9 +171,6 @@ FixedHeader = function ( mTable, oInit ) {
 
 	dt._oPluginFixedHeader = this;
 
-	/* Register our destructor with parent DataTable */
-	dt.oApi._fnCallbackReg(dt, 'aoDestroyCallback', $.proxy(this._fnDestroy, this), 'FixedHeader');
-
 	/* Let's do it */
 	this.fnInit( dt, oInit );
 
@@ -240,7 +237,7 @@ FixedHeader.prototype = {
 			s.aoCache.push( that._fnCloneTable( "fixedRight", "FixedHeader_Right", that._fnCloneTRight, s.oSides.right ) );
 		}
 
-		var counter = ++FixedHeader.counter;
+		var counter = ++FixedHeader._counter;
 		this._eventNamespace = '.fh-' + counter;
 
 		var scrollHandler = function () {
@@ -271,6 +268,10 @@ FixedHeader.prototype = {
 				FixedHeader.fnMeasure();
 				that._fnUpdateClones( true );
 				that._fnUpdatePositions();
+			} )
+			.on('destroy.dt' + this._eventNamespace, function () {
+				that._fnRemoveEventHandlers();
+				that._fnRemoveElements();
 			} );
 
 		/* Get things right to start with */
@@ -930,34 +931,40 @@ FixedHeader.prototype = {
 		oCache.nWrapper.style.width = iWidth+"px";
 	},
 	
+	/**
+	 * Remove event handlers that this instance has added to the page
+	 *  @private
+	 */
 	_fnRemoveEventHandlers: function () {
 		var settings = this.fnGetSettings();
-		var $dt = $(settings.nTable);
+		var dt = $(settings.nTable);
 
-		$dt.off(this._eventNamespace);
+		dt.off(this._eventNamespace);
 		$(window).off( 'resize' + this._eventNamespace );
 
-		if (this.scrollHandler) {
-			var idx = jQuery.inArray(this.scrollHandler, FixedHeader.afnScroll);
-			if (idx >= 0) {
+		if (this.scrollHandler)
+		{
+			var idx = $.inArray(this.scrollHandler, FixedHeader.afnScroll);
+			if ( idx >= 0 )
+			{
 				FixedHeader.afnScroll.splice( idx );
 			}
 		}
 	},
 	
+	/**
+	 * Remove elements added tot he page
+	 *  @private
+	 */
 	_fnRemoveElements: function () {
 		var settings = this.fnGetSettings();
 		var aoCache = settings.aoCache;
 		
-		for (var i = 0; i < aoCache.length; i++) {
+		for ( var i=0 ; i<aoCache.length ; i++ )
+		{
 			$(aoCache[i].nWrapper).remove();
 			$(aoCache[i].nNode).remove();
 		}
-	},
-
-	_fnDestroy: function () {
-		this._fnRemoveEventHandlers();
-		this._fnRemoveElements();
 	},
 
 	/**
@@ -1064,8 +1071,9 @@ FixedHeader.fnMeasure = function ()
  * Variable: counter
  * Purpose:  Global counter for FixedHeader instances, used for namespacing events
  * Scope:    FixedHeader
+ * @private
  */
-FixedHeader.counter = 0;
+FixedHeader._counter = 0;
 
 FixedHeader.version = "2.1.3-dev";
 
