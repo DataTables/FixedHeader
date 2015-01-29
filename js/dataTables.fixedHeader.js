@@ -54,6 +54,11 @@ var factory = function( $, DataTable ) {
  *    * int:zBottom - fixed footer zIndex
  *    * int:zLeft -   fixed left zIndex
  *    * int:zRight -  fixed right zIndex
+ *    * bool:alwaysCloneBottom
+ *    * bool:alwaysCloneLeft
+ *    * bool:alwaysCloneRight
+ *    * bool:alwaysCloneTop
+ *    * int:offsetTop
  */
 FixedHeader = function ( mTable, oInit ) {
 	/* Sanity check - you just know it will happen */
