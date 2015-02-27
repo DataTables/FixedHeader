@@ -54,6 +54,7 @@ var factory = function( $, DataTable ) {
  *    * int:zBottom - fixed footer zIndex
  *    * int:zLeft -   fixed left zIndex
  *    * int:zRight -  fixed right zIndex
+ *    * string:appendTo - selector used to find the parent element for the generated element
  */
 FixedHeader = function ( mTable, oInit ) {
 	/* Sanity check - you just know it will happen */
@@ -98,7 +99,8 @@ FixedHeader = function ( mTable, oInit ) {
 		},
 		"nTable": null,
 		"bFooter": false,
-		"bInitComplete": false
+		"bInitComplete": false,
+		"sAppendTo": null
 	};
 
 	/*
@@ -243,7 +245,7 @@ FixedHeader.prototype = {
 		var scrollHandler = function () {
 			that._fnUpdatePositions.call(that);
 		};
-		
+
 		var resizeHandler = function () {
 			FixedHeader.fnMeasure();
 			that._fnUpdateClones.call(that);
@@ -344,6 +346,9 @@ FixedHeader.prototype = {
 			if ( oInit.alwaysCloneRight !== undefined ) {
 				s.oCloneOnDraw.right = oInit.alwaysCloneRight;
 			}
+			if ( oInit.appendTo !== undefined ) {
+				s.sAppendTo = oInit.appendTo;
+			}
 		}
 	},
 
@@ -400,7 +405,13 @@ FixedHeader.prototype = {
 
 		/* Insert the newly cloned table into the DOM, on top of the "real" header */
 		nDiv.appendChild( nCTable );
-		document.body.appendChild( nDiv );
+
+		var nParent = document.body;
+		if (s.sAppendTo) {
+			var jqParent = $(s.sAppendTo);
+			if (jqParent.length) nParent = jqParent.get(0);
+		}
+		nParent.appendChild( nDiv );
 
 		return {
 			"nNode": nCTable,
