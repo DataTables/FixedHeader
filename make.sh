@@ -21,7 +21,7 @@ js_frameworks fixedHeader $OUT_DIR/js
 
 # Copy and build examples
 rsync -r examples $OUT_DIR
-examples_process $OUT_DIR
+examples_process $OUT_DIR/examples
 
 # Readme and license
 cp Readme.md $OUT_DIR
