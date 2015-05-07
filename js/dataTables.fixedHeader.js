@@ -228,6 +228,10 @@ FixedHeader.prototype = {
 				itemDom.floating.remove();
 				itemDom.floating = null;
 			}
+
+			if ( item === 'footer' ) {
+				this._footerUnsize();
+			}
 		}
 		else if ( mode === 'in' ) {
 			// Remove the header from the read header and insert into a fixed
@@ -291,12 +295,37 @@ FixedHeader.prototype = {
 				.append( itemElement )
 				.appendTo( 'body' );
 
-			// xxx footer needs sizes cloned across
-
 			// Insert a fake thead/tfoot into the DataTable to stop it jumping around
 			itemDom.placeholder = itemElement.clone( false );
 			itemDom.host.append( itemDom.placeholder );
+
+			// xxx footer needs sizes cloned across
+			if ( item === 'footer' ) {
+				this._footerMatch( itemDom.placeholder, itemDom.floating );
+			}
 		}
+	},
+
+
+	_footerMatch: function ( from, to ) {
+		var type = function ( name ) {
+			var toWidths = $(name, from)
+				.map( function () {
+					return $(this).width();
+				} ).toArray();
+
+			$(name, to).each( function ( i ) {
+				$(this).width( toWidths[i] );
+			} );
+		};
+
+		type( 'th' );
+		type( 'td' );
+	},
+
+
+	_footerUnsize: function ( from ) {
+		$('th, td', from).css( 'width', '' );
 	}
 };
 
@@ -337,7 +366,7 @@ DataTable.Api.register( 'fixedHeader.adjust()', function () {
 		var fh = ctx._fixedHeader;
 
 		if ( fh ) {
-			fh._positions();
+			fh._positions(); // xxx make this a FixedHeader API
 			fh._scroll( true );
 		}
 	} );
