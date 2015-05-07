@@ -29,6 +29,7 @@
 var factory = function( $, DataTable ) {
 "use strict";
 
+var _instCounter = 0;
 
 var FixedHeader = function ( dt, config ) {
 	// Sanity check - you just know it will happen
@@ -51,10 +52,16 @@ var FixedHeader = function ( dt, config ) {
 			theadTop: 0,
 			tbodyTop: 0,
 			tfootTop: 0,
-			tfootBottom: 0
+			tfootBottom: 0,
+			width: 0,
+			left: 0,
+			tfootHeight: 0,
+			theadHeight: 0,
+			windowHeight: $(window).height()
 		},
 		headerMode: null,
-		footerMode: null
+		footerMode: null,
+		namespace: '.dtfc'+(_instCounter++)
 	};
 
 	this.dom = {
@@ -102,21 +109,33 @@ FixedHeader.prototype = {
 		var that = this;
 		var dt = this.s.dt;
 
-		// xxx needs a unique namespace
-		$(window).on( 'scroll.dtfc', function () {
-			that._scroll();
-		} );
+		$(window)
+			.on( 'scroll'+this.s.namespace, function () {
+				that._scroll();
+			} )
+			.on( 'resize'+this.s.namespace, function () {
+				that.s.position.windowHeight = $(window).height();
+				that._positions();
+				that._scroll( true );
+			} );
 
-		// xxx window resize event handler
-		// xxx column reorder event handler - redo the placeholder
-		// xxx column visibility event handler - redo the placeholder
+		dt
+			.on( 'column-reorder.dt.dtfc column-visibility.dt.dtfc', function () {
+				that._positions();
+				that._scroll( true );
+			} )
+			.on( 'draw.dtfc', function () {
+				that._positions();
+				that._scroll();
+			} );
 
 		dt.on( 'destroy.dtfc', function () {
-			dt.off( 'destroy.dtfc' );
-			$(window).off( 'scroll.dtfc' );
+			dt.off( '.dtfc' );
+			$(window).off( this.s.namespace );
 		} );
 
 		this._positions();
+		this._scroll();
 	},
 
 
@@ -128,21 +147,27 @@ FixedHeader.prototype = {
 		var dom = this.dom;
 		var tableNode = $(table.node());
 
+		// Need to use the header and footer that are in the main table,
+		// regardless of if they are clones, since they hold the positions we
+		// want to measure from
+		var thead = tableNode.children('thead');
+		var tfoot = tableNode.children('tfoot');
+		var tbody = dom.tbody;
+
 		position.width = tableNode.outerWidth();
 		position.left = tableNode.offset().left;
-		position.theadTop = dom.thead.offset().top;
-		position.tbodyTop = dom.tbody.offset().top;
-		position.tfootTop = dom.tfoot.offset().top;
-		position.tfootBottom = position.tfootTop + dom.tfoot.outerHeight();
+		position.theadTop = thead.offset().top;
+		position.tbodyTop = tbody.offset().top;
+		position.tfootTop = tfoot.offset().top;
+		position.tfootBottom = position.tfootTop + tfoot.outerHeight();
 		position.tfootHeight = position.tfootBottom - position.tfootTop;
 		position.theadHeight = position.tbodyTop - position.theadTop;
 	},
 
 
-	_scroll: function ()
+	_scroll: function ( forceChange )
 	{
 		var windowTop = $(document).scrollTop();
-		var windowHeight = $(window).height(); // xxx move to a resize event handler
 		var position = this.s.position;
 		var headerMode, footerMode;
 
@@ -157,31 +182,31 @@ FixedHeader.prototype = {
 				headerMode = 'below';
 			}
 
-			if ( headerMode !== this.s.headerMode ) {
-				this._modeChange( headerMode, 'header' );
+			if ( forceChange || headerMode !== this.s.headerMode ) {
+				this._modeChange( headerMode, 'header', forceChange );
 			}
 		}
 
 		if ( this.c.footer ) {
-			if ( windowTop + windowHeight >= position.tfootBottom + this.c.footerOffset ) {
+			if ( windowTop + position.windowHeight >= position.tfootBottom + this.c.footerOffset ) {
 				footerMode = 'in-place';
 			}
-			else if ( windowHeight + windowTop > position.tbodyTop + position.tfootHeight + this.c.footerOffset ) {
+			else if ( position.windowHeight + windowTop > position.tbodyTop + position.tfootHeight + this.c.footerOffset ) {
 				footerMode = 'in';
 			}
 			else {
 				footerMode = 'above';
 			}
 
-			if ( footerMode !== this.s.footerMode ) {
-				this._modeChange( footerMode, 'footer' );
+			if ( forceChange || footerMode !== this.s.footerMode ) {
+				this._modeChange( footerMode, 'footer', forceChange );
 			}
 		}
 	},
 
 
 	// Switching mode
-	_modeChange: function ( mode, item )
+	_modeChange: function ( mode, item, forceChange )
 	{
 		var dt = this.s.dt;
 		var itemDom = this.dom[ item ];
@@ -207,7 +232,7 @@ FixedHeader.prototype = {
 		else if ( mode === 'in' ) {
 			// Remove the header from the read header and insert into a fixed
 			// positioned floating table clone
-			this._clone( item );
+			this._clone( item, forceChange );
 
 			itemDom.floating
 				.addClass( 'fixedHeader-floating' )
@@ -221,7 +246,7 @@ FixedHeader.prototype = {
 		}
 		else if ( mode === 'below' ) { // only used for the header
 			// Fix the position of the floating header at base of the table body
-			this._clone( item );
+			this._clone( item, forceChange );
 
 			itemDom.floating
 				.addClass( 'fixedHeader-locked' )
@@ -231,7 +256,7 @@ FixedHeader.prototype = {
 		}
 		else if ( mode === 'above' ) { // only used for the footer
 			// Fix the position of the floating footer at top of the table body
-			this._clone( item );
+			this._clone( item, forceChange );
 
 			itemDom.floating
 				.addClass( 'fixedHeader-locked' )
@@ -243,7 +268,7 @@ FixedHeader.prototype = {
 		this.s[item+'Mode'] = mode;
 	},
 
-	_clone: function ( item )
+	_clone: function ( item, force )
 	{
 		var dt = this.s.dt;
 		var itemDom = this.dom[ item ];
@@ -251,11 +276,17 @@ FixedHeader.prototype = {
 			this.dom.thead :
 			this.dom.tfoot;
 
-		if ( itemDom.floating ) {
+		if ( ! force && itemDom.floating ) {
 			// existing floating element - reuse it
 			itemDom.floating.removeClass( 'fixedHeader-floating fixedHeader-locked' );
 		}
 		else {
+			if ( itemDom.floating ) {
+				itemDom.placeholder.remove();
+				itemDom.floating.children().detach();
+				itemDom.floating.remove();
+			}
+
 			itemDom.floating = $( dt.table().node().cloneNode( false ) )
 				.append( itemElement )
 				.appendTo( 'body' );
@@ -281,9 +312,6 @@ FixedHeader.defaults = {
 };
 
 
-// xxx API method to allow recalculation of the positions and thus redraw
-
-
 $.fn.dataTable.FixedHeader = FixedHeader;
 $.fn.DataTable.FixedHeader = FixedHeader;
 
@@ -300,6 +328,19 @@ $(document).on( 'init.dt.dtb', function (e, settings, json) {
 	if ( opts && ! settings._buttons ) {
 		new FixedHeader( settings, opts );
 	}
+} );
+
+DataTable.Api.register( 'fixedHeader()', function () {} );
+
+DataTable.Api.register( 'fixedHeader.adjust()', function () {
+	return this.iterator( 'table', function ( ctx ) {
+		var fh = ctx._fixedHeader;
+
+		if ( fh ) {
+			fh._positions();
+			fh._scroll( true );
+		}
+	} );
 } );
 
 
