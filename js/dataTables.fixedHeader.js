@@ -105,6 +105,10 @@ FixedHeader.prototype = {
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 * API methods
 	 */
+	
+	/**
+	 * Recalculate the position of the fixed elements and force them into place
+	 */
 	update: function () {
 		this._positions();
 		this._scroll( true );
@@ -113,6 +117,13 @@ FixedHeader.prototype = {
 
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 * Constructor
+	 */
+	
+	/**
+	 * FixedHeader constructor - adding the required event listeners and
+	 * simple initialisation
+	 *
+	 * @private
 	 */
 	_constructor: function ()
 	{
@@ -153,75 +164,103 @@ FixedHeader.prototype = {
 	 * Private methods
 	 */
 
-
-	_positions: function ()
+	/**
+	 * Clone a fixed item to act as a place holder for the original element
+	 * which is moved into a clone of the table element, and moved around the
+	 * document to give the fixed effect.
+	 *
+	 * @param  {string}  item  'header' or 'footer'
+	 * @param  {boolean} force Force the clone to happen, or allow automatic
+	 *   decision (reuse existing if available)
+	 * @private
+	 */
+	_clone: function ( item, force )
 	{
 		var dt = this.s.dt;
-		var table = dt.table();
-		var position = this.s.position;
-		var dom = this.dom;
-		var tableNode = $(table.node());
+		var itemDom = this.dom[ item ];
+		var itemElement = item === 'header' ?
+			this.dom.thead :
+			this.dom.tfoot;
 
-		// Need to use the header and footer that are in the main table,
-		// regardless of if they are clones, since they hold the positions we
-		// want to measure from
-		var thead = tableNode.children('thead');
-		var tfoot = tableNode.children('tfoot');
-		var tbody = dom.tbody;
-
-		position.visible = tableNode.is(':visible');
-		position.width = tableNode.outerWidth();
-		position.left = tableNode.offset().left;
-		position.theadTop = thead.offset().top;
-		position.tbodyTop = tbody.offset().top;
-		position.tfootTop = tfoot.offset().top;
-		position.tfootBottom = position.tfootTop + tfoot.outerHeight();
-		position.tfootHeight = position.tfootBottom - position.tfootTop;
-		position.theadHeight = position.tbodyTop - position.theadTop;
-	},
-
-
-	_scroll: function ( forceChange )
-	{
-		var windowTop = $(document).scrollTop();
-		var position = this.s.position;
-		var headerMode, footerMode;
-
-		if ( this.c.header ) {
-			if ( ! position.visible || windowTop <= position.theadTop - this.c.headerOffset ) {
-				headerMode = 'in-place';
-			}
-			else if ( windowTop <= position.tfootTop - position.theadHeight - this.c.headerOffset ) {
-				headerMode = 'in';
-			}
-			else {
-				headerMode = 'below';
-			}
-
-			if ( forceChange || headerMode !== this.s.headerMode ) {
-				this._modeChange( headerMode, 'header', forceChange );
-			}
+		if ( ! force && itemDom.floating ) {
+			// existing floating element - reuse it
+			itemDom.floating.removeClass( 'fixedHeader-floating fixedHeader-locked' );
 		}
-
-		if ( this.c.footer ) {
-			if ( ! position.visible || windowTop + position.windowHeight >= position.tfootBottom + this.c.footerOffset ) {
-				footerMode = 'in-place';
-			}
-			else if ( position.windowHeight + windowTop > position.tbodyTop + position.tfootHeight + this.c.footerOffset ) {
-				footerMode = 'in';
-			}
-			else {
-				footerMode = 'above';
+		else {
+			if ( itemDom.floating ) {
+				itemDom.placeholder.remove();
+				itemDom.floating.children().detach();
+				itemDom.floating.remove();
 			}
 
-			if ( forceChange || footerMode !== this.s.footerMode ) {
-				this._modeChange( footerMode, 'footer', forceChange );
+			itemDom.floating = $( dt.table().node().cloneNode( false ) )
+				.append( itemElement )
+				.appendTo( 'body' );
+
+			// Insert a fake thead/tfoot into the DataTable to stop it jumping around
+			itemDom.placeholder = itemElement.clone( false );
+			itemDom.host.append( itemDom.placeholder );
+
+			// Footer needs sizes cloned across
+			if ( item === 'footer' ) {
+				this._footerMatch( itemDom.placeholder, itemDom.floating );
 			}
 		}
 	},
 
+	/**
+	 * Copy widths from the cells in one element to another. This is required
+	 * for the footer as the footer in the main table takes its sizes from the
+	 * header columns. That isn't present in the footer so to have it still
+	 * align correctly, the sizes need to be copied over.
+	 *
+	 * @param  {jQuery} from Copy widths from
+	 * @param  {jQuery} to   Copy widths to
+	 * @private
+	 */
+	_footerMatch: function ( from, to ) {
+		var type = function ( name ) {
+			var toWidths = $(name, from)
+				.map( function () {
+					return $(this).width();
+				} ).toArray();
 
-	// Switching mode
+			$(name, to).each( function ( i ) {
+				$(this).width( toWidths[i] );
+			} );
+		};
+
+		type( 'th' );
+		type( 'td' );
+	},
+
+	/**
+	 * Remove assigned widths from the cells in an element. This is required
+	 * when inserting the footer back into the main table so the size is defined
+	 * by the header columns.
+	 *
+	 * @param  {jQuery} from Element to remove cell widths from
+	 * @private
+	 */
+	_footerUnsize: function ( from ) {
+		$('th, td', from).css( 'width', '' );
+	},
+
+	/**
+	 * Change from one display mode to another. Each fixed item can be in one
+	 * of:
+	 *
+	 * * `in-place` - In the main DataTable
+	 * * `in` - Floating over the DataTable
+	 * * `below` - (Header only) Fixed to the bottom of the table body
+	 * * `above` - (Footer only) Fixed to the top of the table body
+	 * 
+	 * @param  {string}  mode        Mode that the item should be shown in
+	 * @param  {string}  item        'header' or 'footer'
+	 * @param  {boolean} forceChange Force a redraw of the mode, even if already
+	 *     in that mode.
+	 * @private
+	 */
 	_modeChange: function ( mode, item, forceChange )
 	{
 		var dt = this.s.dt;
@@ -288,67 +327,100 @@ FixedHeader.prototype = {
 		this.s[item+'Mode'] = mode;
 	},
 
-	_clone: function ( item, force )
+	/**
+	 * Cache the positional information that is required for the mode
+	 * calculations that FixedHeader performs.
+	 *
+	 * @private
+	 */
+	_positions: function ()
 	{
 		var dt = this.s.dt;
-		var itemDom = this.dom[ item ];
-		var itemElement = item === 'header' ?
-			this.dom.thead :
-			this.dom.tfoot;
+		var table = dt.table();
+		var position = this.s.position;
+		var dom = this.dom;
+		var tableNode = $(table.node());
 
-		if ( ! force && itemDom.floating ) {
-			// existing floating element - reuse it
-			itemDom.floating.removeClass( 'fixedHeader-floating fixedHeader-locked' );
-		}
-		else {
-			if ( itemDom.floating ) {
-				itemDom.placeholder.remove();
-				itemDom.floating.children().detach();
-				itemDom.floating.remove();
-			}
+		// Need to use the header and footer that are in the main table,
+		// regardless of if they are clones, since they hold the positions we
+		// want to measure from
+		var thead = tableNode.children('thead');
+		var tfoot = tableNode.children('tfoot');
+		var tbody = dom.tbody;
 
-			itemDom.floating = $( dt.table().node().cloneNode( false ) )
-				.append( itemElement )
-				.appendTo( 'body' );
-
-			// Insert a fake thead/tfoot into the DataTable to stop it jumping around
-			itemDom.placeholder = itemElement.clone( false );
-			itemDom.host.append( itemDom.placeholder );
-
-			// xxx footer needs sizes cloned across
-			if ( item === 'footer' ) {
-				this._footerMatch( itemDom.placeholder, itemDom.floating );
-			}
-		}
+		position.visible = tableNode.is(':visible');
+		position.width = tableNode.outerWidth();
+		position.left = tableNode.offset().left;
+		position.theadTop = thead.offset().top;
+		position.tbodyTop = tbody.offset().top;
+		position.tfootTop = tfoot.offset().top;
+		position.tfootBottom = position.tfootTop + tfoot.outerHeight();
+		position.tfootHeight = position.tfootBottom - position.tfootTop;
+		position.theadHeight = position.tbodyTop - position.theadTop;
 	},
 
 
-	_footerMatch: function ( from, to ) {
-		var type = function ( name ) {
-			var toWidths = $(name, from)
-				.map( function () {
-					return $(this).width();
-				} ).toArray();
+	/**
+	 * Mode calculation - determine what mode the fixed items should be placed
+	 * into.
+	 *
+	 * @param  {boolean} forceChange Force a redraw of the mode, even if already
+	 *     in that mode.
+	 * @private
+	 */
+	_scroll: function ( forceChange )
+	{
+		var windowTop = $(document).scrollTop();
+		var position = this.s.position;
+		var headerMode, footerMode;
 
-			$(name, to).each( function ( i ) {
-				$(this).width( toWidths[i] );
-			} );
-		};
+		if ( this.c.header ) {
+			if ( ! position.visible || windowTop <= position.theadTop - this.c.headerOffset ) {
+				headerMode = 'in-place';
+			}
+			else if ( windowTop <= position.tfootTop - position.theadHeight - this.c.headerOffset ) {
+				headerMode = 'in';
+			}
+			else {
+				headerMode = 'below';
+			}
 
-		type( 'th' );
-		type( 'td' );
-	},
+			if ( forceChange || headerMode !== this.s.headerMode ) {
+				this._modeChange( headerMode, 'header', forceChange );
+			}
+		}
 
+		if ( this.c.footer ) {
+			if ( ! position.visible || windowTop + position.windowHeight >= position.tfootBottom + this.c.footerOffset ) {
+				footerMode = 'in-place';
+			}
+			else if ( position.windowHeight + windowTop > position.tbodyTop + position.tfootHeight + this.c.footerOffset ) {
+				footerMode = 'in';
+			}
+			else {
+				footerMode = 'above';
+			}
 
-	_footerUnsize: function ( from ) {
-		$('th, td', from).css( 'width', '' );
+			if ( forceChange || footerMode !== this.s.footerMode ) {
+				this._modeChange( footerMode, 'footer', forceChange );
+			}
+		}
 	}
 };
 
 
+/**
+ * Version
+ * @type {String}
+ * @static
+ */
 FixedHeader.version = "3.0.0-dev";
 
-
+/**
+ * Defaults
+ * @type {Object}
+ * @static
+ */
 FixedHeader.defaults = {
 	header: true,
 	footer: false,
@@ -357,12 +429,17 @@ FixedHeader.defaults = {
 };
 
 
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * DataTables interfaces
+ */
+
+// Attach for constructor access
 $.fn.dataTable.FixedHeader = FixedHeader;
 $.fn.DataTable.FixedHeader = FixedHeader;
 
 
 // DataTables creation - check if the FixedHeader option has been defined on the
-// table
+// table and if so, initialise
 $(document).on( 'init.dt.dtb', function (e, settings, json) {
 	if ( e.namespace !== 'dt' ) {
 		return;
@@ -375,6 +452,7 @@ $(document).on( 'init.dt.dtb', function (e, settings, json) {
 	}
 } );
 
+// DataTables API methods
 DataTable.Api.register( 'fixedHeader()', function () {} );
 
 DataTable.Api.register( 'fixedHeader.adjust()', function () {
