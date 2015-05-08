@@ -57,7 +57,8 @@ var FixedHeader = function ( dt, config ) {
 			left: 0,
 			tfootHeight: 0,
 			theadHeight: 0,
-			windowHeight: $(window).height()
+			windowHeight: $(window).height(),
+			visible: true
 		},
 		headerMode: null,
 		footerMode: null,
@@ -102,6 +103,15 @@ var FixedHeader = function ( dt, config ) {
  */
 FixedHeader.prototype = {
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+	 * API methods
+	 */
+	update: function () {
+		this._positions();
+		this._scroll( true );
+	},
+
+
+	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 * Constructor
 	 */
 	_constructor: function ()
@@ -139,6 +149,11 @@ FixedHeader.prototype = {
 	},
 
 
+	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+	 * Private methods
+	 */
+
+
 	_positions: function ()
 	{
 		var dt = this.s.dt;
@@ -154,6 +169,7 @@ FixedHeader.prototype = {
 		var tfoot = tableNode.children('tfoot');
 		var tbody = dom.tbody;
 
+		position.visible = tableNode.is(':visible');
 		position.width = tableNode.outerWidth();
 		position.left = tableNode.offset().left;
 		position.theadTop = thead.offset().top;
@@ -172,7 +188,7 @@ FixedHeader.prototype = {
 		var headerMode, footerMode;
 
 		if ( this.c.header ) {
-			if ( windowTop <= position.theadTop - this.c.headerOffset ) {
+			if ( ! position.visible || windowTop <= position.theadTop - this.c.headerOffset ) {
 				headerMode = 'in-place';
 			}
 			else if ( windowTop <= position.tfootTop - position.theadHeight - this.c.headerOffset ) {
@@ -188,7 +204,7 @@ FixedHeader.prototype = {
 		}
 
 		if ( this.c.footer ) {
-			if ( windowTop + position.windowHeight >= position.tfootBottom + this.c.footerOffset ) {
+			if ( ! position.visible || windowTop + position.windowHeight >= position.tfootBottom + this.c.footerOffset ) {
 				footerMode = 'in-place';
 			}
 			else if ( position.windowHeight + windowTop > position.tbodyTop + position.tfootHeight + this.c.footerOffset ) {
@@ -366,8 +382,7 @@ DataTable.Api.register( 'fixedHeader.adjust()', function () {
 		var fh = ctx._fixedHeader;
 
 		if ( fh ) {
-			fh._positions(); // xxx make this a FixedHeader API
-			fh._scroll( true );
+			fh.update();
 		}
 	} );
 } );
