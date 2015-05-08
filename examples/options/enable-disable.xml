@@ -22,11 +22,11 @@ $(document).ready(function() {
 ]]>
 </js>
 
-<title lib="FixedHeader">Enable / disable FixHeader</title>
+<title lib="FixedHeader">Enable / disable FixedHeader</title>
 
 <info><![CDATA[
 
-This example shows how FixedHeader can be enabled and disabled using the `fh-api fixedHeader.update()` aAPI methods. This is can be particularly useful if FixedHeader is used for DataTables that are enclosed in tabs, so the header is disabled when the tab containing it is not visible, and also to then realign the FixedHeader when the table is then made visible again.
+This example shows how FixedHeader can be enabled and disabled using the `fh-api fixedHeader.update()` API method. This is can be particularly useful if FixedHeader is used for DataTables that are enclosed in tabs, so the header is disabled when the tab containing it is not visible, and also to then realign the FixedHeader when the table is then made visible again.
 
 This example shows a simple toggle button that will change the visibility of the DataTable. The `fh-api fixedHeader.update()` method is called whenever the table's visibility is changed, as it would be in a tab show event handler.
 
