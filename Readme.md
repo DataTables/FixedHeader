@@ -26,7 +26,7 @@ $(document).ready( function () {
 
 # Documentation / support
 
-* Documentation: http://datatables.net/extensions/FixedHeader/
+* Documentation: http://datatables.net/extensions/fixedheader/
 * DataTables support forums: http://datatables.net/forums
 
 
