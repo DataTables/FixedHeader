@@ -117,8 +117,8 @@ FixedHeader = function ( mTable, oInit ) {
 	 * Returns:  -
 	 * Inputs:   -
 	 */
-	this.fnUpdate = function () {
-		this._fnUpdateClones();
+	this.fnUpdate = function (prm) {
+		this._fnUpdateClones(prm);
 		this._fnUpdatePositions();
 	};
 
