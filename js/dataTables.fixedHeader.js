@@ -94,7 +94,8 @@ FixedHeader = function ( mTable, oInit ) {
 			"iTableBottom": 0 /* note this is top+height, not actually "bottom" */
 		},
 		"oOffset": {
-			"top": 0
+			"top": 0,
+			"left": 0
 		},
 		"nTable": null,
 		"bFooter": false,
@@ -331,6 +332,9 @@ FixedHeader.prototype = {
 
 			if ( oInit.offsetTop !== undefined ) {
 				s.oOffset.top = oInit.offsetTop;
+			}
+			if ( oInit.offsetLeft !== undefined ) {
+				s.oOffset.left = oInit.offsetLeft;
 			}
 			if ( oInit.alwaysCloneTop !== undefined ) {
 				s.oCloneOnDraw.top = oInit.alwaysCloneTop;
@@ -584,18 +588,18 @@ FixedHeader.prototype = {
 			nTable = oCache.nWrapper,
 			iCellWidth = $(nTable).outerWidth();
 
-		if ( oWin.iScrollLeft < oMes.iTableLeft )
+		if ( oWin.iScrollLeft + s.oOffset.left < oMes.iTableLeft )
 		{
 			/* Fully left align */
 			this._fnUpdateCache( oCache, 'sPosition', 'absolute', 'position', nTable.style );
 			this._fnUpdateCache( oCache, 'sTop', oMes.iTableTop+"px", 'top', nTable.style );
 			this._fnUpdateCache( oCache, 'sLeft', oMes.iTableLeft+"px", 'left', nTable.style );
 		}
-		else if ( oWin.iScrollLeft < oMes.iTableLeft+oMes.iTableWidth-iCellWidth )
+		else if ( oWin.iScrollLeft + s.oOffset.left < oMes.iTableLeft+oMes.iTableWidth-iCellWidth )
 		{
 			this._fnUpdateCache( oCache, 'sPosition', 'fixed', 'position', nTable.style );
 			this._fnUpdateCache( oCache, 'sTop', (oMes.iTableTop-oWin.iScrollTop)+"px", 'top', nTable.style );
-			this._fnUpdateCache( oCache, 'sLeft', "0px", 'left', nTable.style );
+			this._fnUpdateCache( oCache, 'sLeft', s.oOffset.left + "px", 'left', nTable.style );
 		}
 		else
 		{
