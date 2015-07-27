@@ -269,6 +269,17 @@ FixedHeader.prototype = {
 				that._fnUpdateClones( true );
 				that._fnUpdatePositions();
 			} )
+			.on('init.dt' + this._eventNamespace, function () {
+				FixedHeader.fnMeasure();
+				that._fnUpdateClones( true );
+				that._fnUpdatePositions();
+			} )
+			.on('draw.dt' + this._eventNamespace, function () {
+				FixedHeader.fnMeasure();
+				for ( var i=0, iLen=FixedHeader.afnScroll.length ; i<iLen ; i++ ) {
+					FixedHeader.afnScroll[i]();
+				}
+			} )
 			.on('destroy.dt' + this._eventNamespace, function () {
 				that._fnRemoveEventHandlers();
 				that._fnRemoveElements();
