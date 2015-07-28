@@ -398,7 +398,7 @@ FixedHeader.prototype = {
 			}
 		}
 
-		if ( this.c.footer ) {
+		if ( this.c.footer && this.dom.tfoot.length ) {
 			if ( ! position.visible || windowTop + position.windowHeight >= position.tfootBottom + this.c.footerOffset ) {
 				footerMode = 'in-place';
 			}
