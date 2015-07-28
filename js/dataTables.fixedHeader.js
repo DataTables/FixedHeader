@@ -240,11 +240,14 @@ FixedHeader.prototype = {
 	 * when inserting the footer back into the main table so the size is defined
 	 * by the header columns.
 	 *
-	 * @param  {jQuery} from Element to remove cell widths from
 	 * @private
 	 */
-	_footerUnsize: function ( from ) {
-		$('th, td', from).css( 'width', '' );
+	_footerUnsize: function () {
+		var footer = this.dom.footer.floating;
+
+		if ( footer ) {
+			$('th, td', from).css( 'width', '' );
+		}
 	},
 
 	/**
