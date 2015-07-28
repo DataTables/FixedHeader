@@ -353,10 +353,18 @@ FixedHeader.prototype = {
 		position.left = tableNode.offset().left;
 		position.theadTop = thead.offset().top;
 		position.tbodyTop = tbody.offset().top;
-		position.tfootTop = tfoot.offset().top;
-		position.tfootBottom = position.tfootTop + tfoot.outerHeight();
-		position.tfootHeight = position.tfootBottom - position.tfootTop;
 		position.theadHeight = position.tbodyTop - position.theadTop;
+
+		if ( tfoot.length ) {
+			position.tfootTop = tfoot.offset().top;
+			position.tfootBottom = position.tfootTop + tfoot.outerHeight();
+			position.tfootHeight = position.tfootBottom - position.tfootTop;
+		}
+		else {
+			position.tfootTop = position.tbodyTop + tbody.outerHeight();
+			position.tfootBottom = position.tfootTop;
+			position.tfootHeight = position.tfootTop;
+		}
 	},
 
 
