@@ -194,6 +194,7 @@ FixedHeader.prototype = {
 			}
 
 			itemDom.floating = $( dt.table().node().cloneNode( false ) )
+				.removeAttr( 'id' )
 				.append( itemElement )
 				.appendTo( 'body' );
 
