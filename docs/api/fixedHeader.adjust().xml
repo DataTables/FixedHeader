@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<dt-api group="core">
+<dt-api group="fixedheader">
 	<name>fixedHeader.adjust()</name>
 	<summary>Recalculate the position of the table and redraw the fixed elements</summary>
 	<since>3.0.0</since>
