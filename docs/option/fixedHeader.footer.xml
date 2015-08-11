@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<dt-option group="fixedheader">
+<dt-option library="FixedHeader">
 	<name>fixedHeader.footer</name>
 	<summary>Enable / disable fixed footer</summary>
 	<since>3.0.0</since>
