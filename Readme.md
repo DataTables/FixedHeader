@@ -1,36 +1,35 @@
 # FixedHeader
 
-At times it can be useful to ensure that column titles will remain always visible on a table, even when a user scrolls down a table. The FixedHeader plug-in for DataTables will float the 'thead' element above the table at all times to help address this issue. The column titles also remain click-able to perform sorting. Key features include:
-
-* Fix the header to the top of the window
-* Ability to fix the footer and left / right columns as well
-* z-Index ordering options
+The FixedHeader plug-in will freeze in place the header, footer and left and/or right most columns in a DataTable, ensuring that title information will remain always visible.
 
 
 # Installation
 
-To use FixedHeader, first download DataTables ( http://datatables.net/download ) and place the unzipped FixedHeader package into a `extensions` directory in the DataTables package. This will allow the pages in the examples to operate correctly. To see the examples running, open the `examples` directory in your web-browser.
+To use FixedHeader the best way to obtain the software is to use the [DataTables downloader](//datatables.net/download). You can also include the individual files from the [DataTables CDN](//cdn.datatables.net). See the [documentation](http://datatables.net/extensions/fixedheader/) for full details.
 
 
 # Basic usage
 
-FixedHeader is initialised using the `$.fn.dataTable.FixedHeader()` object. For example:
+FixedHeader is initialised using the `fixedHeader` option in the DataTables constructor - a simple boolean `true` will enable the feature. Further options can be specified using this option as an object - see the documentation for details.
+
+Example:
 
 ```js
 $(document).ready( function () {
-    var table = $('#example').dataTable();
-    new $.fn.dataTable.FixedHeader( table );
+    $('#myTable').DataTable( {
+    	fixedHeader: true
+    } );
 } );
 ```
 
 
 # Documentation / support
 
-* Documentation: http://datatables.net/extensions/FixedHeader/
-* DataTables support forums: http://datatables.net/forums
+* [Documentation](https://datatables.net/extensions/fixedheader/)
+* [DataTables support forums](http://datatables.net/forums)
 
 
 # GitHub
 
-If you fancy getting involved with the development of FixedHeader and help make it better, please refer to its GitHub repo: https://github.com/DataTables/FixedHeader
+If you fancy getting involved with the development of FixedHeader and help make it better, please refer to its [GitHub repo](https://github.com/DataTables/FixedHeader).
 
