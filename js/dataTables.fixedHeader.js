@@ -246,7 +246,7 @@ FixedHeader.prototype = {
 		var footer = this.dom.footer.floating;
 
 		if ( footer ) {
-			$('th, td', from).css( 'width', '' );
+			$('th, td', footer).css( 'width', '' );
 		}
 	},
 
