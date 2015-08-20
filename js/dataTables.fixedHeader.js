@@ -101,7 +101,7 @@ var FixedHeader = function ( dt, config ) {
  * Purpose:  Prototype for FixedHeader
  * Scope:    global
  */
-FixedHeader.prototype = {
+$.extend( FixedHeader.prototype, {
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 * API methods
 	 */
@@ -418,7 +418,7 @@ FixedHeader.prototype = {
 			}
 		}
 	}
-};
+} );
 
 
 /**
