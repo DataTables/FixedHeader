@@ -62,7 +62,11 @@ var FixedHeader = function ( dt, config ) {
 		},
 		headerMode: null,
 		footerMode: null,
-		namespace: '.dtfc'+(_instCounter++)
+		namespace: '.dtfc'+(_instCounter++),
+		scrollLeft: {
+			header: -1,
+			footer: -1
+		}
 	};
 
 	this.dom = {
@@ -251,6 +255,27 @@ $.extend( FixedHeader.prototype, {
 	},
 
 	/**
+	 * Reposition the floating elements to take account of horizontal page
+	 * scroll
+	 *
+	 * @param  {string} item       The `header` or `footer`
+	 * @param  {int}    scrollLeft Document scrollLeft
+	 * @private
+	 */
+	_horizontal: function ( item, scrollLeft )
+	{
+		var itemDom = this.dom[ item ];
+		var position = this.s.position;
+		var lastScrollLeft = this.s.scrollLeft;
+
+		if ( itemDom.floating && lastScrollLeft[ item ] !== scrollLeft ) {
+			itemDom.floating.css( 'left', position.left - scrollLeft );
+
+			lastScrollLeft[ item ] = scrollLeft;
+		}
+	},
+
+	/**
 	 * Change from one display mode to another. Each fixed item can be in one
 	 * of:
 	 *
@@ -383,6 +408,7 @@ $.extend( FixedHeader.prototype, {
 	_scroll: function ( forceChange )
 	{
 		var windowTop = $(document).scrollTop();
+		var windowLeft = $(document).scrollLeft();
 		var position = this.s.position;
 		var headerMode, footerMode;
 
@@ -400,6 +426,8 @@ $.extend( FixedHeader.prototype, {
 			if ( forceChange || headerMode !== this.s.headerMode ) {
 				this._modeChange( headerMode, 'header', forceChange );
 			}
+
+			this._horizontal( 'header', windowLeft );
 		}
 
 		if ( this.c.footer && this.dom.tfoot.length ) {
@@ -416,6 +444,8 @@ $.extend( FixedHeader.prototype, {
 			if ( forceChange || footerMode !== this.s.footerMode ) {
 				this._modeChange( footerMode, 'footer', forceChange );
 			}
+
+			this._horizontal( 'footer', windowLeft );
 		}
 	}
 } );
