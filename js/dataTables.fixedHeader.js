@@ -489,7 +489,7 @@ $(document).on( 'init.dt.dtb', function (e, settings, json) {
 
 	var opts = settings.oInit.fixedHeader || DataTable.defaults.fixedHeader;
 
-	if ( opts && ! settings._buttons ) {
+	if ( opts && ! settings._fixedHeader ) {
 		new FixedHeader( settings, opts );
 	}
 } );
