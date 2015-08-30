@@ -154,9 +154,10 @@ $.extend( FixedHeader.prototype, {
 				that._scroll();
 			} );
 
+            var closureNamespace = this.s.namespace;
 		dt.on( 'destroy.dtfc', function () {
 			dt.off( '.dtfc' );
-			$(window).off( that.s.namespace );
+			$(window).off( closureNamespace );
 		} );
 
 		this._positions();
