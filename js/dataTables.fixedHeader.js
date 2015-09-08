@@ -141,19 +141,12 @@ $.extend( FixedHeader.prototype, {
 			} )
 			.on( 'resize'+this.s.namespace, function () {
 				that.s.position.windowHeight = $(window).height();
-				that._positions();
-				that._scroll( true );
+				that.update();
 			} );
 
-		dt
-			.on( 'column-reorder.dt.dtfc column-visibility.dt.dtfc', function () {
-				that._positions();
-				that._scroll( true );
-			} )
-			.on( 'draw.dtfc', function () {
-				that._positions();
-				that._scroll();
-			} );
+		dt.on( 'column-reorder.dt.dtfc column-visibility.dt.dtfc draw.dt.dtfc', function () {
+			that.update();
+		} );
 
 		dt.on( 'destroy.dtfc', function () {
 			dt.off( '.dtfc' );
