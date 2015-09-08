@@ -208,9 +208,7 @@ $.extend( FixedHeader.prototype, {
 			itemDom.host.append( itemDom.placeholder );
 
 			// Clone widths
-			if ( item === 'footer' || ! this.s.autoWidth ) {
-				this._matchWidths( itemDom.placeholder, itemDom.floating );
-			}
+			this._matchWidths( itemDom.placeholder, itemDom.floating );
 		}
 	},
 
