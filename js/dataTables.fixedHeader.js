@@ -62,6 +62,7 @@ var FixedHeader = function ( dt, config ) {
 		},
 		headerMode: null,
 		footerMode: null,
+		autoWidth: dt.settings()[0].oFeatures.bAutoWidth,
 		namespace: '.dtfc'+(_instCounter++),
 		scrollLeft: {
 			header: -1,
@@ -206,9 +207,9 @@ $.extend( FixedHeader.prototype, {
 			itemDom.placeholder = itemElement.clone( false );
 			itemDom.host.append( itemDom.placeholder );
 
-			// Footer needs sizes cloned across
-			if ( item === 'footer' ) {
-				this._footerMatch( itemDom.placeholder, itemDom.floating );
+			// Clone widths
+			if ( item === 'footer' || ! this.s.autoWidth ) {
+				this._matchWidths( itemDom.placeholder, itemDom.floating );
 			}
 		}
 	},
@@ -217,13 +218,14 @@ $.extend( FixedHeader.prototype, {
 	 * Copy widths from the cells in one element to another. This is required
 	 * for the footer as the footer in the main table takes its sizes from the
 	 * header columns. That isn't present in the footer so to have it still
-	 * align correctly, the sizes need to be copied over.
+	 * align correctly, the sizes need to be copied over. It is also required
+	 * for the header when auto width is not enabled
 	 *
 	 * @param  {jQuery} from Copy widths from
 	 * @param  {jQuery} to   Copy widths to
 	 * @private
 	 */
-	_footerMatch: function ( from, to ) {
+	_matchWidths: function ( from, to ) {
 		var type = function ( name ) {
 			var toWidths = $(name, from)
 				.map( function () {
@@ -242,15 +244,17 @@ $.extend( FixedHeader.prototype, {
 	/**
 	 * Remove assigned widths from the cells in an element. This is required
 	 * when inserting the footer back into the main table so the size is defined
-	 * by the header columns.
+	 * by the header columns and also when auto width is disabled in the
+	 * DataTable.
 	 *
+	 * @param  {string} item The `header` or `footer`
 	 * @private
 	 */
-	_footerUnsize: function () {
-		var footer = this.dom.footer.floating;
+	_unsize: function ( item ) {
+		var el = this.dom[ item ].floating;
 
-		if ( footer ) {
-			$('th, td', footer).css( 'width', '' );
+		if ( el && (item === 'footer' || (item === 'header' && ! this.s.autoWidth)) ) {
+			$('th, td', el).css( 'width', '' );
 		}
 	},
 
@@ -303,6 +307,8 @@ $.extend( FixedHeader.prototype, {
 				itemDom.placeholder = null;
 			}
 
+			this._unsize( item );
+
 			itemDom.host.append( item === 'header' ?
 				this.dom.thead :
 				this.dom.tfoot
@@ -311,10 +317,6 @@ $.extend( FixedHeader.prototype, {
 			if ( itemDom.floating ) {
 				itemDom.floating.remove();
 				itemDom.floating = null;
-			}
-
-			if ( item === 'footer' ) {
-				this._footerUnsize();
 			}
 		}
 		else if ( mode === 'in' ) {
