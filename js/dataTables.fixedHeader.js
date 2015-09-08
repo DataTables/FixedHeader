@@ -346,7 +346,8 @@ $.extend( FixedHeader.prototype, {
 				.css( 'width', position.width+'px' );
 		}
 
-		this.s.scrollLeft = -1;
+		this.s.scrollLeft.header = -1;
+		this.s.scrollLeft.footer = -1;
 		this.s[item+'Mode'] = mode;
 	},
 
