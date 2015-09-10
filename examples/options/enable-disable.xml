@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<dt-example table-type="html" order="5">
+<dt-example table-type="html" order="6">
 
-<css lib="datatables fixedheader" />
+<css lib="datatables fixedheader">
+	#float {
+		position: fixed;
+		top: 3em;
+		right: 2em;
+		z-index: 100;
+	}
+</css>
 <js lib="jquery datatables fixedheader">
 <![CDATA[
 $(document).ready(function() {
@@ -9,14 +16,12 @@ $(document).ready(function() {
 		fixedHeader: true
 	} );
 
-	var visible = true;
-	var tableContainer = $(table.table().container());
+	$('#enable').on( 'click', function () {
+		table.fixedHeader.enable();
+	} );
 
-	$('#toggle').on( 'click', function () {
-		tableContainer.css( 'display', visible ? 'none' : 'block' );
-		table.fixedHeader.adjust();
-
-		visible = ! visible;
+	$('#disable').on( 'click', function () {
+		table.fixedHeader.disable();
 	} );
 } );
 ]]>
@@ -26,14 +31,17 @@ $(document).ready(function() {
 
 <info><![CDATA[
 
-This example shows how FixedHeader can be enabled and disabled using the `fh-api fixedHeader.adjust()` API method. This is can be particularly useful if FixedHeader is used for DataTables that are enclosed in tabs, so the header is disabled when the tab containing it is not visible, and also to then realign the FixedHeader when the table is then made visible again.
+This example shows how FixedHeader can be enabled and disabled for a table using the `fh-api fixedHeader.enable()` and `fh-api fixedHeader.disable()` API methods. This can be useful if you want to dynamically control the behaviour of the fixed elements.
 
-This example shows a simple toggle button that will change the visibility of the DataTable. The `fh-api fixedHeader.adjust()` method is called whenever the table's visibility is changed, as it would be in a tab show event handler.
+This example demonstrates this ability using two floating buttons (top right) which you can click to enable and disable the fixed header.
 
 ]]></info>
 
 <demo-html>
-	<button id="toggle">Toggle table visibility</button>
+	<div id="float">
+		<button id="enable">Enable FixedHeader</button>
+		<button id="disable">Disable FixedHeader</button>
+	</div>
 </demo-html>
 
 </dt-example>

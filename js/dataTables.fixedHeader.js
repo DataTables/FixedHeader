@@ -67,7 +67,8 @@ var FixedHeader = function ( dt, config ) {
 		scrollLeft: {
 			header: -1,
 			footer: -1
-		}
+		},
+		enable: true
 	};
 
 	this.dom = {
@@ -112,9 +113,30 @@ $.extend( FixedHeader.prototype, {
 	 */
 	
 	/**
+	 * Enable / disable the fixed elements
+	 *
+	 * @param  {boolean} enable `true` to enable, `false` to disable
+	 */
+	enable: function ( enable )
+	{
+		this.s.enable = enable;
+
+		if ( this.c.header ) {
+			this._modeChange( 'in-place', 'header', true );
+		}
+
+		if ( this.c.footer && this.dom.tfoot.length ) {
+			this._modeChange( 'in-place', 'footer', true );
+		}
+
+		this.update();
+	},
+	
+	/**
 	 * Recalculate the position of the fixed elements and force them into place
 	 */
-	update: function () {
+	update: function ()
+	{
 		this._positions();
 		this._scroll( true );
 	},
@@ -407,6 +429,10 @@ $.extend( FixedHeader.prototype, {
 		var position = this.s.position;
 		var headerMode, footerMode;
 
+		if ( ! this.s.enable ) {
+			return;
+		}
+
 		if ( this.c.header ) {
 			if ( ! position.visible || windowTop <= position.theadTop - this.c.headerOffset ) {
 				headerMode = 'in-place';
@@ -498,6 +524,26 @@ DataTable.Api.register( 'fixedHeader.adjust()', function () {
 
 		if ( fh ) {
 			fh.update();
+		}
+	} );
+} );
+
+DataTable.Api.register( 'fixedHeader.enable()', function ( flag ) {
+	return this.iterator( 'table', function ( ctx ) {
+		var fh = ctx._fixedHeader;
+
+		if ( fh ) {
+			fh.enable( flag !== undefined ? flag : true );
+		}
+	} );
+} );
+
+DataTable.Api.register( 'fixedHeader.disable()', function ( ) {
+	return this.iterator( 'table', function ( ctx ) {
+		var fh = ctx._fixedHeader;
+
+		if ( fh ) {
+			fh.enable( false );
 		}
 	} );
 } );
