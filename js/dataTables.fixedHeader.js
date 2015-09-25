@@ -246,7 +246,7 @@ $.extend( FixedHeader.prototype, {
 				} ).toArray();
 
 			$(name, to).each( function ( i ) {
-				$(this).width( toWidths[i] );
+				$(this).width( toWidths[i] ).css("min-width", toWidths[i] );
 			} );
 		};
 
