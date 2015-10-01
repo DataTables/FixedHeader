@@ -22,12 +22,25 @@
  * For details please refer to: http://www.datatables.net
  */
 
+(function( factory ){
+	if ( typeof define === 'function' && define.amd ) {
+		// AMD
+		define( ['jquery', 'datatables'], factory );
+	}
+	else if ( typeof exports === 'object' ) {
+		// Node / CommonJS
+		module.exports = function ($, dt) {
+			if ( ! $ ) { $ = require('jquery'); }
+			factory( $, dt || $.fn.dataTable || require('datatables') );
+		};
+	}
+	else if ( jQuery ) {
+		// Browser standard
+		factory( jQuery, jQuery.fn.dataTable );
+	}
+}(function( $, DataTable ) {
+'use strict';
 
-(function(window, document, undefined) {
-
-
-var factory = function( $, DataTable ) {
-"use strict";
 
 var _instCounter = 0;
 
@@ -550,21 +563,4 @@ DataTable.Api.register( 'fixedHeader.disable()', function ( ) {
 
 
 return FixedHeader;
-}; // /factory
-
-
-// Define as an AMD module if possible
-if ( typeof define === 'function' && define.amd ) {
-	define( ['jquery', 'datatables'], factory );
-}
-else if ( typeof exports === 'object' ) {
-    // Node/CommonJS
-    factory( require('jquery'), require('datatables') );
-}
-else if ( jQuery && !jQuery.fn.dataTable.FixedHeader ) {
-	// Otherwise simply initialise as normal, stopping multiple evaluation
-	factory( jQuery, jQuery.fn.dataTable );
-}
-
-
-})(window, document);
+}));
