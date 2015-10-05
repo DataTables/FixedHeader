@@ -146,6 +146,16 @@ $.extend( FixedHeader.prototype, {
 	},
 	
 	/**
+	 * Set headerOffset 
+	 *
+	 * @param  {int} new value for headerOffset
+	 */
+	headerOffset: function ( topOffset )
+  {
+		this.c.headerOffset = topOffset;
+  },
+	
+	/**
 	 * Recalculate the position of the fixed elements and force them into place
 	 */
 	update: function ()
@@ -561,6 +571,15 @@ DataTable.Api.register( 'fixedHeader.disable()', function ( ) {
 	} );
 } );
 
+DataTable.Api.register( 'fixedHeader.headerOffset()', function ( topOffset ) {
+	return this.iterator( 'table', function ( ctx ) {
+		var fh = ctx._fixedHeader;
+
+		if ( fh ) {
+			fh.headerOffset( topOffset );
+		}
+	} );
+} );
 
 return FixedHeader;
 }));
