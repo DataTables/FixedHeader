@@ -154,6 +154,17 @@ $.extend( FixedHeader.prototype, {
   {
 		this.c.headerOffset = topOffset;
   },
+  
+  /**
+   * Set footerOffset 
+   *
+   * @param  {int} new value for footerOffset
+   */
+  footerOffset: function ( bottomOffset )
+  {
+    this.c.footerOffset = bottomOffset;
+  },
+
 	
 	/**
 	 * Recalculate the position of the fixed elements and force them into place
@@ -593,6 +604,33 @@ DataTable.Api.register( 'fixedHeader.headerOffset()', function ( topOffset ) {
 
     if ( fh ) {
       fh.headerOffset( topOffset );
+    }
+  } );
+} );
+
+/**
+ * Get the current footerOffset.
+ *
+ * @return {integer} the offset (in pixels) of the footer element's offset for the scrolling calculations
+ *
+ *//**
+ * Set the footerOffset.
+ *
+ * @param {integer} bottomOffset - the offset (in pixels) of the footer element's offset for the scrolling calculations
+ * @returns {DataTables.Api} this
+ */
+
+DataTable.Api.register( 'fixedHeader.footerOffset()', function ( bottomOffset ) {
+  if ( bottomOffset === undefined ) {
+    return this.context.length !== 0 ?
+           this.context[0]._fixedHeader.c.footerOffset :
+           undefined;
+  }
+  return this.iterator( 'table', function ( ctx ) {
+    var fh = ctx._fixedHeader;
+
+    if ( fh ) {
+      fh.footerOffset( bottomOffset );
     }
   } );
 } );
