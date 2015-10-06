@@ -571,14 +571,30 @@ DataTable.Api.register( 'fixedHeader.disable()', function ( ) {
 	} );
 } );
 
+/**
+ * Get the current headerOffset.
+ *
+ * @return {integer} the offset (in pixels) of the header element's offset for the scrolling calculations
+ *
+ *//**
+ * Set the headerOffset.
+ *
+ * @param {integer} topOffset - the offset (in pixels) of the header element's offset for the scrolling calculations
+ * @returns {DataTables.Api} this
+ */
 DataTable.Api.register( 'fixedHeader.headerOffset()', function ( topOffset ) {
-	return this.iterator( 'table', function ( ctx ) {
-		var fh = ctx._fixedHeader;
+  if ( topOffset === undefined ) {
+    return this.context.length !== 0 ?
+           this.context[0]._fixedHeader.c.headerOffset :
+           undefined;
+  }
+  return this.iterator( 'table', function ( ctx ) {
+    var fh = ctx._fixedHeader;
 
-		if ( fh ) {
-			fh.headerOffset( topOffset );
-		}
-	} );
+    if ( fh ) {
+      fh.headerOffset( topOffset );
+    }
+  } );
 } );
 
 return FixedHeader;
