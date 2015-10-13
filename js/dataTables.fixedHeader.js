@@ -149,23 +149,33 @@ $.extend( FixedHeader.prototype, {
 	},
 	
 	/**
-	 * Set headerOffset 
+	 * Set header offset 
 	 *
 	 * @param  {int} new value for headerOffset
 	 */
-	headerOffset: function ( topOffset )
+	headerOffset: function ( offset )
 	{
-		this.c.headerOffset = topOffset;
+		if ( offset !== undefined ) {
+			this.c.headerOffset = offset;
+			this.update();
+		}
+
+		return this.c.headerOffset;
 	},
 	
 	/**
-	 * Set footerOffset 
+	 * Set footer offset
 	 *
 	 * @param  {int} new value for footerOffset
 	 */
-	footerOffset: function ( bottomOffset )
+	footerOffset: function ( offset )
 	{
-		this.c.footerOffset = bottomOffset;
+		if ( offset !== undefined ) {
+			this.c.footerOffset = offset;
+			this.update();
+		}
+
+		return this.c.footerOffset;
 	},
 
 	
@@ -585,34 +595,23 @@ DataTable.Api.register( 'fixedHeader.disable()', function ( ) {
 	} );
 } );
 
-DataTable.Api.register( 'fixedHeader.headerOffset()', function ( topOffset ) {
-	if ( topOffset === undefined ) {
-		return this.context.length !== 0 ?
-			this.context[0]._fixedHeader.c.headerOffset :
-			undefined;
-	}
-	return this.iterator( 'table', function ( ctx ) {
-		var fh = ctx._fixedHeader;
+$.each( ['header', 'footer'], function ( i, el ) {
+	DataTable.Api.register( 'fixedHeader.'+el+'Offset()', function ( offset ) {
+		var ctx = this.context;
 
-		if ( fh ) {
-			fh.headerOffset( topOffset );
+		if ( offset === undefined ) {
+			return ctx.length && ctx[0]._fixedHeader ?
+				ctx[0]._fixedHeader[el +'Offset']() :
+				undefined;
 		}
-	} );
-} );
 
-DataTable.Api.register( 'fixedHeader.footerOffset()', function ( bottomOffset ) {
-	if ( bottomOffset === undefined ) {
-		return this.context.length !== 0 ?
-			this.context[0]._fixedHeader.c.footerOffset :
-			undefined;
-	}
-	
-	return this.iterator( 'table', function ( ctx ) {
-		var fh = ctx._fixedHeader;
+		return this.iterator( 'table', function ( ctx ) {
+			var fh = ctx._fixedHeader;
 
-		if ( fh ) {
-			fh.footerOffset( bottomOffset );
-		}
+			if ( fh ) {
+				fh[ el +'Offset' ]( offset );
+			}
+		} );
 	} );
 } );
 

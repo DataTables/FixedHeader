@@ -37,4 +37,7 @@ $('#example').DataTable( {
 } );
 
 ]]></example>
+
+	<related>fh-init fixedHeader.footerOffset</related>
+	<related>fh-api fixedHeader.headerOffset()</related>
 </dt-option>
