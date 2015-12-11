@@ -274,7 +274,7 @@ $.extend( FixedHeader.prototype, {
 
 			// Insert a fake thead/tfoot into the DataTable to stop it jumping around
 			itemDom.placeholder = itemElement.clone( false );
-			itemDom.host.append( itemDom.placeholder );
+			itemDom.host.prepend( itemDom.placeholder );
 
 			// Clone widths
 			this._matchWidths( itemDom.placeholder, itemDom.floating );
@@ -376,10 +376,12 @@ $.extend( FixedHeader.prototype, {
 
 			this._unsize( item );
 
-			itemDom.host.append( item === 'header' ?
-				this.dom.thead :
-				this.dom.tfoot
-			);
+			if ( item === 'header' ) {
+				itemDom.host.prepend( this.dom.thead );
+			}
+			else {
+				itemDom.host.append( this.dom.tfoot );
+			}
 
 			if ( itemDom.floating ) {
 				itemDom.floating.remove();
