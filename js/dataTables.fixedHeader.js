@@ -293,19 +293,24 @@ $.extend( FixedHeader.prototype, {
 	 * @private
 	 */
 	_matchWidths: function ( from, to ) {
-		var type = function ( name ) {
-			var toWidths = $(name, from)
+		var get = function ( name ) {
+			return $(name, from)
 				.map( function () {
 					return $(this).width();
 				} ).toArray();
+		};
 
+		var set = function ( name, toWidths ) {
 			$(name, to).each( function ( i ) {
 				$(this).width( toWidths[i] ).css("min-width", toWidths[i] );
 			} );
 		};
 
-		type( 'th' );
-		type( 'td' );
+		var thWidths = get( 'th' );
+		var tdWidths = get( 'td' );
+
+		set( 'th', thWidths );
+		set( 'td', tdWidths );
 	},
 
 	/**
