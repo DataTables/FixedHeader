@@ -262,6 +262,7 @@ $.extend( FixedHeader.prototype, {
 		}
 		else {
 			if ( itemDom.floating ) {
+				this._unsize( item );
 				itemDom.placeholder.remove();
 				itemDom.floating.children().detach();
 				itemDom.floating.remove();
