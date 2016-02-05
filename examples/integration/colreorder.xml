@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<dt-example table-type="html" order="2">
+<dt-example table-type="html" order="3">
 
 <css lib="datatables fixedheader colreorder" />
 <js lib="jquery datatables fixedheader colreorder">
 <![CDATA[
 $(document).ready(function() {
 	var table = $('#example').DataTable( {
-		fixedHeader: true
+		fixedHeader: true,
+		colReorder: true
 	} );
-
-	new $.fn.dataTable.ColReorder( table );
 } );
 ]]>
 </js>
