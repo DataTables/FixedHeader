@@ -220,7 +220,7 @@ $.extend( FixedHeader.prototype, {
 				that.update();
 			} );
 
-		dt.on( 'column-reorder.dt.dtfc column-visibility.dt.dtfc draw.dt.dtfc', function () {
+		dt.on( 'column-reorder.dt.dtfc column-visibility.dt.dtfc draw.dt.dtfc column-sizing.dt.dtfc', function () {
 			that.update();
 		} );
 
@@ -263,11 +263,13 @@ $.extend( FixedHeader.prototype, {
 		else {
 			if ( itemDom.floating ) {
 				itemDom.placeholder.remove();
+				this._unsize( item );
 				itemDom.floating.children().detach();
 				itemDom.floating.remove();
 			}
 
 			itemDom.floating = $( dt.table().node().cloneNode( false ) )
+				.css( 'table-layout', 'fixed' )
 				.removeAttr( 'id' )
 				.append( itemElement )
 				.appendTo( 'body' );
@@ -302,7 +304,10 @@ $.extend( FixedHeader.prototype, {
 
 		var set = function ( name, toWidths ) {
 			$(name, to).each( function ( i ) {
-				$(this).width( toWidths[i] ).css("min-width", toWidths[i] );
+				$(this).css( {
+					width: toWidths[i],
+					minWidth: toWidths[i]
+				} );
 			} );
 		};
 
@@ -326,7 +331,13 @@ $.extend( FixedHeader.prototype, {
 		var el = this.dom[ item ].floating;
 
 		if ( el && (item === 'footer' || (item === 'header' && ! this.s.autoWidth)) ) {
-			$('th, td', el).css( 'width', '' );
+			$('th, td', el).css( {
+				width: '',
+				minWidth: ''
+			} );
+		}
+		else if ( el && item === 'header' ) {
+			$('th, td', el).css( 'min-width', '' );
 		}
 	},
 
