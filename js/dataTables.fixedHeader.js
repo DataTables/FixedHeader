@@ -326,7 +326,7 @@ $.extend( FixedHeader.prototype, {
 		var el = this.dom[ item ].floating;
 
 		if ( el && (item === 'footer' || (item === 'header' && ! this.s.autoWidth)) ) {
-			$('th, td', el).css( 'width', '' );
+			$('th, td', el).css( 'min-width', '' );
 		}
 	},
 
