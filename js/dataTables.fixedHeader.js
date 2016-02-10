@@ -575,18 +575,20 @@ $.fn.DataTable.FixedHeader = FixedHeader;
 
 // DataTables creation - check if the FixedHeader option has been defined on the
 // table and if so, initialise
-$(document).on( 'init.dt.dtb', function (e, settings, json) {
+$(document).on( 'init.dt.dtfh', function (e, settings, json) {
 	if ( e.namespace !== 'dt' ) {
 		return;
 	}
 
-	var opts = settings.oInit.fixedHeader;
-	if ( opts === undefined ) {
-		opts = DataTable.defaults.fixedHeader; // might still be undefined
-	}
+	var init = settings.oInit.fixedHeader;
+	var defaults = DataTable.defaults.fixedHeader;
 
-	if ( opts && ! settings._fixedHeader ) {
-		new FixedHeader( settings, opts );
+	if ( (init || defaults) && ! settings._fixedHeader ) {
+		var opts = $.extend( {}, init, defaults );
+
+		if ( init !== false ) {
+			new FixedHeader( settings, opts );
+		}
 	}
 } );
 
