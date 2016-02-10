@@ -580,7 +580,10 @@ $(document).on( 'init.dt.dtb', function (e, settings, json) {
 		return;
 	}
 
-	var opts = settings.oInit.fixedHeader || DataTable.defaults.fixedHeader;
+	var opts = settings.oInit.fixedHeader;
+	if ( opts === undefined ) {
+		opts = DataTable.defaults.fixedHeader; // might still be undefined
+	}
 
 	if ( opts && ! settings._fixedHeader ) {
 		new FixedHeader( settings, opts );
