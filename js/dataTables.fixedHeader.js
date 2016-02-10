@@ -584,7 +584,7 @@ $(document).on( 'init.dt.dtfh', function (e, settings, json) {
 	var defaults = DataTable.defaults.fixedHeader;
 
 	if ( (init || defaults) && ! settings._fixedHeader ) {
-		var opts = $.extend( {}, init, defaults );
+		var opts = $.extend( {}, defaults, init );
 
 		if ( init !== false ) {
 			new FixedHeader( settings, opts );
