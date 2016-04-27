@@ -1,21 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<dt-example table-type="html" order="5">
+<dt-example table-type="html" order="4">
 
 <css lib="datatables fixedheader" />
 <js lib="jquery datatables fixedheader">
 <![CDATA[
 $(document).ready(function() {
 	$('#example').DataTable( {
-		fixedHeader: {
-			header: true,
-			headerOffset: $('#fixed').height()
-		}
+		fixedHeader: true
 	} );
 } );
 ]]>
 </js>
 
-<title lib="FixedHeader">Offset - manual</title>
+<title lib="FixedHeader">Offset - automatic</title>
 
 <info><![CDATA[
 
@@ -24,9 +21,9 @@ It is not uncommon to have a fixed element at the top or bottom of a web-page to
 * Automatically, by assigning the class `-string fh-fixedHeader` or `-string fh-fixedFooter` to the fixed elements
 * Using the `fh-init fixedHeader.headerOffset` and `fh-init fixedHeader.footerOffset` options.
 
-This example takes the second approach, using the `fh-init fixedHeader.headerOffset` option to assign a suitable offset.
+This example demonstrates the first option where a header element has the class `-string fh-fixedHeader` assigned to it. FixedHeader automatically detects this element and will offer the header by the required amount.
 
-<div id="fixed" style="position:fixed; background-color:#4E6CA3; top:0; right:0; left:0; height:50px; z-index:1;"> </div>
+<div class="fh-fixedHeader" style="position:fixed; background-color:#4E6CA3; top:0; right:0; left:0; height:50px; z-index:1;"> </div>
 
 ]]></info>
 
