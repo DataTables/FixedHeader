@@ -221,11 +221,9 @@ $.extend( FixedHeader.prototype, {
 			} );
 
 		var autoHeader = $('.fh-fixedHeader');
-		console.log( autoHeader[0], autoHeader.outerHeight() );
 		if ( ! this.c.headerOffset && autoHeader.length ) {
 			this.c.headerOffset = autoHeader.outerHeight();
 		}
-		console.log( 'this.c.headerOffset', this.c.headerOffset );
 
 		var autoFooter = $('.fh-fixedFooter');
 		if ( ! this.c.footerOffset && autoFooter.length ) {
@@ -395,6 +393,13 @@ $.extend( FixedHeader.prototype, {
 		var itemDom = this.dom[ item ];
 		var position = this.s.position;
 
+		// Record focus. Browser's will cause input elements to loose focus if
+		// they are inserted else where in the doc
+		var tablePart = this.dom[ item==='footer' ? 'tfoot' : 'thead' ];
+		var focus = $.contains( tablePart[0], document.activeElement ) ?
+			document.activeElement :
+			null;
+
 		if ( mode === 'in-place' ) {
 			// Insert the header back into the table's real header
 			if ( itemDom.placeholder ) {
@@ -450,6 +455,11 @@ $.extend( FixedHeader.prototype, {
 				.css( 'top', position.tbodyTop )
 				.css( 'left', position.left+'px' )
 				.css( 'width', position.width+'px' );
+		}
+
+		// Restore focus if it was lost
+		if ( focus && focus !== document.activeElement ) {
+			focus.focus();
 		}
 
 		this.s.scrollLeft.header = -1;
