@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<dt-example table-type="html" order="5" framework="jqueryui">
+<dt-example table-type="html" order="2" framework="bootstrap4">
 
 <css lib="datatables fixedheader" />
 <js lib="jquery datatables fixedheader">
 <![CDATA[
 $(document).ready(function() {
-	$('#example').DataTable( {
+	var table = $('#example').DataTable( {
 		fixedHeader: true
 	} );
 } );
 ]]>
 </js>
 
-<title lib="FixedHeader">jQuery UI styling</title>
+<title lib="FixedHeader">Bootstrap 4</title>
 
 <info><![CDATA[
 
-This example shows FixedHeader operating with the jQuery UI ThemeRoller styling framework.
+This example shows FixedHeader being styling by the Bootstrap 4 CSS framework.
 
 ]]></info>
 
