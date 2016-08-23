@@ -1,6 +1,6 @@
 # FixedHeader
 
-The FixedHeader plug-in will freeze in place the header, footer and left and/or right most columns in a DataTable, ensuring that title information will remain always visible.
+The FixedHeader plug-in will freeze in place the header and/or footer in a DataTable, ensuring that title information will remain always visible.
 
 
 # Installation
