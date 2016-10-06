@@ -303,6 +303,12 @@ $.extend( FixedHeader.prototype, {
 					.append( itemElement )
 					.appendTo( itemScroll );
 
+				// Sync Scroll with scrollBody
+				var tableScrollBody = $(".dataTables_scrollBody");
+				tableScrollBody.scroll( function() {
+					itemScroll.scrollLeft( tableScrollBody.scrollLeft() );
+				});
+
 				var itemElementLeft = itemElement;
 				var itemElementRight = itemElement;
 
