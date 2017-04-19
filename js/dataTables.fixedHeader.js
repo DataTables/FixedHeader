@@ -635,8 +635,9 @@ DataTable.Api.register( 'fixedHeader.enable()', function ( flag ) {
 	return this.iterator( 'table', function ( ctx ) {
 		var fh = ctx._fixedHeader;
 
-		if ( fh ) {
-			fh.enable( flag !== undefined ? flag : true );
+		flag = ( flag !== undefined ? flag : true );
+		if ( fh && flag !== fh.s.enable ) {
+			fh.enable( flag );
 		}
 	} );
 } );
@@ -645,7 +646,7 @@ DataTable.Api.register( 'fixedHeader.disable()', function ( ) {
 	return this.iterator( 'table', function ( ctx ) {
 		var fh = ctx._fixedHeader;
 
-		if ( fh ) {
+		if ( fh && fh.s.enable ) {
 			fh.enable( false );
 		}
 	} );
