@@ -81,7 +81,9 @@ var FixedHeader = function ( dt, config ) {
 			tfootHeight: 0,
 			theadHeight: 0,
 			windowHeight: $(window).height(),
-			visible: true
+			visible: true,
+			scrollParentTop: 0,
+			scrollParentVisible: true
 		},
 		headerMode: null,
 		footerMode: null,
@@ -211,14 +213,18 @@ $.extend( FixedHeader.prototype, {
 		var that = this;
 		var dt = this.s.dt;
 
-		$(window)
-			.on( 'scroll'+this.s.namespace, function () {
+		window.addEventListener('scroll',
+			function () {
+				if(this.c.relativeScroll) {
+					that._positions();
+				}
 				that._scroll();
-			} )
-			.on( 'resize'+this.s.namespace, function () {
+			}, true);
+		window.addEventListener('resize',
+			function () {
 				that.s.position.windowHeight = $(window).height();
 				that.update();
-			} );
+			}, true);
 
 		var autoHeader = $('.fh-fixedHeader');
 		if ( ! this.c.headerOffset && autoHeader.length ) {
@@ -498,6 +504,8 @@ $.extend( FixedHeader.prototype, {
 		position.theadTop = thead.offset().top;
 		position.tbodyTop = tbody.offset().top;
 		position.theadHeight = position.tbodyTop - position.theadTop;
+		position.scrollParentTop = thead.scrollParent().offset().top;
+		position.scrollParentVisible = thead.scrollParent().is(':visible');
 
 		if ( tfoot.length ) {
 			position.tfootTop = tfoot.offset().top;
@@ -532,7 +540,10 @@ $.extend( FixedHeader.prototype, {
 		}
 
 		if ( this.c.header ) {
-			if ( ! position.visible || windowTop <= position.theadTop - this.c.headerOffset ) {
+			if ( this.c.relativeScroll && position.scrollParentVisible && position.theadTop - position.scrollParentTop < 0 ) {
+				headerMode = 'in-relative';
+			}
+			else if ( this.c.relativeScroll || ! position.visible || windowTop <= position.theadTop - this.c.headerOffset ) {
 				headerMode = 'in-place';
 			}
 			else if ( windowTop <= position.tfootTop - position.theadHeight - this.c.headerOffset ) {
@@ -586,7 +597,8 @@ FixedHeader.defaults = {
 	header: true,
 	footer: false,
 	headerOffset: 0,
-	footerOffset: 0
+	footerOffset: 0,
+	relativeScroll: 0
 };
 
 
