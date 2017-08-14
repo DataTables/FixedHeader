@@ -407,7 +407,7 @@ $.extend( FixedHeader.prototype, {
 			} ).eq( 0 );
 
 		return position === "fixed" || !scrollParent.length ?
-			$( element[ 0 ].ownerDocument || document ) :
+			$( element[ 0 ].ownerDocument.body || document.body ) :
 			scrollParent;		
 	},
 
