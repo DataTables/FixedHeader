@@ -384,6 +384,32 @@ $.extend( FixedHeader.prototype, {
 			lastScrollLeft[ item ] = scrollLeft;
 		}
 	},
+	
+	/** 
+	 * Get the closest ancestor element that is scrollable. 
+	 * @private
+	 */ 
+	_scrollParent: function( element ) 
+	{
+		// based on the jQuery UI version of scrollParent()
+		// Copyright jQuery Foundation and other contributors
+		// Released under the MIT license.
+		var position = element.css( "position" ),
+			excludeStaticParent = position === "absolute",
+			overflowRegex = /(auto|scroll)/,
+			scrollParent = element.parents().filter( function() {
+				var parent = $( this );
+				if ( excludeStaticParent && parent.css( "position" ) === "static" ) {
+					return false;
+				}
+				return overflowRegex.test( parent.css( "overflow" ) + parent.css( "overflow-y" ) +
+					parent.css( "overflow-x" ) );
+			} ).eq( 0 );
+
+		return position === "fixed" || !scrollParent.length ?
+			$( element[ 0 ].ownerDocument || document ) :
+			scrollParent;		
+	},
 
 	/**
 	 * Change from one display mode to another. Each fixed item can be in one
@@ -503,7 +529,7 @@ $.extend( FixedHeader.prototype, {
 		var position = this.s.position;
 		var dom = this.dom;
 		var tableNode = $(table.node());
-	    var scrollParent = tableNode.scrollParent();
+		var scrollParent = this._scrollParent(tableNode);
 
 		// Need to use the header and footer that are in the main table,
 		// regardless of if they are clones, since they hold the positions we
@@ -520,7 +546,7 @@ $.extend( FixedHeader.prototype, {
 		position.theadHeight = position.tbodyTop - position.theadTop;
 		position.scrollParentTop = scrollParent.offset().top;
 		position.scrollParentVisible = scrollParent.is(':visible');
-	    position.scrollParentHeight = scrollParent.outerHeight();
+		position.scrollParentHeight = scrollParent.outerHeight();
 
 		if ( tfoot.length ) {
 			position.tfootTop = tfoot.offset().top;
