@@ -215,10 +215,13 @@ $.extend( FixedHeader.prototype, {
 
 		window.addEventListener('scroll',
 			function () {
-				if(this.c.relativeScroll) {
-					that._positions();
+				if (that.c.relativeScroll) {
+				    that._positions();
+				    that._scroll();
 				}
-				that._scroll();
+				else {
+				    that._scroll();
+				}
 			}, true);
 		window.addEventListener('resize',
 			function () {
@@ -416,7 +419,6 @@ $.extend( FixedHeader.prototype, {
 				itemDom.placeholder.remove();
 				itemDom.placeholder = null;
 			}
-
 			this._unsize( item );
 
 			if ( item === 'header' ) {
@@ -430,6 +432,17 @@ $.extend( FixedHeader.prototype, {
 				itemDom.floating.remove();
 				itemDom.floating = null;
 			}
+		}
+		else if (mode === 'in-relative') {
+			// Remove the header from the read header and insert into a fixed
+			// positioned floating table clone
+			this._clone(item, forceChange);
+
+			itemDom.floating
+				.addClass('fixedHeader-locked')
+				.css('top', item === 'header' ? this.c[item + 'Offset'] + position.scrollParentTop : position.scrollParentTop + position.scrollParentHeight - position.tfootHeight - this.c[item + 'Offset'])
+				.css('left', position.left + 'px')
+				.css('width', position.width + 'px');
 		}
 		else if ( mode === 'in' ) {
 			// Remove the header from the read header and insert into a fixed
@@ -490,6 +503,7 @@ $.extend( FixedHeader.prototype, {
 		var position = this.s.position;
 		var dom = this.dom;
 		var tableNode = $(table.node());
+	    var scrollParent = tableNode.scrollParent();
 
 		// Need to use the header and footer that are in the main table,
 		// regardless of if they are clones, since they hold the positions we
@@ -504,8 +518,9 @@ $.extend( FixedHeader.prototype, {
 		position.theadTop = thead.offset().top;
 		position.tbodyTop = tbody.offset().top;
 		position.theadHeight = position.tbodyTop - position.theadTop;
-		position.scrollParentTop = thead.scrollParent().offset().top;
-		position.scrollParentVisible = thead.scrollParent().is(':visible');
+		position.scrollParentTop = scrollParent.offset().top;
+		position.scrollParentVisible = scrollParent.is(':visible');
+	    position.scrollParentHeight = scrollParent.outerHeight();
 
 		if ( tfoot.length ) {
 			position.tfootTop = tfoot.offset().top;
@@ -560,8 +575,11 @@ $.extend( FixedHeader.prototype, {
 			this._horizontal( 'header', windowLeft );
 		}
 
-		if ( this.c.footer && this.dom.tfoot.length ) {
-			if ( ! position.visible || windowTop + position.windowHeight >= position.tfootBottom + this.c.footerOffset ) {
+		if (this.c.footer && this.dom.tfoot.length) {
+			if (this.c.relativeScroll && position.scrollParentVisible && position.tfootTop + position.tfootHeight > position.scrollParentTop + position.scrollParentHeight ) {
+				footerMode = 'in-relative';
+			}
+			else if ( this.c.relativeScroll || ! position.visible || windowTop + position.windowHeight >= position.tfootBottom + this.c.footerOffset ) {
 				footerMode = 'in-place';
 			}
 			else if ( position.windowHeight + windowTop > position.tbodyTop + position.tfootHeight + this.c.footerOffset ) {
