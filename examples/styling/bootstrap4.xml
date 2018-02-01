@@ -16,7 +16,7 @@ $(document).ready(function() {
 
 <info><![CDATA[
 
-This example shows FixedHeader being styling by the Bootstrap 4 CSS framework.
+This example shows FixedHeader being styled by the Bootstrap 4 CSS framework.
 
 ]]></info>
 

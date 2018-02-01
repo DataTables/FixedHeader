@@ -15,7 +15,7 @@
 	</type>
 
 	<description>
-		FixedHeader operates by calculating the position of the DataTable on the page and performing the required calculations to fix the header / footer on the page as appropriate. For performance reasons the position value are cached rather than being constantly updated. The result is that if an event external to DataTables updates the page and moves the position of the table, these values must be recalculated. This method provides that ability.
+		FixedHeader operates by calculating the position of the DataTable on the page and performing the required calculations to fix the header / footer on the page as appropriate. For performance reasons the position values are cached rather than being constantly updated. The result is that if an event external to DataTables updates the page and moves the position of the table, these values must be recalculated. This method provides that ability.
 
 		Note that if the DataTable is not visible, FixedHeader will effectively disable itself, returning the DataTable to its standard state. If the DataTable is then made visible again (for example in a tab), this method should be called to correctly draw the table.
 	</description>
