@@ -16,7 +16,7 @@ $(document).ready(function() {
 
 <info><![CDATA[
 
-This example shows FixedHeader being styling by the [Semantic UI](http://semantic-ui.com) framework.
+This example shows FixedHeader being styled by the [Semantic UI](http://semantic-ui.com) framework.
 
 ]]></info>
 

@@ -12,11 +12,11 @@ $(document).ready(function() {
 ]]>
 </js>
 
-<title lib="FixedHeader">Bootstrap</title>
+<title lib="FixedHeader">Bootstrap 3</title>
 
 <info><![CDATA[
 
-This example shows FixedHeader being styling by the Bootstrap CSS framework.
+This example shows FixedHeader being styled by the Bootstrap CSS framework.
 
 ]]></info>
 
