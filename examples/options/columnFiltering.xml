@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <dt-example table-type="html" order="9">
 
-<css lib="datatables fixedheader" />
+<css lib="datatables fixedheader">
+	thead input {
+		width: 100%;
+	}
+</css>
 <js lib="jquery datatables fixedheader">
 <![CDATA[
 $(document).ready(function() {
