@@ -235,6 +235,14 @@ $.extend( FixedHeader.prototype, {
 		} );
 
 		dt.on( 'destroy.dtfc', function () {
+			if ( that.c.header ) {
+				that._modeChange( 'in-place', 'header', true );
+			}
+
+			if ( that.c.footer && that.dom.tfoot.length ) {
+				that._modeChange( 'in-place', 'footer', true );
+			}
+
 			dt.off( '.dtfc' );
 			$(window).off( that.s.namespace );
 		} );
