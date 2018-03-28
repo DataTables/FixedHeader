@@ -102,7 +102,8 @@ var FixedHeader = function ( dt, config ) {
 		header: {
 			host: null,
 			floating: null,
-			placeholder: null
+			placeholder: null,
+			container: null,
 		},
 		footer: {
 			host: null,
@@ -273,6 +274,7 @@ $.extend( FixedHeader.prototype, {
 		var itemElement = item === 'header' ?
 			this.dom.thead :
 			this.dom.tfoot;
+		var fixedColumns = this.c.fixedColumns;
 
 		if ( ! force && itemDom.floating ) {
 			// existing floating element - reuse it
@@ -286,11 +288,84 @@ $.extend( FixedHeader.prototype, {
 				itemDom.floating.remove();
 			}
 
-			itemDom.floating = $( dt.table().node().cloneNode( false ) )
-				.css( 'table-layout', 'fixed' )
-				.removeAttr( 'id' )
-				.append( itemElement )
-				.appendTo( 'body' );
+			// Check if there is fixed columns options
+			if ( fixedColumns.isFixed ) {
+				itemDom.container = $('.fixedHeader-container');
+				if (itemDom.container.length <= 0) {
+					// Create
+					itemDom.container = $('<div></div>');
+					itemDom.container.addClass('fixedHeader-container');
+
+				} else {
+					itemDom.container.empty();
+				}
+
+				var itemScroll = $('<div></div>');
+				itemScroll
+					.addClass('fixedHeader-scroll')
+					.appendTo( itemDom.container );
+
+				itemDom.floating = $( dt.table().node().cloneNode( false ) )
+					.css( 'table-layout', 'fixed' )
+					.removeAttr( 'id' )
+					.append( itemElement )
+					.appendTo( itemScroll );
+
+				// Sync Scroll with scrollBody
+				var tableScrollBody = $(".dataTables_scrollBody");
+				tableScrollBody.scroll( function() {
+					itemScroll.scrollLeft( tableScrollBody.scrollLeft() );
+				});
+
+				var itemElementLeft = itemElement;
+				var itemElementRight = itemElement;
+
+				// Append left fixed column head
+				if ( fixedColumns.left > 0 ) {
+					var leftWrapper = $('<div></div>');
+					leftWrapper.addClass('DTFH_Wrapper DTFH_LeftWrapper');
+
+					var tableFloatingLeft = $( dt.table().node().cloneNode( false ) );
+					var floatingCloneLeft = tableFloatingLeft.clone( true )
+						.removeAttr('id')
+						.addClass('fixedHeader-floating dataTable-clone-left').css('width', 'auto');
+
+					itemElementLeft.clone( true ).appendTo( floatingCloneLeft );
+
+					floatingCloneLeft.find('th:gt('+ (fixedColumns.left - 1) +')').remove();
+					floatingCloneLeft.appendTo( leftWrapper );
+
+					leftWrapper.appendTo( itemDom.container );
+				}
+
+				// Append right fixed column head
+				if ( fixedColumns.right > 0 ) {
+					var rightWrapper = $('<div></div>');
+					rightWrapper.addClass('DTFH_Wrapper DTFH_RightWrapper');
+
+					var tableFloatingRight = $( dt.table().node().cloneNode( false ) );
+					var floatingCloneRight = tableFloatingRight.clone()
+						.removeAttr('id')
+						.addClass('fixedHeader-floating dataTable-clone-right').css('width', 'auto');
+
+					itemElementRight.clone( true ).appendTo( floatingCloneRight );
+
+					var elementToRemove = floatingCloneRight.find('th:lt(-'+ fixedColumns.right +')');
+					elementToRemove.remove();
+					floatingCloneRight.appendTo( rightWrapper );
+
+					rightWrapper.appendTo( itemDom.container );
+				}
+
+				itemDom.container.appendTo('body');
+
+			} else {
+				itemDom.floating = $( dt.table().node().cloneNode( false ) )
+					.css( 'table-layout', 'fixed' )
+					.removeAttr( 'id' )
+					.append( itemElement )
+					.appendTo( 'body' );
+			}
 
 			// Insert a fake thead/tfoot into the DataTable to stop it jumping around
 			itemDom.placeholder = itemElement.clone( false )
@@ -404,6 +479,11 @@ $.extend( FixedHeader.prototype, {
 		var dt = this.s.dt;
 		var itemDom = this.dom[ item ];
 		var position = this.s.position;
+		var table = dt.table();
+		var tableNode = $( dt.table().node() );
+		var tableParent = tableNode.parent();
+		var tableParentWidth = tableParent.width();
+		var tableParentLeft = tableParent.offset().left;
 
 		// Record focus. Browser's will cause input elements to loose focus if
 		// they are inserted else where in the doc
@@ -435,6 +515,10 @@ $.extend( FixedHeader.prototype, {
 			if ( itemDom.floating ) {
 				itemDom.floating.remove();
 				itemDom.floating = null;
+				if ( itemDom.container ) {
+					itemDom.container.remove();
+					itemDom.container = null;
+				}
 			}
 		}
 		else if ( mode === 'in' ) {
@@ -447,6 +531,13 @@ $.extend( FixedHeader.prototype, {
 				.css( item === 'header' ? 'top' : 'bottom', this.c[item+'Offset'] )
 				.css( 'left', position.left+'px' )
 				.css( 'width', position.width+'px' );
+
+			if ( itemDom.container ) {
+				itemDom.container
+					.css( item === 'header' ? 'top' : 'bottom', this.c[item+'Offset'] )
+					.css( 'left', tableParentLeft+'px' )
+					.css( 'width', tableParentWidth+'px' );
+			}
 
 			if ( item === 'footer' ) {
 				itemDom.floating.css( 'top', '' );
@@ -600,7 +691,12 @@ FixedHeader.defaults = {
 	header: true,
 	footer: false,
 	headerOffset: 0,
-	footerOffset: 0
+	footerOffset: 0,
+	fixedColumns: {
+		isFixed: false,
+		left: 0,
+		right: 0
+	}
 };
 
 
