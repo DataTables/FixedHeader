@@ -81,7 +81,9 @@ var FixedHeader = function ( dt, config ) {
 			tfootHeight: 0,
 			theadHeight: 0,
 			windowHeight: $(window).height(),
-			visible: true
+			visible: true,
+			scrollParentTop: 0,
+			scrollParentVisible: true
 		},
 		headerMode: null,
 		footerMode: null,
@@ -211,14 +213,21 @@ $.extend( FixedHeader.prototype, {
 		var that = this;
 		var dt = this.s.dt;
 
-		$(window)
-			.on( 'scroll'+this.s.namespace, function () {
-				that._scroll();
-			} )
-			.on( 'resize'+this.s.namespace, function () {
+		window.addEventListener('scroll',
+			function () {
+				if (that.c.relativeScroll) {
+				    that._positions();
+				    that._scroll();
+				}
+				else {
+				    that._scroll();
+				}
+			}, true);
+		window.addEventListener('resize',
+			function () {
 				that.s.position.windowHeight = $(window).height();
 				that.update();
-			} );
+			}, true);
 
 		var autoHeader = $('.fh-fixedHeader');
 		if ( ! this.c.headerOffset && autoHeader.length ) {
@@ -384,6 +393,32 @@ $.extend( FixedHeader.prototype, {
 			lastScrollLeft[ item ] = scrollLeft;
 		}
 	},
+	
+	/** 
+	 * Get the closest ancestor element that is scrollable. 
+	 * @private
+	 */ 
+	_scrollParent: function( element ) 
+	{
+		// based on the jQuery UI version of scrollParent()
+		// Copyright jQuery Foundation and other contributors
+		// Released under the MIT license.
+		var position = element.css( "position" ),
+			excludeStaticParent = position === "absolute",
+			overflowRegex = /(auto|scroll)/,
+			scrollParent = element.parents().filter( function() {
+				var parent = $( this );
+				if ( excludeStaticParent && parent.css( "position" ) === "static" ) {
+					return false;
+				}
+				return overflowRegex.test( parent.css( "overflow" ) + parent.css( "overflow-y" ) +
+					parent.css( "overflow-x" ) );
+			} ).eq( 0 );
+
+		return position === "fixed" || !scrollParent.length ?
+			$( element[ 0 ].ownerDocument.body || document.body ) :
+			scrollParent;		
+	},
 
 	/**
 	 * Change from one display mode to another. Each fixed item can be in one
@@ -423,7 +458,6 @@ $.extend( FixedHeader.prototype, {
 				itemDom.placeholder.remove();
 				itemDom.placeholder = null;
 			}
-
 			this._unsize( item );
 
 			if ( item === 'header' ) {
@@ -437,6 +471,17 @@ $.extend( FixedHeader.prototype, {
 				itemDom.floating.remove();
 				itemDom.floating = null;
 			}
+		}
+		else if (mode === 'in-relative') {
+			// Remove the header from the read header and insert into a fixed
+			// positioned floating table clone
+			this._clone(item, forceChange);
+
+			itemDom.floating
+				.addClass('fixedHeader-locked')
+				.css('top', item === 'header' ? this.c[item + 'Offset'] + position.scrollParentTop : position.scrollParentTop + position.scrollParentHeight - position.tfootHeight - this.c[item + 'Offset'])
+				.css('left', position.left + 'px')
+				.css('width', position.width + 'px');
 		}
 		else if ( mode === 'in' ) {
 			// Remove the header from the read header and insert into a fixed
@@ -499,6 +544,7 @@ $.extend( FixedHeader.prototype, {
 		var position = this.s.position;
 		var dom = this.dom;
 		var tableNode = $(table.node());
+		var scrollParent = this._scrollParent(tableNode);
 
 		// Need to use the header and footer that are in the main table,
 		// regardless of if they are clones, since they hold the positions we
@@ -513,6 +559,9 @@ $.extend( FixedHeader.prototype, {
 		position.theadTop = thead.offset().top;
 		position.tbodyTop = tbody.offset().top;
 		position.theadHeight = position.tbodyTop - position.theadTop;
+		position.scrollParentTop = scrollParent.offset().top;
+		position.scrollParentVisible = scrollParent.is(':visible');
+		position.scrollParentHeight = scrollParent.outerHeight();
 
 		if ( tfoot.length ) {
 			position.tfootTop = tfoot.offset().top;
@@ -547,7 +596,10 @@ $.extend( FixedHeader.prototype, {
 		}
 
 		if ( this.c.header ) {
-			if ( ! position.visible || windowTop <= position.theadTop - this.c.headerOffset ) {
+			if ( this.c.relativeScroll && position.scrollParentVisible && position.theadTop - position.scrollParentTop < 0 ) {
+				headerMode = 'in-relative';
+			}
+			else if ( this.c.relativeScroll || ! position.visible || windowTop <= position.theadTop - this.c.headerOffset ) {
 				headerMode = 'in-place';
 			}
 			else if ( windowTop <= position.tfootTop - position.theadHeight - this.c.headerOffset ) {
@@ -564,8 +616,11 @@ $.extend( FixedHeader.prototype, {
 			this._horizontal( 'header', windowLeft );
 		}
 
-		if ( this.c.footer && this.dom.tfoot.length ) {
-			if ( ! position.visible || windowTop + position.windowHeight >= position.tfootBottom + this.c.footerOffset ) {
+		if (this.c.footer && this.dom.tfoot.length) {
+			if (this.c.relativeScroll && position.scrollParentVisible && position.tfootTop + position.tfootHeight > position.scrollParentTop + position.scrollParentHeight ) {
+				footerMode = 'in-relative';
+			}
+			else if ( this.c.relativeScroll || ! position.visible || windowTop + position.windowHeight >= position.tfootBottom + this.c.footerOffset ) {
 				footerMode = 'in-place';
 			}
 			else if ( position.windowHeight + windowTop > position.tbodyTop + position.tfootHeight + this.c.footerOffset ) {
@@ -601,7 +656,8 @@ FixedHeader.defaults = {
 	header: true,
 	footer: false,
 	headerOffset: 0,
-	footerOffset: 0
+	footerOffset: 0,
+	relativeScroll: 0
 };
 
 
