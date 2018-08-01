@@ -140,7 +140,7 @@ $.extend( FixedHeader.prototype, {
 	 *
 	 * @param  {boolean} enable `true` to enable, `false` to disable
 	 */
-	enable: function ( enable )
+	enable: function ( enable, update )
 	{
 		this.s.enable = enable;
 
@@ -152,7 +152,9 @@ $.extend( FixedHeader.prototype, {
 			this._modeChange( 'in-place', 'footer', true );
 		}
 
-		this.update();
+		if ( update || update === undefined ) {
+			this.update();
+		}
 	},
 	
 	/**
@@ -191,6 +193,15 @@ $.extend( FixedHeader.prototype, {
 	 */
 	update: function ()
 	{
+		var table = this.s.dt.table().node();
+
+		if ( $(table).is(':visible') ) {
+			this.enable( true, false );
+		}
+		else {
+			this.enable( false, false );
+		}
+
 		this._positions();
 		this._scroll( true );
 	},
