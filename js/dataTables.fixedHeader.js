@@ -305,7 +305,7 @@ $.extend( FixedHeader.prototype, {
 				.appendTo( 'body' );
 
 			// Insert a fake thead/tfoot into the DataTable to stop it jumping around
-			itemDom.placeholder = itemElement.clone( false )
+			itemDom.placeholder = itemElement.clone( false );
 			itemDom.placeholder
 				.find( '*[id]' )
 				.removeAttr( 'id' );
