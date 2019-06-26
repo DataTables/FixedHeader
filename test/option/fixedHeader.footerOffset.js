@@ -30,6 +30,10 @@ describe('fixedHeader - options - fixedHeader.footerOffset', function() {
 			var pos = 400 + $(window).height() - $('table.fixedHeader-floating').height();
 			expect($('table.fixedHeader-floating').offset().top).toBe(pos);
 		});
+		it('Tidyup', function() {
+			// needed because of DD-934
+			table.destroy();
+		});
 
 		dt.html('basic');
 		it('When non-zero, no fixed header shown on initialisaton', function() {
@@ -54,6 +58,10 @@ describe('fixedHeader - options - fixedHeader.footerOffset', function() {
 			var pos = $(window).height() - 400 + 300 - $('table.fixedHeader-floating').height();
 
 			expect($('table.fixedHeader-floating').offset().top).toBe(pos);
+		});
+		it('Tidyup', function() {
+			// needed because of DD-934
+			table.destroy();
 		});
 	});
 });

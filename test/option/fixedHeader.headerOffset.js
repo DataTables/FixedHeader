@@ -26,6 +26,10 @@ describe('fixedHeader - options - fixedHeader.headerOffset', function() {
 			await dt.sleep(500);
 			expect($('table.fixedHeader-floating').offset().top).toBe(400);
 		});
+		it('Tidyup', function() {
+			// needed because of DD-934
+			table.destroy();
+		});
 
 		dt.html('basic');
 		it('When non-zero, no fixed header shown on initialisaton', function() {
@@ -45,6 +49,10 @@ describe('fixedHeader - options - fixedHeader.headerOffset', function() {
 			$('html').scrollTop(400);
 			await dt.sleep(500);
 			expect($('table.fixedHeader-floating').offset().top).toBe(700);
+		});
+		it('Tidyup', function() {
+			// needed because of DD-934
+			table.destroy();
 		});
 	});
 });

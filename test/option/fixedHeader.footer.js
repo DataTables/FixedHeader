@@ -57,5 +57,9 @@ describe('fixedHeader - options - fixedHeader.footer', function() {
 			expect($('table.dataTable').length).toBe(2);
 			expect($('table.fixedHeader-floating').length).toBe(1);
 		});
+		it('Tidyup', function() {
+			// needed because of DD-934
+			table.destroy();
+		});
 	});
 });

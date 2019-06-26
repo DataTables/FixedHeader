@@ -33,6 +33,10 @@ describe('fixedHeader - options - fixedHeader.header', function() {
 			expect($('table.dataTable').length).toBe(0);
 			expect($('table.fixedHeader-floating').length).toBe(0);
 		});
+		it('Tidyup', function() {
+			// needed because of DD-934
+			table.destroy();
+		});
 
 		dt.html('basic');
 		it('When false, no fixed header shown on initialisaton', function() {
@@ -51,6 +55,10 @@ describe('fixedHeader - options - fixedHeader.header', function() {
 			await dt.sleep(500);
 			expect($('table.dataTable').length).toBe(1);
 			expect($('table.fixedHeader-floating').length).toBe(0);
+		});
+		it('Tidyup', function() {
+			// needed because of DD-934
+			table.destroy();
 		});
 	});
 });

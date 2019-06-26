@@ -40,13 +40,17 @@ describe('fixedHeader - api - fixedHeader.disable()', function() {
 			expect($('table.dataTable').length).toBe(2);
 			expect($('table.fixedHeader-floating').length).toBe(1);
 		});
-		it('... disappears when disabled', async function() {
-			//DD-936 - disable() is doing nothing
-			table.fixedHeader.disable();
-			// expect($('table.dataTable').length).toBe(1);
-			// expect($('table.fixedHeader-floating').length).toBe(0);
-		});
+		// it('... disappears when disabled', function() {
+		// 	//DD-936 - disable() is doing nothing
+		// 	table.fixedHeader.disable();
+		// 	// expect($('table.dataTable').length).toBe(1);
+		// 	// expect($('table.fixedHeader-floating').length).toBe(0);
+		// });
 
 		// other tests needed here for footer and footer+header
+		it('Tidyup', function() {
+			// needed because of DD-934
+			table.destroy();
+		});
 	});
 });
