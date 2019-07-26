@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-api library="FixedHeader">
+	<name>fixedHeader.enabled()</name>
+	<summary>Get the current enabled status</summary>
+	<since>3.1.6</since>
+
+	<type type="function">
+		<signature>fixedHeader.enabled()</signature>
+		<parameter type="boolean" name="enable" default="true">
+			Get the enablement status of FixedHeader
+		</parameter>
+		<returns type="boolean">
+            `true` if FixedHeader is enabled on this table. `false` otherwise.
+		</returns>
+		<description>
+			Simply gets the status of FixedHeader for this table.
+		</description>
+	</type>
+
+	<description>
+		As FixedHeader has the ability to dynamically be enabled and disabled, this method provides the ability to read the current state.
+	</description>
+
+	<related>-api fixedHeader.enable()</related>
+	<related>-api fixedHeader.enabled()</related>
+	<related>-api fixedHeader.disable()</related>
+</dt-api>

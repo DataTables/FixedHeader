@@ -29,5 +29,7 @@ table.fixedHeader.enable( false );
 
 ]]></example>
 
-	<related>fh-api fixedHeader.disable()</related>
+	<related>-api fixedHeader.enable()</related>
+	<related>-api fixedHeader.enabled()</related>
+	<related>-api fixedHeader.disable()</related>
 </dt-api>
