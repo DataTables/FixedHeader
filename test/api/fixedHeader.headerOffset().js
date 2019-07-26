@@ -21,10 +21,6 @@ describe('fixedHeader - api - fixedHeader.headerOffset()', function() {
 		it('Setter returns API instance', function() {
 			expect(table.fixedHeader.headerOffset(50) instanceof $.fn.dataTable.Api).toBe(true);
 		});
-		it('Tidyup', function() {
-			// needed because of DD-934
-			table.destroy();
-		});
 	});
 
 	describe('Functional tests', function() {
@@ -49,10 +45,6 @@ describe('fixedHeader - api - fixedHeader.headerOffset()', function() {
 		});
 		it('... and at expected offset', function() {
 			expect($('table.fixedHeader-floating').offset().top).toBe(300);
-		});
-		it('Tidyup', function() {
-			// needed because of DD-934
-			table.destroy();
 		});
 	});
 });
