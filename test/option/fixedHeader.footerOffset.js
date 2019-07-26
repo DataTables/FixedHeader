@@ -20,19 +20,16 @@ describe('fixedHeader - options - fixedHeader.footerOffset', function() {
 				},
 				paging: false
 			});
+
 			expect($('table.dataTable').length).toBe(2);
 			expect($('table.fixedHeader-floating').length).toBe(1);
 		});
-		it('... scrolling as expected', async function() {
-			$('html').scrollTop(400);
-			await dt.sleep(500);
+		it('... scrolling as expected', async function(done) {
+			await dt.scrollTop(400);
 
 			var pos = 400 + $(window).height() - $('table.fixedHeader-floating').height();
 			expect($('table.fixedHeader-floating').offset().top).toBe(pos);
-		});
-		it('Tidyup', function() {
-			// needed because of DD-934
-			table.destroy();
+			done();
 		});
 
 		dt.html('basic');
@@ -52,16 +49,12 @@ describe('fixedHeader - options - fixedHeader.footerOffset', function() {
 			var pos = $(window).height() - 400 - $('table.fixedHeader-floating').height();
 			expect($('table.fixedHeader-floating').offset().top).toBe(pos);
 		});
-		it('... scrolling as expected', async function() {
-			$('html').scrollTop(300);
-			await dt.sleep(500);
+		it('... scrolling as expected', async function(done) {
+			await dt.scrollTop(300);
 			var pos = $(window).height() - 400 + 300 - $('table.fixedHeader-floating').height();
 
 			expect($('table.fixedHeader-floating').offset().top).toBe(pos);
-		});
-		it('Tidyup', function() {
-			// needed because of DD-934
-			table.destroy();
+			done();
 		});
 	});
 });

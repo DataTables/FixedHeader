@@ -134,7 +134,23 @@ $.extend( FixedHeader.prototype, {
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 * API methods
 	 */
-	
+
+	/**
+	 * Kill off FH and any events
+	 */
+	destroy: function () {
+		this.s.dt.off( '.dtfc' );
+		$(window).off( this.s.namespace );
+
+		if ( this.c.header ) {
+			this._modeChange( 'in-place', 'header', true );
+		}
+
+		if ( this.c.footer && this.dom.tfoot.length ) {
+			this._modeChange( 'in-place', 'footer', true );
+		}
+	},
+
 	/**
 	 * Enable / disable the fixed elements
 	 *
@@ -247,16 +263,7 @@ $.extend( FixedHeader.prototype, {
 		} );
 
 		dt.on( 'destroy.dtfc', function () {
-			if ( that.c.header ) {
-				that._modeChange( 'in-place', 'header', true );
-			}
-
-			if ( that.c.footer && that.dom.tfoot.length ) {
-				that._modeChange( 'in-place', 'footer', true );
-			}
-
-			dt.off( '.dtfc' );
-			$(window).off( that.s.namespace );
+			that.destroy();
 		} );
 
 		this._positions();
@@ -524,6 +531,7 @@ $.extend( FixedHeader.prototype, {
 		position.left = tableNode.offset().left;
 		position.theadTop = thead.offset().top;
 		position.tbodyTop = tbody.offset().top;
+		position.tbodyHeight = tbody.outerHeight();
 		position.theadHeight = position.tbodyTop - position.theadTop;
 
 		if ( tfoot.length ) {
@@ -554,6 +562,8 @@ $.extend( FixedHeader.prototype, {
 		var position = this.s.position;
 		var headerMode, footerMode;
 
+		console.log('position.tbodyTop', position);
+
 		if ( this.c.header ) {
 			if ( ! this.s.enable ) {
 				headerMode = 'in-place';
@@ -583,6 +593,8 @@ $.extend( FixedHeader.prototype, {
 				footerMode = 'in-place';
 			}
 			else if ( position.windowHeight + windowTop > position.tbodyTop + position.tfootHeight + this.c.footerOffset ) {
+				console.log('FOOTER MODE @IN@', position.windowHeight + windowTop, position.tbodyTop + position.tfootHeight + this.c.footerOffset )
+				console.log('FOOTER MODE @IN@', position.windowHeight, windowTop, position.tbodyTop, position.tfootHeight, this.c.footerOffset )
 				footerMode = 'in';
 			}
 			else {

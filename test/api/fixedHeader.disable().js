@@ -18,15 +18,11 @@ describe('fixedHeader - api - fixedHeader.disable()', function() {
 		it('Returns API instance', function() {
 			expect(table.fixedHeader.disable() instanceof $.fn.dataTable.Api).toBe(true);
 		});
-		it('Tidyup', function() {
-			// needed because of DD-934
-			table.destroy();
-		});
 	});
 
 	describe('Functional tests', function() {
 		dt.html('basic');
-		it('Just the header', async function() {
+		it('Just the header', async function(done) {
 			table = $('#example').DataTable({
 				fixedHeader: {
 					header: true
@@ -34,23 +30,16 @@ describe('fixedHeader - api - fixedHeader.disable()', function() {
 				paging: false
 			});
 
-			$('html').scrollTop(2000);
-			await dt.sleep(500);
+			await dt.scrollTop(2000);
 
 			expect($('table.dataTable').length).toBe(2);
 			expect($('table.fixedHeader-floating').length).toBe(1);
+			done();
 		});
-		// it('... disappears when disabled', function() {
-		// 	//DD-936 - disable() is doing nothing
-		// 	table.fixedHeader.disable();
-		// 	// expect($('table.dataTable').length).toBe(1);
-		// 	// expect($('table.fixedHeader-floating').length).toBe(0);
-		// });
-
-		// other tests needed here for footer and footer+header
-		it('Tidyup', function() {
-			// needed because of DD-934
-			table.destroy();
+		it('... disappears when disabled', function() {
+			table.fixedHeader.disable();
+			expect($('table.dataTable').length).toBe(1);
+			expect($('table.fixedHeader-floating').length).toBe(0);
 		});
 	});
 });
