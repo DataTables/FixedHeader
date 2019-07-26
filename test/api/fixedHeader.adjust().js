@@ -44,5 +44,8 @@ describe('fixedHeader - api - fixedHeader.adjust()', function() {
 		it('... and now in the DOM', function() {
 			expect($('table.fixedHeader-floating').offset().top).toBe(100);
 		});
+                it('destroy', function() {
+                        table.destroy();
+                });
 	});
 });

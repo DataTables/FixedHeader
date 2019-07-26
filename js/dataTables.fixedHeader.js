@@ -562,8 +562,6 @@ $.extend( FixedHeader.prototype, {
 		var position = this.s.position;
 		var headerMode, footerMode;
 
-		console.log('position.tbodyTop', position);
-
 		if ( this.c.header ) {
 			if ( ! this.s.enable ) {
 				headerMode = 'in-place';
@@ -593,8 +591,6 @@ $.extend( FixedHeader.prototype, {
 				footerMode = 'in-place';
 			}
 			else if ( position.windowHeight + windowTop > position.tbodyTop + position.tfootHeight + this.c.footerOffset ) {
-				console.log('FOOTER MODE @IN@', position.windowHeight + windowTop, position.tbodyTop + position.tfootHeight + this.c.footerOffset )
-				console.log('FOOTER MODE @IN@', position.windowHeight, windowTop, position.tbodyTop, position.tfootHeight, this.c.footerOffset )
 				footerMode = 'in';
 			}
 			else {

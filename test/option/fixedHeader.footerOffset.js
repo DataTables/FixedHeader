@@ -56,5 +56,8 @@ describe('fixedHeader - options - fixedHeader.footerOffset', function() {
 			expect($('table.fixedHeader-floating').offset().top).toBe(pos);
 			done();
 		});
+                it('destroy', function() {
+                        table.destroy();
+                });
 	});
 });

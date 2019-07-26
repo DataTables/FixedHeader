@@ -31,7 +31,6 @@ describe('fixedHeader - api - fixedHeader.disable()', function() {
 			});
 
 			await dt.scrollTop(2000);
-
 			expect($('table.dataTable').length).toBe(2);
 			expect($('table.fixedHeader-floating').length).toBe(1);
 			done();
@@ -41,5 +40,8 @@ describe('fixedHeader - api - fixedHeader.disable()', function() {
 			expect($('table.dataTable').length).toBe(1);
 			expect($('table.fixedHeader-floating').length).toBe(0);
 		});
+                it('destroy', function() {
+                        table.destroy();
+                });
 	});
 });

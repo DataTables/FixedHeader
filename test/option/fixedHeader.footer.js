@@ -58,5 +58,8 @@ describe('fixedHeader - options - fixedHeader.footer', function() {
 			expect($('table.fixedHeader-floating').length).toBe(1);
 			done();
 		});
+                it('destroy', function() {
+                        table.destroy();
+                });
 	});
 });

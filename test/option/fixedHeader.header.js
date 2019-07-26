@@ -53,5 +53,8 @@ describe('fixedHeader - options - fixedHeader.header', function() {
 			expect($('table.fixedHeader-floating').length).toBe(0);
 			done();
 		});
+                it('destroy', function() {
+                        table.destroy();
+                });
 	});
 });
