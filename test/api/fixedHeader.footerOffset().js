@@ -50,8 +50,8 @@ describe('fixedHeader - api - fixedHeader.footerOffset()', function() {
 			var pos = $(window).height() - 300 - $('table.fixedHeader-floating').height();
 			expect($('table.fixedHeader-floating').offset().top).toBe(pos);
 		});
-                it('destroy', function() {
-                        table.destroy();
-                });
+		it('destroy', function() {
+			table.destroy();
+		});
 	});
 });
