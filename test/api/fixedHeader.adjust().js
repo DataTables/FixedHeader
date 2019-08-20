@@ -18,6 +18,9 @@ describe('fixedHeader - api - fixedHeader.adjust()', function() {
 		it('Returns API instance', function() {
 			expect(table.fixedHeader.adjust() instanceof $.fn.dataTable.Api).toBe(true);
 		});
+		it('destroy', function() {
+			table.destroy();
+		});
 	});
 
 	describe('Functional tests', function() {
@@ -44,8 +47,8 @@ describe('fixedHeader - api - fixedHeader.adjust()', function() {
 		it('... and now in the DOM', function() {
 			expect($('table.fixedHeader-floating').offset().top).toBe(100);
 		});
-                it('destroy', function() {
-                        table.destroy();
-                });
+		it('destroy', function() {
+			table.destroy();
+		});
 	});
 });

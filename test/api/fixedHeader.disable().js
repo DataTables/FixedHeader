@@ -18,6 +18,9 @@ describe('fixedHeader - api - fixedHeader.disable()', function() {
 		it('Returns API instance', function() {
 			expect(table.fixedHeader.disable() instanceof $.fn.dataTable.Api).toBe(true);
 		});
+		it('destroy', function() {
+			table.destroy();
+		});
 	});
 
 	describe('Functional tests', function() {
@@ -40,8 +43,8 @@ describe('fixedHeader - api - fixedHeader.disable()', function() {
 			expect($('table.dataTable').length).toBe(1);
 			expect($('table.fixedHeader-floating').length).toBe(0);
 		});
-                it('destroy', function() {
-                        table.destroy();
-                });
+		it('destroy', function() {
+			table.destroy();
+		});
 	});
 });

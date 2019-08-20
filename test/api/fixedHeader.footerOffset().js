@@ -21,6 +21,9 @@ describe('fixedHeader - api - fixedHeader.footerOffset()', function() {
 		it('Setter returns API instance', function() {
 			expect(table.fixedHeader.footerOffset(50) instanceof $.fn.dataTable.Api).toBe(true);
 		});
+		it('destroy', function() {
+			table.destroy();
+		});
 	});
 
 	describe('Functional tests', function() {

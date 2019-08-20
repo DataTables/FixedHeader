@@ -34,6 +34,9 @@ describe('fixedHeader - options - fixedHeader.header', function() {
 			expect($('table.dataTable').length).toBe(0);
 			expect($('table.fixedHeader-floating').length).toBe(0);
 		});
+		it('destroy', function() {
+			table.destroy();
+		});
 
 		dt.html('basic');
 		it('When false, no fixed header shown on initialisaton', function() {
@@ -53,8 +56,8 @@ describe('fixedHeader - options - fixedHeader.header', function() {
 			expect($('table.fixedHeader-floating').length).toBe(0);
 			done();
 		});
-                it('destroy', function() {
-                        table.destroy();
-                });
+		it('destroy', function() {
+			table.destroy();
+		});
 	});
 });
