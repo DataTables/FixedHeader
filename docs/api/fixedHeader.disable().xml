@@ -26,5 +26,7 @@ table.fixedHeader.disable();
 
 ]]></example>
 
-	<related>fh-api fixedHeader.enable()</related>
+	<related>-api fixedHeader.enable()</related>
+	<related>-api fixedHeader.enabled()</related>
+	<related>-api fixedHeader.disable()</related>
 </dt-api>
