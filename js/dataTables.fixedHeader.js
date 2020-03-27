@@ -681,7 +681,7 @@ DataTable.Api.register( 'fixedHeader.enable()', function ( flag ) {
 
 DataTable.Api.register( 'fixedHeader.enabled()', function () {
 	if ( this.context.length ) {
-		var fx = this.content[0]._fixedHeader;
+		var fh = this.content[0]._fixedHeader;
 
 		if ( fh ) {
 			return fh.enabled();
