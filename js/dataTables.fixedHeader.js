@@ -425,6 +425,13 @@ $.extend( FixedHeader.prototype, {
 		var itemDom = this.dom[ item ];
 		var position = this.s.position;
 
+		// It isn't trivial to add a !important css attribute...
+		var importantWidth = function (w) {
+			itemDom.floating.attr('style', function(i,s) {
+				return (s || '') + 'width: '+w+'px !important;';
+			});
+		};
+
 		// Record focus. Browser's will cause input elements to loose focus if
 		// they are inserted else where in the doc
 		var tablePart = this.dom[ item==='footer' ? 'tfoot' : 'thead' ];
@@ -465,8 +472,9 @@ $.extend( FixedHeader.prototype, {
 			itemDom.floating
 				.addClass( 'fixedHeader-floating' )
 				.css( item === 'header' ? 'top' : 'bottom', this.c[item+'Offset'] )
-				.css( 'left', position.left+'px' )
-				.css( 'width', position.width+'px' );
+				.css( 'left', position.left+'px' );
+
+			importantWidth(position.width);
 
 			if ( item === 'footer' ) {
 				itemDom.floating.css( 'top', '' );
@@ -479,8 +487,9 @@ $.extend( FixedHeader.prototype, {
 			itemDom.floating
 				.addClass( 'fixedHeader-locked' )
 				.css( 'top', position.tfootTop - position.theadHeight )
-				.css( 'left', position.left+'px' )
-				.css( 'width', position.width+'px' );
+				.css( 'left', position.left+'px' );
+
+			importantWidth(position.width);
 		}
 		else if ( mode === 'above' ) { // only used for the footer
 			// Fix the position of the floating footer at top of the table body
@@ -489,8 +498,9 @@ $.extend( FixedHeader.prototype, {
 			itemDom.floating
 				.addClass( 'fixedHeader-locked' )
 				.css( 'top', position.tbodyTop )
-				.css( 'left', position.left+'px' )
-				.css( 'width', position.width+'px' );
+				.css( 'left', position.left+'px' );
+
+			importantWidth(position.width);
 		}
 
 		// Restore focus if it was lost
