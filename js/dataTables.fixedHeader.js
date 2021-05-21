@@ -220,7 +220,7 @@ $.extend( FixedHeader.prototype, {
 		}
 
 		this._positions();
-		this._scroll( true );
+		this._scroll();
 	},
 
 
