@@ -208,7 +208,7 @@ $.extend( FixedHeader.prototype, {
 	/**
 	 * Recalculate the position of the fixed elements and force them into place
 	 */
-	update: function ()
+	update: function (force)
 	{
 		var table = this.s.dt.table().node();
 
@@ -220,7 +220,7 @@ $.extend( FixedHeader.prototype, {
 		}
 
 		this._positions();
-		this._scroll( true );
+		this._scroll( force !== undefined ? force : true );
 	},
 
 
@@ -258,9 +258,14 @@ $.extend( FixedHeader.prototype, {
 			this.c.footerOffset = autoFooter.outerHeight();
 		}
 
-		dt.on( 'column-reorder.dt.dtfc column-visibility.dt.dtfc draw.dt.dtfc column-sizing.dt.dtfc responsive-display.dt.dtfc', function () {
-			that.update();
-		} );
+		dt
+			.on( 'column-reorder.dt.dtfc column-visibility.dt.dtfc column-sizing.dt.dtfc responsive-display.dt.dtfc', function (e, ctx) {
+				that.update();
+			} )
+			.on( 'draw.dt.dtfc', function (e, ctx) {
+				// For updates from our own table, don't reclone, but for all others, do
+				that.update(ctx === dt.settings()[0] ? false : true);
+			} );
 
 		dt.on( 'destroy.dtfc', function () {
 			that.destroy();
@@ -438,10 +443,6 @@ $.extend( FixedHeader.prototype, {
 		var focus = $.contains( tablePart[0], document.activeElement ) ?
 			document.activeElement :
 			null;
-		
-		if ( focus ) {
-			focus.blur();
-		}
 
 		if ( mode === 'in-place' ) {
 			// Insert the header back into the table's real header
