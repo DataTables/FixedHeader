@@ -86,7 +86,7 @@ var FixedHeader = function ( dt, config ) {
 		headerMode: null,
 		footerMode: null,
 		autoWidth: dt.settings()[0].oFeatures.bAutoWidth,
-		namespace: '.dtfc'+(_instCounter++),
+		namespace: '.dtfh'+(_instCounter++),
 		scrollLeft: {
 			header: -1,
 			footer: -1
@@ -139,7 +139,7 @@ $.extend( FixedHeader.prototype, {
 	 * Kill off FH and any events
 	 */
 	destroy: function () {
-		this.s.dt.off( '.dtfc' );
+		this.s.dt.off( '.dtfh' );
 		$(window).off( this.s.namespace );
 
 		if ( this.c.header ) {
@@ -259,15 +259,15 @@ $.extend( FixedHeader.prototype, {
 		}
 
 		dt
-			.on( 'column-reorder.dt.dtfc column-visibility.dt.dtfc column-sizing.dt.dtfc responsive-display.dt.dtfc', function (e, ctx) {
+			.on( 'column-reorder.dt.dtfh column-visibility.dt.dtfh column-sizing.dt.dtfh responsive-display.dt.dtfh', function (e, ctx) {
 				that.update();
 			} )
-			.on( 'draw.dt.dtfc', function (e, ctx) {
+			.on( 'draw.dt.dtfh', function (e, ctx) {
 				// For updates from our own table, don't reclone, but for all others, do
 				that.update(ctx === dt.settings()[0] ? false : true);
 			} );
 
-		dt.on( 'destroy.dtfc', function () {
+		dt.on( 'destroy.dtfh', function () {
 			that.destroy();
 		} );
 
@@ -536,6 +536,10 @@ $.extend( FixedHeader.prototype, {
 		var thead = tableNode.children('thead');
 		var tfoot = tableNode.children('tfoot');
 		var tbody = dom.tbody;
+
+		if (thead.length === 0) {
+			return;
+		}
 
 		position.visible = tableNode.is(':visible');
 		position.width = tableNode.outerWidth();
