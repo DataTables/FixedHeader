@@ -581,6 +581,7 @@ $.extend( FixedHeader.prototype, {
 		position.tbodyTop = tbody.offset().top;
 		position.tbodyHeight = tbody.outerHeight();
 		position.theadHeight = position.tbodyTop - position.theadTop;
+		position.theadBottom = position.theadTop + position.theadHeight;
 
 		if ( tfoot.length ) {
 			position.tfootTop = tfoot.offset().top;
@@ -650,6 +651,16 @@ $.extend( FixedHeader.prototype, {
 			}
 
 			this._horizontal( 'footer', windowLeft );
+		}
+
+		if(this.dom.footer.floating !== null) {
+			var headerOffset = this.dom.header.floating !== null ? this.dom.header.floating.offset() : this.dom.thead.offset();
+			var headerHeight = this.dom.header.floating !== null ? this.dom.header.floating.outerHeight() : this.dom.thead.outerHeight();
+			var footerOffset = this.dom.footer.floating.offset();
+
+			if(footerOffset.top < headerOffset.top + headerHeight + 300) {
+				$(this.s.dt.table().node()).parent().outerHeight((footerOffset.top) - (headerOffset.top + headerHeight));
+			}
 		}
 	}
 } );
