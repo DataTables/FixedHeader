@@ -319,9 +319,40 @@ $.extend( FixedHeader.prototype, {
 			itemDom.floating = $( dt.table().node().cloneNode( false ) )
 				.css( 'table-layout', 'fixed' )
 				.attr( 'aria-hidden', 'true' )
+				.css({
+					top: '0px',
+					left: '0px',
+				})
 				.removeAttr( 'id' )
-				.append( itemElement )
+				.append( itemElement );
+
+
+			if(item === 'footer') {
+				$('div.dtfh-floatingparent.dtfh-floatingparentfoot').remove();
+			}
+			else {
+				$('div.dtfh-floatingparent.dtfh-floatingparenthead').remove();
+			}
+			let floatingparent = $('<div class="dtfh-floatingparent">')
+				.css({
+					width: $(dt.table().node()).parent().outerWidth() + 'px',
+					overflow: 'hidden',
+					height: 'fit-content',
+					position: 'fixed',
+					left: $(dt.table().node()).offset().left + $(dt.table().node()).parent().scrollLeft() + 'px'
+				})
+				.css(
+					item === 'header' ?
+						{top: this.c.headerOffset + 'px'} :
+						{bottom: this.c.footerOffset + 'px'}
+				)
+				.addClass(item === 'footer' ? 'dtfh-floatingparentfoot' : 'dtfh-floatingparenthead')
+				.append(itemDom.floating)
 				.appendTo( 'body' );
+
+			$($(dt.table().node()).parent()).scroll(function() {
+				floatingparent[0].scrollLeft = $(dt.table().node()).parent().scrollLeft()
+			})
 
 			// Insert a fake thead/tfoot into the DataTable to stop it jumping around
 			itemDom.placeholder = itemElement.clone( false );
@@ -539,8 +570,8 @@ $.extend( FixedHeader.prototype, {
 		// Need to use the header and footer that are in the main table,
 		// regardless of if they are clones, since they hold the positions we
 		// want to measure from
-		var thead = tableNode.children('thead');
-		var tfoot = tableNode.children('tfoot');
+		var thead = $(dt.table().header());
+		var tfoot = $(dt.table().footer());
 		var tbody = dom.tbody;
 
 		position.visible = tableNode.is(':visible');
