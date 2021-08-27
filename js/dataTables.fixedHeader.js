@@ -595,7 +595,7 @@ $.extend( FixedHeader.prototype, {
 			// Calculate the amount that the footer or header needs to be shuffled
 			var shuffle = item === 'footer' ?
 				// footer and top of body isn't on screen
-				bodyTop > windowTop + windowHeight ?
+				bodyTop > windowBottom ?
 					// Yes - push the footer below
 					position.tfootHeight :
 					// No - bottom set to the gap between the top of the body and the bottom of the window
@@ -610,7 +610,7 @@ $.extend( FixedHeader.prototype, {
 			itemDom.floating.addClass( 'fixedHeader-floating' ).css(prop, val).css( 'left', !scrollEnabled ? position.left : '');
 			itemDom.floatingParent.css(prop, val).css( {
 				'left': position.left,
-				'height': position.theadHeight,
+				'height': item === 'header' ? position.theadHeight : position.tfootHeight,
 				'z-index': 2
 			})
 
