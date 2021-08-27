@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="1">
+
+<css lib="datatables fixedheader rowgroup" />
+<js lib="jquery datatables fixedheader rowgroup">
+<![CDATA[
+$(document).ready(function() {
+	$('#example').DataTable( {
+		fixedHeader: true,
+        order: [[2, 'asc']],
+		rowGroup: {
+			dataSrc: 2
+		}
+	} );
+} );
+]]>
+</js>
+
+<title lib="FixedHeader">RowGroup</title>
+
+<info><![CDATA[
+
+This example shows the [RowGroup extension](//datatables.net/extensions/rowgroup) for DataTables being used with RowGroup. The integration between these extensions has been unsupported in the past, but it is now possible.
+
+]]></info>
+
+</dt-example>

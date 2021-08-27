@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="scroller" order="1">
+
+<css lib="datatables fixedheader scroller" />
+<js lib="jquery datatables fixedheader scroller">
+<![CDATA[
+$(document).ready(function() {
+	$('#example').DataTable( {
+		ajax:           "../data/2500.txt",
+		deferRender:    true,
+		scrollY:        200,
+		scrollCollapse: true,
+		scroller:       true,
+		fixedHeader: {
+			header: true,
+			footer: true
+		}
+	} );
+} );
+]]>
+</js>
+
+<title lib="FixedHeader">Scroller</title>
+
+<info><![CDATA[
+
+This example shows the [Scroller extension](//datatables.net/extensions/scroller) for DataTables being used with Scroller. The integration between these extensions has been unsupported in the past, but it is now possible.
+
+]]></info>
+
+<custom-table>
+<table id="example" class="display" style="width:100%">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>ZIP / Post code</th>
+            <th>Country</th>
+        </tr>
+    </thead>
+	<tfoot>
+        <tr>
+            <th>ID</th>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>ZIP / Post code</th>
+            <th>Country</th>
+        </tr>
+    </tfoot>
+</table>
+</custom-table>
+
+</dt-example>

@@ -607,8 +607,12 @@ $.extend( FixedHeader.prototype, {
 			// Set the top or bottom based off of the offset and the shuffle value
 			var prop = item === 'header' ? 'top' : 'bottom';
 			var val = this.c[item+'Offset'] - (shuffle > 0 ? shuffle : 0);
-			itemDom.floating.addClass( 'fixedHeader-floating' ).css(prop, val).css( 'left', position.left );
-			itemDom.floatingParent.css(prop, val).css( 'left', position.left );
+			itemDom.floating.addClass( 'fixedHeader-floating' ).css(prop, val).css( 'left', !scrollEnabled ? position.left : '');
+			itemDom.floatingParent.css(prop, val).css( {
+				'left': position.left,
+				'height': position.theadHeight,
+				'z-index': 2
+			})
 
 			importantWidth(position.width);
 
