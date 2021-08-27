@@ -608,7 +608,7 @@ $.extend( FixedHeader.prototype, {
 			var prop = item === 'header' ? 'top' : 'bottom';
 			var val = this.c[item+'Offset'] - (shuffle > 0 ? shuffle : 0);
 			itemDom.floating.addClass( 'fixedHeader-floating' ).css(prop, val).css( 'left', position.left );
-			itemDom.floatingParent.css(prop, val);
+			itemDom.floatingParent.css(prop, val).css( 'left', position.left );
 
 			importantWidth(position.width);
 
