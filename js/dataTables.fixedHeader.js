@@ -278,6 +278,7 @@ $.extend( FixedHeader.prototype, {
 		} );
 
 		this._positions();
+		$('div.dataTables_scrollHeadInner').height(this.s.position.theadHeight);
 		this._scroll();
 	},
 
@@ -304,6 +305,12 @@ $.extend( FixedHeader.prototype, {
 			this.dom.thead :
 			this.dom.tfoot;
 
+		// If footer and scrolling is enabled then we don't clone
+		// Instead the table's height is decreased accordingly - see `_scroll()`
+		if (item === 'footer' && this._scrollEnabled()) {
+			return;
+		}	
+
 		if ( ! force && itemDom.floating ) {
 			// existing floating element - reuse it
 			itemDom.floating.removeClass( 'fixedHeader-floating fixedHeader-locked' );
@@ -316,12 +323,16 @@ $.extend( FixedHeader.prototype, {
 				itemDom.floating.remove();
 			}
 
+			var tableNode = $(dt.table().node()); 
+			var scrollBody = $(tableNode.parent());
+			var scrollEnabled = this._scrollEnabled();
+
 			itemDom.floating = $( dt.table().node().cloneNode( false ) )
 				.css( 'table-layout', 'fixed' )
 				.attr( 'aria-hidden', 'true' )
 				.css({
 					top: '0px',
-					left: '0px',
+					left: scrollEnabled ? tableNode.offset().left + scrollBody.scrollLeft() : 0
 				})
 				.removeAttr( 'id' )
 				.append( itemElement );
@@ -333,26 +344,40 @@ $.extend( FixedHeader.prototype, {
 			else {
 				$('div.dtfh-floatingparent.dtfh-floatingparenthead').remove();
 			}
-			let floatingparent = $('<div class="dtfh-floatingparent">')
+
+			itemDom.floatingParent = $('<div class="dtfh-floatingparent">')
 				.css({
-					width: $(dt.table().node()).parent().outerWidth() + 'px',
+					width: scrollBody.width(),
 					overflow: 'hidden',
 					height: 'fit-content',
 					position: 'fixed',
-					left: $(dt.table().node()).offset().left + $(dt.table().node()).parent().scrollLeft() + 'px'
+					left: scrollEnabled ? tableNode.offset().left + scrollBody.scrollLeft() : 0
 				})
 				.css(
 					item === 'header' ?
-						{top: this.c.headerOffset + 'px'} :
-						{bottom: this.c.footerOffset + 'px'}
+						{
+							top: this.c.headerOffset,
+							bottom: ''
+						} :
+						{
+							top: '',
+							bottom: this.c.footerOffset
+						}
 				)
 				.addClass(item === 'footer' ? 'dtfh-floatingparentfoot' : 'dtfh-floatingparenthead')
 				.append(itemDom.floating)
 				.appendTo( 'body' );
 
-			$($(dt.table().node()).parent()).scroll(function() {
-				floatingparent[0].scrollLeft = $(dt.table().node()).parent().scrollLeft()
-			})
+			this._stickyPosition(itemDom.floating, '-');
+
+			var scrollLeftUpdate = () => {
+				var scrollLeft = scrollBody.scrollLeft()
+				this.s.scrollLeft = {footer: scrollLeft, header: scrollLeft};
+				itemDom.floatingParent.scrollLeft(this.s.scrollLeft.header);
+			}
+
+			scrollLeftUpdate();
+			scrollBody.scroll(scrollLeftUpdate)
 
 			// Insert a fake thead/tfoot into the DataTable to stop it jumping around
 			itemDom.placeholder = itemElement.clone( false );
@@ -364,6 +389,33 @@ $.extend( FixedHeader.prototype, {
 
 			// Clone widths
 			this._matchWidths( itemDom.placeholder, itemDom.floating );
+		}
+	},
+
+	/**
+	 * This method sets the sticky position of the header elements to match fixed columns
+	 * @param {JQuery<HTMLElement>} el 
+	 * @param {string} sign 
+	 */
+	_stickyPosition(el, sign) {
+		if (this._scrollEnabled()) {
+			var that = this
+			var rtl = $(that.s.dt.table().node()).css('direction') === 'rtl';
+
+			el.find('th').each(function() {
+				// Find out if fixed header has previously set this column
+				if ($(this).css('position') === 'sticky') {
+					if ($(this).css('right') !== 'auto' && !rtl) {
+						// New position either adds or dismisses the barWidth
+						var potential = +$(this).css('right').replace(/px/g, '') + (sign === '-' ? -1 : 1) * that.s.dt.settings()[0].oBrowser.barWidth;
+						$(this).css('right', potential > 0 ? potential : 0);
+					}
+					else if($(this).css('left') !== 'auto' && rtl) {
+						var potential = +$(this).css('left').replace(/px/g, '') + (sign === '-' ? -1 : 1) * that.s.dt.settings()[0].oBrowser.barWidth;
+						$(this).css('left', potential > 0 ? potential : 0);
+					}
+				}
+			});
 		}
 	},
 
@@ -440,7 +492,12 @@ $.extend( FixedHeader.prototype, {
 		var lastScrollLeft = this.s.scrollLeft;
 
 		if ( itemDom.floating && lastScrollLeft[ item ] !== scrollLeft ) {
-			itemDom.floating.css( 'left', position.left - scrollLeft );
+			// If scrolling is enabled we need to match the floating header to the body
+			if (this._scrollEnabled()) {
+				var newScrollLeft = $($(this.s.dt.table().node()).parent()).scrollLeft()
+				itemDom.floating.scrollLeft(newScrollLeft);
+				itemDom.floatingParent.scrollLeft(newScrollLeft);
+			}
 
 			lastScrollLeft[ item ] = scrollLeft;
 		}
@@ -467,11 +524,27 @@ $.extend( FixedHeader.prototype, {
 		var itemDom = this.dom[ item ];
 		var position = this.s.position;
 
+		// Just determine if scroll is enabled once
+		var scrollEnabled = this._scrollEnabled();
+
+		// If footer and scrolling is enabled then we don't clone
+		// Instead the table's height is decreased accordingly - see `_scroll()`
+		if (item === 'footer' && scrollEnabled) {
+			return;
+		}		
+
 		// It isn't trivial to add a !important css attribute...
 		var importantWidth = function (w) {
 			itemDom.floating.attr('style', function(i,s) {
 				return (s || '') + 'width: '+w+'px !important;';
 			});
+
+			// If not scrolling also have to update the floatingParent
+			if (!scrollEnabled) {
+				itemDom.floatingParent.attr('style', function(i,s) {
+					return (s || '') + 'width: '+w+'px !important;';
+				});
+			}
 		};
 
 		// Record focus. Browser's will cause input elements to loose focus if
@@ -480,6 +553,7 @@ $.extend( FixedHeader.prototype, {
 		var focus = $.contains( tablePart[0], document.activeElement ) ?
 			document.activeElement :
 			null;
+		var scrollBody = $($(this.s.dt.table().node()).parent());
 
 		if ( mode === 'in-place' ) {
 			// Insert the header back into the table's real header
@@ -500,17 +574,41 @@ $.extend( FixedHeader.prototype, {
 			if ( itemDom.floating ) {
 				itemDom.floating.remove();
 				itemDom.floating = null;
+				this._stickyPosition(itemDom.host, '+');
 			}
+
+			$($(itemDom.host.parent()).parent()).scrollLeft(scrollBody.scrollLeft())
 		}
 		else if ( mode === 'in' ) {
 			// Remove the header from the read header and insert into a fixed
 			// positioned floating table clone
 			this._clone( item, forceChange );
 
-			itemDom.floating
-				.addClass( 'fixedHeader-floating' )
-				.css( item === 'header' ? 'top' : 'bottom', this.c[item+'Offset'] )
-				.css( 'left', position.left+'px' );
+			// Get useful position values
+			var scrollOffset = scrollBody.offset();
+			var windowTop = $(document).scrollTop();
+			var windowHeight = $(window).height();
+			var windowBottom = windowTop + windowHeight;
+			var bodyTop = scrollEnabled ? scrollOffset.top : position.tbodyTop;
+			var bodyBottom = scrollEnabled ? scrollOffset.top + scrollBody.outerHeight() : position.tfootTop
+
+			// Calculate the amount that the footer or header needs to be shuffled
+			var shuffle = item === 'footer' ?
+				// footer and top of body isn't on screen
+				bodyTop > windowTop + windowHeight ?
+					// Yes - push the footer below
+					position.tfootHeight :
+					// No - bottom set to the gap between the top of the body and the bottom of the window
+					bodyTop + position.tfootHeight - windowBottom :
+				// Otherwise must be a header so get the difference from the bottom of the
+				//  desired floating header and the bottom of the table body
+				windowTop + this.c.headerOffset + position.theadHeight - bodyBottom
+				
+			// Set the top or bottom based off of the offset and the shuffle value
+			var prop = item === 'header' ? 'top' : 'bottom';
+			var val = this.c[item+'Offset'] - (shuffle > 0 ? shuffle : 0);
+			itemDom.floating.addClass( 'fixedHeader-floating' ).css(prop, val).css( 'left', position.left );
+			itemDom.floatingParent.css(prop, val);
 
 			importantWidth(position.width);
 
@@ -535,7 +633,7 @@ $.extend( FixedHeader.prototype, {
 
 			itemDom.floating
 				.addClass( 'fixedHeader-locked' )
-				.css( 'top', position.tbodyTop )
+				.css('top', scrollEnabled ? scrollBody.offset().top + scrollBody.outerHeight() : position.tfootTop)
 				.css( 'left', position.left+'px' );
 
 			importantWidth(position.width);
@@ -566,6 +664,7 @@ $.extend( FixedHeader.prototype, {
 		var position = this.s.position;
 		var dom = this.dom;
 		var tableNode = $(table.node());
+		var scrollEnabled = this._scrollEnabled();
 
 		// Need to use the header and footer that are in the main table,
 		// regardless of if they are clones, since they hold the positions we
@@ -573,20 +672,21 @@ $.extend( FixedHeader.prototype, {
 		var thead = $(dt.table().header());
 		var tfoot = $(dt.table().footer());
 		var tbody = dom.tbody;
+		var scrollBody = tableNode.parent();
 
 		position.visible = tableNode.is(':visible');
 		position.width = tableNode.outerWidth();
 		position.left = tableNode.offset().left;
 		position.theadTop = thead.offset().top;
-		position.tbodyTop = tbody.offset().top;
-		position.tbodyHeight = tbody.outerHeight();
-		position.theadHeight = position.tbodyTop - position.theadTop;
+		position.tbodyTop = scrollEnabled ? scrollBody.offset().top : tbody.offset().top;
+		position.tbodyHeight = scrollEnabled ? scrollBody.outerHeight() : tbody.outerHeight();
+		position.theadHeight = thead.outerHeight();
 		position.theadBottom = position.theadTop + position.theadHeight;
 
 		if ( tfoot.length ) {
-			position.tfootTop = tfoot.offset().top;
+			position.tfootTop = position.tbodyTop + position.tbodyHeight; //tfoot.offset().top;
 			position.tfootBottom = position.tfootTop + tfoot.outerHeight();
-			position.tfootHeight = position.tfootBottom - position.tfootTop;
+			position.tfootHeight = tfoot.outerHeight();
 		}
 		else {
 			position.tfootTop = position.tbodyTop + tbody.outerHeight();
@@ -606,21 +706,56 @@ $.extend( FixedHeader.prototype, {
 	 */
 	_scroll: function ( forceChange )
 	{
-		var windowTop = $(document).scrollTop();
+		// ScrollBody details
+		var scrollEnabled = this._scrollEnabled();
+		var scrollBody = $(this.s.dt.table().node()).parent();
+		var scrollOffset =  scrollBody.offset();
+		var scrollHeight =  scrollBody.outerHeight();
+
+		// Window details
 		var windowLeft = $(document).scrollLeft();
+		var windowTop = $(document).scrollTop();
+		var windowHeight = $(window).height();
+		var windowBottom = windowHeight + windowTop
+
+
 		var position = this.s.position;
 		var headerMode, footerMode;
+
+		// Body Details
+		var bodyTop = (scrollEnabled ? scrollOffset.top : position.tbodyTop);
+		var bodyLeft = (scrollEnabled ? scrollOffset.left : position.tbodyLeft);
+		var bodyBottom = (scrollEnabled ? scrollOffset.top + scrollHeight : position.tfootTop);
+		var bodyWidth = (scrollEnabled ? scrollBody.outerWidth() : position.tbodyWidth);
+
+		var windowBottom = windowTop + windowHeight;
 
 		if ( this.c.header ) {
 			if ( ! this.s.enable ) {
 				headerMode = 'in-place';
 			}
-			else if ( ! position.visible || windowTop <= position.theadTop - this.c.headerOffset ) {
+			// The header is in it's normal place if the body top is lower than
+			//  the scroll of the window plus the headerOffset and the height of the header
+			else if ( ! position.visible || windowTop + this.c.headerOffset + position.theadHeight <= bodyTop) {
 				headerMode = 'in-place';
 			}
-			else if ( windowTop <= position.tfootTop - position.theadHeight - this.c.headerOffset ) {
+			// The header should be floated if
+			else if (
+				// The scrolling plus the header offset plus the height of the header is lower than the top of the body
+				windowTop + this.c.headerOffset + position.theadHeight > bodyTop &&
+				// And the scrolling at the top plus the header offset is above the bottom of the body
+				windowTop + this.c.headerOffset < bodyBottom
+			) {
 				headerMode = 'in';
+				var scrollBody = $($(this.s.dt.table().node()).parent());
+
+				// Further to the above, If the scrolling plus the header offset plus the header height is lower
+				// than the bottom of the table a shuffle is required so have to force the calculation
+				if(windowTop + this.c.headerOffset + position.theadHeight > bodyBottom){
+					forceChange = true;
+				}
 			}
+			// Anything else and the view is below the table
 			else {
 				headerMode = 'below';
 			}
@@ -632,36 +767,131 @@ $.extend( FixedHeader.prototype, {
 			this._horizontal( 'header', windowLeft );
 		}
 
+		var header = {
+			offset: {top: 0, left: 0},
+			height: 0
+		}
+		var footer = {
+			offset: {top: 0, left: 0},
+			height: 0
+		}
+
 		if ( this.c.footer && this.dom.tfoot.length ) {
 			if ( ! this.s.enable ) {
 				footerMode = 'in-place';
 			}
-			else if ( ! position.visible || windowTop + position.windowHeight >= position.tfootBottom + this.c.footerOffset ) {
+			else if ( ! position.visible || position.tfootBottom + this.c.footerOffset <= windowBottom ) {
 				footerMode = 'in-place';
 			}
-			else if ( position.windowHeight + windowTop > position.tbodyTop + position.tfootHeight + this.c.footerOffset ) {
+			else if (
+				bodyBottom + position.tfootHeight + this.c.footerOffset > windowBottom &&
+				bodyTop + this.c.footerOffset < windowBottom
+			) {
 				footerMode = 'in';
+				if (bodyTop + this.c.footerOffset + position.tfootHeight > windowBottom) {
+					forceChange = true;
+				}
 			}
 			else {
 				footerMode = 'above';
 			}
-
+			
 			if ( forceChange || footerMode !== this.s.footerMode ) {
 				this._modeChange( footerMode, 'footer', forceChange );
 			}
 
 			this._horizontal( 'footer', windowLeft );
-		}
+			
+			var getOffsetHeight = (el) => {
+				return {
+					offset: el.offset(),
+					height: el.outerHeight()
+				}
+			}
+		
+			header = this.dom.header.floating ? getOffsetHeight(this.dom.header.floating) : getOffsetHeight(this.dom.thead);
+			footer = this.dom.footer.floating ? getOffsetHeight(this.dom.footer.floating) : getOffsetHeight(this.dom.tfoot);
 
-		if(this.dom.footer.floating !== null) {
-			var headerOffset = this.dom.header.floating !== null ? this.dom.header.floating.offset() : this.dom.thead.offset();
-			var headerHeight = this.dom.header.floating !== null ? this.dom.header.floating.outerHeight() : this.dom.thead.outerHeight();
-			var footerOffset = this.dom.footer.floating.offset();
+			// If scrolling is enabled and the footer is off the screen
+			if (scrollEnabled && footer.offset.top > windowTop){// && footer.offset.top >= windowBottom) {
+				// Calculate the gap between the top of the scrollBody and the top of the window
+				var overlap = windowTop - scrollOffset.top;
+				// The new height is the bottom of the window
+				var newHeight = windowBottom +
+					// If the gap between the top of the scrollbody and the window is more than
+					//  the height of the header then the top of the table is still visible so add that gap
+					// Doing this has effectively calculated the height from the top of the table to the bottom of the current page
+					(overlap > -header.height ? overlap : 0) -
+					// Take from that
+					(
+						// The top of the header plus
+						header.offset.top +
+						// The header height if the standard header is present
+						(overlap < -header.height ? header.height : 0) +
+						// And the height of the footer
+						footer.height
+					)
 
-			if(footerOffset.top < headerOffset.top + headerHeight + 300) {
-				$(this.s.dt.table().node()).parent().outerHeight((footerOffset.top) - (headerOffset.top + headerHeight));
+					// Don't want a negative height
+				if (newHeight < 0) {
+					newHeight = 0;
+				}
+
+				// At the end of the above calculation the space between the header (top of the page if floating)
+				// and the point just above the footer should be the new value for the height of the table.
+				scrollBody.outerHeight(newHeight);
+				
+				// Need some rounding here as sometimes very small decimal places are encountered
+				// If the actual height is bigger or equal to the height we just applied then the footer is "Floating"
+				if(Math.round(scrollBody.outerHeight()) >= Math.round(newHeight)) {
+					$(this.dom.tfoot.parent()).addClass("fixedHeader-floating");
+				}
+				// Otherwise max-width has kicked in so it is not floating
+				else {
+					$(this.dom.tfoot.parent()).removeClass("fixedHeader-floating");
+				}
 			}
 		}
+
+		// If fixed columns is being used on this table then the blockers need to be copied across
+		// Cloning these is cleaner than creating as our own as it will keep consistency with fixedColumns automatically
+		// ASSUMING that the class remains the same
+		if (this.s.dt.settings()[0]._fixedColumns !== undefined) {
+			var adjustBlocker = (side, end, el) => {
+				if (el === undefined) {
+					let blocker = $('div.dtfc-'+side+'-'+end+'-blocker');
+					el = blocker.length === 0 ?
+						null :
+						blocker.clone().appendTo('body').css('z-index', 1);
+				}
+				if(el !== null) {
+					el.css({
+						top: end === 'top' ? header.offset.top : footer.offset.top,
+						left: side === 'right' ? bodyLeft + bodyWidth - el.width() : bodyLeft
+					});
+				}
+
+				return el;
+			}
+
+			// Adjust all blockers
+			this.dom.header.rightBlocker = adjustBlocker('right', 'top', this.dom.header.rightBlocker);
+			this.dom.header.leftBlocker = adjustBlocker('left', 'top', this.dom.header.leftBlocker);
+			this.dom.footer.rightBlocker = adjustBlocker('right', 'bottom', this.dom.footer.rightBlocker);
+			this.dom.footer.leftBlocker = adjustBlocker('left', 'bottom', this.dom.footer.leftBlocker);
+		}
+	},
+
+	/**
+	 * Function to check if scrolling is enabled on the table or not
+	 * @returns Boolean value indicating if scrolling on the table is enabled or not
+	 */
+	_scrollEnabled: function() {
+		var oScroll = this.s.dt.settings()[0].oScroll;
+		if(oScroll.sY !== "" || oScroll.sX !== "") {
+			return true;
+		}
+		return false
 	}
 } );
 
