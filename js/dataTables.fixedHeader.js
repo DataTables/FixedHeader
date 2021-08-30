@@ -317,7 +317,9 @@ $.extend( FixedHeader.prototype, {
 		}
 		else {
 			if ( itemDom.floating ) {
-				itemDom.placeholder.remove();
+				if(itemDom.placeholder !== null) {
+					itemDom.placeholder.remove();
+				}
 				this._unsize( item );
 				itemDom.floating.children().detach();
 				itemDom.floating.remove();
@@ -337,12 +339,8 @@ $.extend( FixedHeader.prototype, {
 				.removeAttr( 'id' )
 				.append( itemElement );
 
-
-			if(item === 'footer') {
-				$('div.dtfh-floatingparent.dtfh-floatingparentfoot').remove();
-			}
-			else {
-				$('div.dtfh-floatingparent.dtfh-floatingparenthead').remove();
+			if(itemDom.floatingParent !== null && itemDom.floatingParent !== undefined) {
+				itemDom.floatingParent.remove();
 			}
 
 			itemDom.floatingParent = $('<div class="dtfh-floatingparent">')
@@ -612,7 +610,7 @@ $.extend( FixedHeader.prototype, {
 				'left': position.left,
 				'height': item === 'header' ? position.theadHeight : position.tfootHeight,
 				'z-index': 2
-			})
+			}).append(itemDom.floating);
 
 			importantWidth(position.width);
 
@@ -755,8 +753,11 @@ $.extend( FixedHeader.prototype, {
 
 				// Further to the above, If the scrolling plus the header offset plus the header height is lower
 				// than the bottom of the table a shuffle is required so have to force the calculation
-				if(windowTop + this.c.headerOffset + position.theadHeight > bodyBottom){
+				if(windowTop + this.c.headerOffset + position.theadHeight > bodyBottom || this.dom.header.floatingParent === undefined){
 					forceChange = true;
+				}
+				else {
+					this.dom.header.floatingParent.css('top', this.c.headerOffset).append(this.dom.header.floating);
 				}
 			}
 			// Anything else and the view is below the table
