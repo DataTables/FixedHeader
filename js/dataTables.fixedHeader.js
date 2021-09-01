@@ -726,7 +726,7 @@ $.extend( FixedHeader.prototype, {
 
 		// Body Details
 		var bodyTop = (scrollEnabled ? scrollOffset.top : position.tbodyTop);
-		var bodyLeft = (scrollEnabled ? scrollOffset.left : position.tbodyLeft);
+		var bodyLeft = (scrollEnabled ? scrollOffset.left : position.left);
 		var bodyBottom = (scrollEnabled ? scrollOffset.top + scrollHeight : position.tfootTop);
 		var bodyWidth = (scrollEnabled ? scrollBody.outerWidth() : position.tbodyWidth);
 
@@ -854,6 +854,13 @@ $.extend( FixedHeader.prototype, {
 					$(this.dom.tfoot.parent()).removeClass("fixedHeader-floating");
 				}
 			}
+		}
+
+		if(this.dom.header.floating){
+			this.dom.header.floatingParent.css('left', bodyLeft-windowLeft);
+		}
+		if(this.dom.footer.floating){
+			this.dom.footer.floatingParent.css('left', bodyLeft-windowLeft);
 		}
 
 		// If fixed columns is being used on this table then the blockers need to be copied across
