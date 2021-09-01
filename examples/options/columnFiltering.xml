@@ -17,28 +17,30 @@ $(document).ready(function() {
 		fixedHeader: true
 	} );
 
+    // For each column
+    table.columns().eq(0).each(function(colIdx) {
+        // Set the header cell to contain the input element
+        var cell = $('.filters th').eq($(table.column(colIdx).header()).index());
+        var title = $(cell).text();
+        $(cell).html( '<input type="text" placeholder="'+title+'" />' );
 
-        table.columns().eq(0).each(function(colIdx) {
-			var cell = $('.filters th').eq($(table.column(colIdx).header()).index());
-			console.log(cell);
-			var title = $(cell).text();
-			$(cell).html( '<input type="text" placeholder="Search '+title+'" />' );
-	
-            $('input', $('.filters th').eq($(table.column(colIdx).header()).index()) ).off('keyup change').on('keyup change', function (e) {
+        // On every keypress in this input
+        $('input', $('.filters th').eq($(table.column(colIdx).header()).index()) )
+            .off('keyup change')
+            .on('keyup change', function (e) {
                 e.stopPropagation();
-                $(this).attr('title', $(this).val());
-                    var regexr = '({search})'; //$(this).parents('th').find('select').val();
-                    table
-                        .column(colIdx)
-                        .search((this.value != "") ? regexr.replace('{search}', '((('+this.value+')))') : "", this.value != "", this.value == "")
-                        .draw();
-                
-            });
 
-            $('select', $('.filters th').eq($(table.column(colIdx).header()).index()) ).off('change').on('change', function () {
-                $(this).parents('th').find('input').trigger('change');
+                // Get the search value
+                $(this).attr('title', $(this).val());
+                var regexr = '({search})'; //$(this).parents('th').find('select').val();
+
+                // Search the column for that value
+                table
+                    .column(colIdx)
+                    .search((this.value != "") ? regexr.replace('{search}', '((('+this.value+')))') : "", this.value != "", this.value == "")
+                    .draw();
             });
-        });
+    });
 } );
 ]]>
 </js>
