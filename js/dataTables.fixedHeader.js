@@ -793,9 +793,7 @@ $.extend( FixedHeader.prototype, {
 				bodyTop + this.c.footerOffset < windowBottom
 			) {
 				footerMode = 'in';
-				if (bodyTop + this.c.footerOffset + position.tfootHeight > windowBottom) {
-					forceChange = true;
-				}
+				forceChange = true;
 			}
 			else {
 				footerMode = 'above';
