@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<dt-example table-type="scroller" order="1">
+<dt-example table-type="scroller" order="4">
 
 <css lib="datatables fixedheader scroller" />
 <js lib="jquery datatables fixedheader scroller">
