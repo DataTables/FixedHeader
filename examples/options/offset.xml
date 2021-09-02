@@ -26,7 +26,7 @@ It is not uncommon to have a fixed element at the top or bottom of a web-page to
 
 This example takes the second approach, using the `fh-init fixedHeader.headerOffset` option to assign a suitable offset.
 
-<div id="fixed" style="position:fixed; background-color:#4E6CA3; top:0; right:0; left:0; height:50px; z-index:1;"> </div>
+<div id="fixed" style="position:fixed; background-color:#4E6CA3; top:0; right:0; left:0; height:50px; z-index:3;"> </div>
 
 ]]></info>
 

@@ -102,11 +102,13 @@ var FixedHeader = function ( dt, config ) {
 		header: {
 			host: null,
 			floating: null,
+			floatingParent: $('<div class="dtfh-floatingparent">'),
 			placeholder: null
 		},
 		footer: {
 			host: null,
 			floating: null,
+			floatingParent: $('<div class="dtfh-floatingparent">'),
 			placeholder: null
 		}
 	};
@@ -333,17 +335,13 @@ $.extend( FixedHeader.prototype, {
 				.css( 'table-layout', 'fixed' )
 				.attr( 'aria-hidden', 'true' )
 				.css({
-					top: '0px',
-					left: scrollEnabled ? tableNode.offset().left + scrollBody.scrollLeft() : 0
+					top: 0,
+					left: 0
 				})
 				.removeAttr( 'id' )
 				.append( itemElement );
 
-			if(itemDom.floatingParent !== null && itemDom.floatingParent !== undefined) {
-				itemDom.floatingParent.remove();
-			}
-
-			itemDom.floatingParent = $('<div class="dtfh-floatingparent">')
+			itemDom.floatingParent
 				.css({
 					width: scrollBody.width(),
 					overflow: 'hidden',
@@ -575,6 +573,10 @@ $.extend( FixedHeader.prototype, {
 				this._stickyPosition(itemDom.host, '+');
 			}
 
+			if ( itemDom.floatingParent ) {
+				itemDom.floatingParent.remove();
+			}
+
 			$($(itemDom.host.parent()).parent()).scrollLeft(scrollBody.scrollLeft())
 		}
 		else if ( mode === 'in' ) {
@@ -606,11 +608,7 @@ $.extend( FixedHeader.prototype, {
 			var prop = item === 'header' ? 'top' : 'bottom';
 			var val = this.c[item+'Offset'] - (shuffle > 0 ? shuffle : 0);
 
-			itemDom.floating
-				.addClass( 'fixedHeader-floating' )
-				.css(prop, val)
-				.css( 'left', !scrollEnabled ? position.left : '');
-
+			itemDom.floating.addClass( 'fixedHeader-floating' );
 			itemDom.floatingParent
 				.css(prop, val)
 				.css( {
@@ -630,10 +628,12 @@ $.extend( FixedHeader.prototype, {
 			// Fix the position of the floating header at base of the table body
 			this._clone( item, forceChange );
 
-			itemDom.floating
-				.addClass( 'fixedHeader-locked' )
-				.css( 'top', position.tfootTop - position.theadHeight )
-				.css( 'left', position.left+'px' );
+			itemDom.floating.addClass( 'fixedHeader-locked' );
+			itemDom.floatingParent.css({
+				position: 'absolute',
+				top: position.tfootTop - position.theadHeight,
+				left: position.left+'px'
+			});
 
 			importantWidth(position.width);
 		}
@@ -641,10 +641,12 @@ $.extend( FixedHeader.prototype, {
 			// Fix the position of the floating footer at top of the table body
 			this._clone( item, forceChange );
 
-			itemDom.floating
-				.addClass( 'fixedHeader-locked' )
-				.css('top', scrollEnabled ? scrollBody.offset().top + scrollBody.outerHeight() : position.tfootTop)
-				.css( 'left', position.left+'px' );
+			itemDom.floating.addClass( 'fixedHeader-locked' );
+			itemDom.floatingParent.css({
+				position: 'absolute',
+				top: position.tbodyTop,
+				left: position.left+'px'
+			});
 
 			importantWidth(position.width);
 		}

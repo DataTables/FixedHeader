@@ -27,7 +27,7 @@ It is not uncommon to have a fixed element at the top or bottom of a web-page to
 
 This example demonstrates the first option where a header element has the class `-string fh-fixedHeader` assigned to it. FixedHeader automatically detects this element and will offset the header by the required amount.
 
-<div class="fh-fixedHeader" style="position:fixed; background-color:#4E6CA3; top:0; right:0; left:0; height:50px; z-index:1;"> </div>
+<div class="fh-fixedHeader" style="position:fixed; background-color:#4E6CA3; top:0; right:0; left:0; height:50px; z-index:3;"> </div>
 
 ]]></info>
 
