@@ -767,7 +767,12 @@ $.extend( FixedHeader.prototype, {
 					forceChange = true;
 				}
 				else {
-					this.dom.header.floatingParent.css('top', this.c.headerOffset).append(this.dom.header.floating);
+					this.dom.header.floatingParent
+						.css({
+							'top': this.c.headerOffset,
+							'position': 'fixed'
+						})
+						.append(this.dom.header.floating);
 				}
 			}
 			// Anything else and the view is below the table
