@@ -332,9 +332,9 @@ $.extend( FixedHeader.prototype, {
 			var scrollEnabled = this._scrollEnabled();
 
 			itemDom.floating = $( dt.table().node().cloneNode( false ) )
-				.css( 'table-layout', 'fixed' )
 				.attr( 'aria-hidden', 'true' )
 				.css({
+					'table-layout': 'fixed',
 					top: 0,
 					left: 0
 				})
@@ -401,13 +401,15 @@ $.extend( FixedHeader.prototype, {
 			el.find('th').each(function() {
 				// Find out if fixed header has previously set this column
 				if ($(this).css('position') === 'sticky') {
-					if ($(this).css('right') !== 'auto' && !rtl) {
+					var right = $(this).css('right');
+					var left = $(this).css('left');
+					if (right !== 'auto' && !rtl) {
 						// New position either adds or dismisses the barWidth
-						var potential = +$(this).css('right').replace(/px/g, '') + (sign === '-' ? -1 : 1) * that.s.dt.settings()[0].oBrowser.barWidth;
+						var potential = +right.replace(/px/g, '') + (sign === '-' ? -1 : 1) * that.s.dt.settings()[0].oBrowser.barWidth;
 						$(this).css('right', potential > 0 ? potential : 0);
 					}
-					else if($(this).css('left') !== 'auto' && rtl) {
-						var potential = +$(this).css('left').replace(/px/g, '') + (sign === '-' ? -1 : 1) * that.s.dt.settings()[0].oBrowser.barWidth;
+					else if(left !== 'auto' && rtl) {
+						var potential = +left.replace(/px/g, '') + (sign === '-' ? -1 : 1) * that.s.dt.settings()[0].oBrowser.barWidth;
 						$(this).css('left', potential > 0 ? potential : 0);
 					}
 				}
