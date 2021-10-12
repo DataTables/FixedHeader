@@ -280,7 +280,6 @@ $.extend( FixedHeader.prototype, {
 		} );
 
 		this._positions();
-		$('div.dataTables_scrollHeadInner').height(this.s.position.theadHeight);
 		this._scroll();
 	},
 
