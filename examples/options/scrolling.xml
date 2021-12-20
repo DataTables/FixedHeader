@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <dt-example table-type="html-wide" table-class="stripe row-border order-column nowrap" order="6">
 
-<css lib="datatables fixedcolumns fixedheader"/>
-<js lib="jquery datatables fixedcolumns fixedheader">
+<css lib="datatables fixedheader"/>
+<js lib="jquery datatables fixedheader">
 <![CDATA[
 $(document).ready(function() {
 	$('#example').DataTable( {
@@ -19,7 +19,7 @@ $(document).ready(function() {
 ]]>
 </js>
 
-<title lib="FixedColumns">Scrolling Table</title>
+<title lib="FixedHeader">Scrolling Table</title>
 
 <info><![CDATA[
 
