@@ -2,7 +2,7 @@
 <dt-example table-type="html" order="5" framework="semanticui">
 
 <css lib="datatables fixedheader" />
-<js lib="jquery datatables fixedheader">
+<js lib="jquery semanticui datatables fixedheader">
 <![CDATA[
 $(document).ready(function() {
 	var table = $('#example').DataTable( {
@@ -12,11 +12,11 @@ $(document).ready(function() {
 ]]>
 </js>
 
-<title lib="FixedHeader">Semantic UI</title>
+<title lib="FixedHeader">Fomantic-UI (formally Semantic-UI) styling</title>
 
 <info><![CDATA[
 
-This example shows FixedHeader being styled by the [Semantic UI](http://semantic-ui.com) framework.
+This example shows FixedHeader being styled by [Fomantic-UI](https://fomantic-ui.com) (a maintained fork of [Semantic-UI](https://semantic-ui.com/)).
 
 ]]></info>
 
