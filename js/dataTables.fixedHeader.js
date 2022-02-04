@@ -300,6 +300,7 @@ $.extend( FixedHeader.prototype, {
 	 */
 	_clone: function ( item, force )
 	{
+		var that = this;
 		var dt = this.s.dt;
 		var itemDom = this.dom[ item ];
 		var itemElement = item === 'header' ?
@@ -329,6 +330,7 @@ $.extend( FixedHeader.prototype, {
 			var tableNode = $(dt.table().node()); 
 			var scrollBody = $(tableNode.parent());
 			var scrollEnabled = this._scrollEnabled();
+			var docScrollLeft = $(document).scrollLeft();
 
 			itemDom.floating = $( dt.table().node().cloneNode( false ) )
 				.attr( 'aria-hidden', 'true' )
@@ -365,14 +367,16 @@ $.extend( FixedHeader.prototype, {
 
 			this._stickyPosition(itemDom.floating, '-');
 
-			var scrollLeftUpdate = () => {
+			var scrollLeftUpdate = function () {
 				var scrollLeft = scrollBody.scrollLeft()
-				this.s.scrollLeft = {footer: scrollLeft, header: scrollLeft};
-				itemDom.floatingParent.scrollLeft(this.s.scrollLeft.header);
+				that.s.scrollLeft = {footer: scrollLeft, header: scrollLeft};
+				itemDom.floatingParent.scrollLeft(that.s.scrollLeft.header);
 			}
 
 			scrollLeftUpdate();
-			scrollBody.scroll(scrollLeftUpdate)
+			scrollBody
+				.off('scroll.dtfh')
+				.on('scroll.dtfh', scrollLeftUpdate);
 
 			// Insert a fake thead/tfoot into the DataTable to stop it jumping around
 			itemDom.placeholder = itemElement.clone( false );
@@ -384,6 +388,11 @@ $.extend( FixedHeader.prototype, {
 
 			// Clone widths
 			this._matchWidths( itemDom.placeholder, itemDom.floating );
+
+			// The above action will remove the table header, potentially causing the table to
+			// collapse to a smaller size, before it is then re-inserted (append). The result
+			// can be that the document, if scrolling left, can "jump".
+			$(document).scrollLeft(docScrollLeft);
 		}
 	},
 
