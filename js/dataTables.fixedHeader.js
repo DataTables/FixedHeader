@@ -331,6 +331,7 @@ $.extend( FixedHeader.prototype, {
 			var scrollBody = $(tableNode.parent());
 			var scrollEnabled = this._scrollEnabled();
 			var docScrollLeft = $(document).scrollLeft();
+			var docScrollTop = $(document).scrollTop();
 
 			itemDom.floating = $( dt.table().node().cloneNode( false ) )
 				.attr( 'aria-hidden', 'true' )
@@ -391,8 +392,10 @@ $.extend( FixedHeader.prototype, {
 
 			// The above action will remove the table header, potentially causing the table to
 			// collapse to a smaller size, before it is then re-inserted (append). The result
-			// can be that the document, if scrolling left, can "jump".
-			$(document).scrollLeft(docScrollLeft);
+			// can be that the document, if scrolling, can "jump".
+			$(document)
+				.scrollTop(docScrollTop)
+				.scrollLeft(docScrollLeft);
 		}
 	},
 
