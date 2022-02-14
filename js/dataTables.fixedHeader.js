@@ -141,14 +141,30 @@ $.extend( FixedHeader.prototype, {
 	 * Kill off FH and any events
 	 */
 	destroy: function () {
+		var dom = this.dom;
+
 		this.s.dt.off( '.dtfc' );
 		$(window).off( this.s.namespace );
+
+		// Remove clones of FC blockers
+		if (dom.header.rightBlocker) {
+			dom.header.rightBlocker.remove();
+		}
+		if (dom.header.leftBlocker) {
+			dom.header.leftBlocker.remove();
+		}
+		if (dom.footer.rightBlocker) {
+			dom.footer.rightBlocker.remove();
+		}
+		if (dom.footer.leftBlocker) {
+			dom.footer.leftBlocker.remove();
+		}
 
 		if ( this.c.header ) {
 			this._modeChange( 'in-place', 'header', true );
 		}
 
-		if ( this.c.footer && this.dom.tfoot.length ) {
+		if ( this.c.footer && dom.tfoot.length ) {
 			this._modeChange( 'in-place', 'footer', true );
 		}
 	},
@@ -731,6 +747,10 @@ $.extend( FixedHeader.prototype, {
 	 */
 	_scroll: function ( forceChange )
 	{
+		if (this.s.dt.settings()[0].bDestroying) {
+			return;
+		}
+
 		// ScrollBody details
 		var scrollEnabled = this._scrollEnabled();
 		var scrollBody = $(this.s.dt.table().node()).parent();
