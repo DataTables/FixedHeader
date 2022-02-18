@@ -853,12 +853,12 @@ $.extend( FixedHeader.prototype, {
 
 			this._horizontal( 'footer', windowLeft );
 			
-			var getOffsetHeight = (el) => {
+			var getOffsetHeight = function (el) {
 				return {
 					offset: el.offset(),
 					height: el.outerHeight()
-				}
-			}
+				};
+			};
 		
 			header = this.dom.header.floating ? getOffsetHeight(this.dom.header.floating) : getOffsetHeight(this.dom.thead);
 			footer = this.dom.footer.floating ? getOffsetHeight(this.dom.footer.floating) : getOffsetHeight(this.dom.tfoot);
@@ -915,13 +915,15 @@ $.extend( FixedHeader.prototype, {
 		// Cloning these is cleaner than creating as our own as it will keep consistency with fixedColumns automatically
 		// ASSUMING that the class remains the same
 		if (this.s.dt.settings()[0]._fixedColumns !== undefined) {
-			var adjustBlocker = (side, end, el) => {
+			var adjustBlocker = function (side, end, el) {
 				if (el === undefined) {
-					let blocker = $('div.dtfc-'+side+'-'+end+'-blocker');
+					var blocker = $('div.dtfc-'+side+'-'+end+'-blocker');
+
 					el = blocker.length === 0 ?
 						null :
 						blocker.clone().appendTo('body').css('z-index', 1);
 				}
+
 				if(el !== null) {
 					el.css({
 						top: end === 'top' ? header.offset.top : footer.offset.top,
