@@ -789,7 +789,7 @@ $.extend( FixedHeader.prototype, {
 				// The scrolling plus the header offset plus the height of the header is lower than the top of the body
 				windowTop + this.c.headerOffset + position.theadHeight > bodyTop &&
 				// And the scrolling at the top plus the header offset is above the bottom of the body
-				windowTop + this.c.headerOffset < bodyBottom
+				windowTop + this.c.headerOffset + position.theadHeight < bodyBottom
 			) {
 				headerMode = 'in';
 				var scrollBody = $($(this.s.dt.table().node()).parent());
