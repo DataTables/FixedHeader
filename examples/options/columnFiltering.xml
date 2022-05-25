@@ -39,9 +39,7 @@ $(document).ready(function () {
 						$('.filters th').eq($(api.column(colIdx).header()).index())
 					)
 						.off('keyup change')
-						.on('keyup change', function (e) {
-							e.stopPropagation();
-
+						.on('change', function (e) {
 							// Get the search value
 							$(this).attr('title', $(this).val());
 							var regexr = '({search})'; //$(this).parents('th').find('select').val();
@@ -58,7 +56,11 @@ $(document).ready(function () {
 									this.value == ''
 								)
 								.draw();
+						})
+						.on('keyup', function (e) {
+							e.stopPropagation();
 
+							$(this).trigger('change');
 							$(this)
 								.focus()[0]
 								.setSelectionRange(cursorPosition, cursorPosition);
