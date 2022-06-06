@@ -333,6 +333,9 @@ $.extend( FixedHeader.prototype, {
 			itemDom.floating.removeClass( 'fixedHeader-floating fixedHeader-locked' );
 		}
 		else {
+			var docScrollLeft = $(document).scrollLeft();
+			var docScrollTop = $(document).scrollTop();
+
 			if ( itemDom.floating ) {
 				if(itemDom.placeholder !== null) {
 					itemDom.placeholder.remove();
@@ -345,8 +348,6 @@ $.extend( FixedHeader.prototype, {
 			var tableNode = $(dt.table().node()); 
 			var scrollBody = $(tableNode.parent());
 			var scrollEnabled = this._scrollEnabled();
-			var docScrollLeft = $(document).scrollLeft();
-			var docScrollTop = $(document).scrollTop();
 
 			itemDom.floating = $( dt.table().node().cloneNode( false ) )
 				.attr( 'aria-hidden', 'true' )

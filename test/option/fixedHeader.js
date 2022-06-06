@@ -23,8 +23,38 @@ describe('fixedHeader - options - fixedHeader', function() {
 			expect($('table.fixedHeader-floating').length).toBe(1);
 			done();
 		});
-		it('destroy', function() {
+		it('destroy', async function(done) {
+			await dt.scrollTop(0);
 			table.destroy();
+			done();
+		});
+	});
+
+	describe('Holds position when columns adjusted', function() {
+		let pos;
+
+		dt.html('basic');
+
+		it('Will initialize', function() {
+			table = $('#example').DataTable({
+				fixedHeader: true,
+				paging: false,
+				scrollY: 1000
+			});
+		});
+
+		it('Position on scroll', async function(done) {
+			await dt.scrollTop(2000);
+			expect($('table.fixedHeader-floating').length).toBe(1);
+
+			pos = $(window).scrollTop();
+			done();
+		});
+
+		it('Position held after columns.adjust', function() {
+			table.columns.adjust();
+
+			expect($(window).scrollTop()).toBe(pos);
 		});
 	});
 });
