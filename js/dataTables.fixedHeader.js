@@ -227,6 +227,10 @@ $.extend( FixedHeader.prototype, {
 	 */
 	update: function (force)
 	{
+		if (! this.s.enable) {
+			return;
+		}
+
 		var table = this.s.dt.table().node();
 
 		if ( $(table).is(':visible') ) {
