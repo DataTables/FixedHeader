@@ -29,8 +29,8 @@ css_frameworks fixedHeader $OUT_DIR/css
 
 # Copy JS
 rsync -r js $OUT_DIR
-js_compress $OUT_DIR/js/dataTables.fixedHeader.js
-js_frameworks fixedHeader $OUT_DIR/js
+js_wrap $OUT_DIR/js/dataTables.fixedHeader.js "jquery datatables.net"
+js_frameworks fixedHeader $OUT_DIR/js "jquery datatables.net-FW datatables.net-fixedheader"
 
 # Copy Types
 if [ -d $OUT_DIR/types ]; then
