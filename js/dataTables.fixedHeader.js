@@ -895,14 +895,21 @@ $.extend( FixedHeader.prototype, {
 
 					el = blocker.length === 0 ?
 						null :
-						blocker.clone().appendTo('body').css('z-index', 1);
+						blocker.clone().css('z-index', 1);
 				}
 
 				if(el !== null) {
-					el.css({
-						top: end === 'top' ? header.offset.top : footer.offset.top,
-						left: side === 'right' ? bodyLeft + bodyWidth - el.width() : bodyLeft
-					});
+					if (headerMode === 'in' || headerMode === 'below') {
+						el
+							.appendTo('body')
+							.css({
+								top: end === 'top' ? header.offset.top : footer.offset.top,
+								left: side === 'right' ? bodyLeft + bodyWidth - el.width() : bodyLeft
+							});
+					}
+					else {
+						el.detach();
+					}
 				}
 
 				return el;
