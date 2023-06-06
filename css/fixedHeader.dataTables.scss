@@ -18,3 +18,13 @@ table.fixedHeader-locked {
         display: none;
     }
 }
+
+html.dark {
+	table.fixedHeader-floating {
+		background-color: var(--dt-html-background);
+	}
+
+	table.fixedHeader-locked {
+		background-color: var(--dt-html-background);
+	}
+}

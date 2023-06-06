@@ -15,3 +15,10 @@ table.dataTable.fixedHeader-locked {
     display: none;
   }
 }
+
+html[data-bs-theme="dark"] {
+	table.dataTable.fixedHeader-floating,
+	table.dataTable.fixedHeader-locked {
+		background-color: var(--bs-body-bg);
+	}
+}
