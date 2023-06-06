@@ -4,17 +4,29 @@
 <css lib="datatables fixedheader rowgroup" />
 <js lib="jquery datatables fixedheader rowgroup">
 <![CDATA[
-$(document).ready(function() {
-	$('#example').DataTable( {
-		fixedHeader: true,
-        order: [[2, 'asc']],
-		rowGroup: {
-			dataSrc: 2
-		}
-	} );
-} );
+$('#example').DataTable({
+	fixedHeader: true,
+	order: [[2, 'asc']],
+	rowGroup: {
+		dataSrc: 2
+	}
+});
+
 ]]>
 </js>
+
+<js-vanilla>
+<![CDATA[
+new DataTable('#example', {
+	fixedHeader: true,
+	order: [[2, 'asc']],
+	rowGroup: {
+		dataSrc: 2
+	}
+});
+
+]]>
+</js-vanilla>
 
 <title lib="FixedHeader">RowGroup</title>
 

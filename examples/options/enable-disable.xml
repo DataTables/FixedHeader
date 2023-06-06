@@ -11,21 +11,37 @@
 </css>
 <js lib="jquery datatables fixedheader">
 <![CDATA[
-$(document).ready(function() {
-	var table = $('#example').DataTable( {
-		fixedHeader: true
-	} );
+var table = $('#example').DataTable({
+	fixedHeader: true
+});
 
-	$('#enable').on( 'click', function () {
-		table.fixedHeader.enable();
-	} );
+$('#enable').on('click', function () {
+	table.fixedHeader.enable();
+});
 
-	$('#disable').on( 'click', function () {
-		table.fixedHeader.disable();
-	} );
-} );
+$('#disable').on('click', function () {
+	table.fixedHeader.disable();
+});
+
 ]]>
 </js>
+
+<js-vanilla>
+<![CDATA[
+let table = new DataTable('#example', {
+	fixedHeader: true
+});
+
+document.querySelector('#enable').addEventListener('click', function () {
+	table.fixedHeader.enable();
+});
+
+document.querySelector('#disable').addEventListener('click', function () {
+	table.fixedHeader.disable();
+});
+
+]]>
+</js-vanilla>
 
 <title lib="FixedHeader">Enable / disable FixedHeader</title>
 

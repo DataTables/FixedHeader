@@ -4,15 +4,23 @@
 <css lib="datatables fixedheader responsive" />
 <js lib="jquery datatables fixedheader responsive">
 <![CDATA[
-$(document).ready(function() {
-	var table = $('#example').DataTable( {
-		responsive: true
-	} );
+$('#example').DataTable({
+	fixedHeader: true,
+	responsive: true
+});
 
-	new $.fn.dataTable.FixedHeader( table );
-} );
 ]]>
 </js>
+
+<js-vanilla>
+<![CDATA[
+new DataTable('#example', {
+	fixedHeader: true,
+	responsive: true
+});
+
+]]>
+</js-vanilla>
 
 <title lib="FixedHeader">Responsive integration</title>
 

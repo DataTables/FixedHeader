@@ -4,23 +4,43 @@
 <css lib="datatables fixedheader" />
 <js lib="jquery datatables fixedheader">
 <![CDATA[
-$(document).ready(function() {
-	var table = $('#example').DataTable( {
-		fixedHeader: true
-	} );
 
-	var visible = true;
-	var tableContainer = $(table.table().container());
+var table = $('#example').DataTable({
+	fixedHeader: true
+});
 
-	$('#toggle').on( 'click', function () {
-		tableContainer.css( 'display', visible ? 'none' : 'block' );
-		table.fixedHeader.adjust();
+var visible = true;
+var tableContainer = $(table.table().container());
 
-		visible = ! visible;
-	} );
-} );
+$('#toggle').on('click', function () {
+	tableContainer.css('display', visible ? 'none' : 'block');
+	table.fixedHeader.adjust();
+
+	visible = !visible;
+});
+
 ]]>
 </js>
+
+<js-vanilla>
+<![CDATA[
+
+let table = new DataTable('#example', {
+	fixedHeader: true
+});
+
+let visible = true;
+let tableContainer = table.table().container();
+
+document.querySelector('#toggle').addEventListener('click', function () {
+	tableContainer.style.display = visible ? 'none' : 'block';
+	table.fixedHeader.adjust();
+
+	visible = !visible;
+});
+
+]]>
+</js-vanilla>
 
 <title lib="FixedHeader">Show / hide FixedHeader</title>
 

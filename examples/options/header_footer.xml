@@ -4,16 +4,27 @@
 <css lib="datatables fixedheader" />
 <js lib="jquery datatables fixedheader">
 <![CDATA[
-$(document).ready(function() {
-	var table = $('#example').DataTable( {
-		fixedHeader: {
-			header: true,
-			footer: true
-		}
-	} );
-} );
+$('#example').DataTable({
+	fixedHeader: {
+		header: true,
+		footer: true
+	}
+});
+
 ]]>
 </js>
+
+<js-vanilla>
+<![CDATA[
+new DataTable('#example', {
+	fixedHeader: {
+		header: true,
+		footer: true
+	}
+});
+
+]]>
+</js-vanilla>
 
 <title lib="FixedHeader">Header and footer fixed</title>
 

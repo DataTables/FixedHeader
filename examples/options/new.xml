@@ -4,15 +4,25 @@
 <css lib="datatables fixedheader" />
 <js lib="jquery datatables fixedheader">
 <![CDATA[
-$(document).ready(function() {
-	var table = $('#example').DataTable();
+var table = $('#example').DataTable();
 
-	new $.fn.dataTable.FixedHeader( table, {
-		footer: true
-	} );
-} );
+new DataTable.FixedHeader(table, {
+	footer: true
+});
+
 ]]>
 </js>
+
+<js-vanilla>
+<![CDATA[
+let table = new DataTable('#example');
+
+new DataTable.FixedHeader(table, {
+	footer: true
+});
+
+]]>
+</js-vanilla>
 
 <title lib="FixedHeader">Alternative initialisation</title>
 

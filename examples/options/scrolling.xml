@@ -4,20 +4,36 @@
 <css lib="datatables fixedheader"/>
 <js lib="jquery datatables fixedheader">
 <![CDATA[
-$(document).ready(function() {
-	$('#example').DataTable( {
-		scrollY:        300,
-		scrollX:        true,
-		scrollCollapse: true,
-		paging:         false,
-		fixedHeader:           {
-			header: true,
-			footer: true
-		}
-	} );
-} );
+$('#example').DataTable({
+	fixedHeader: {
+		header: true,
+		footer: true
+	},
+	paging: false,
+	scrollCollapse: true,
+	scrollX: true,
+	scrollY: 300
+});
+
 ]]>
 </js>
+
+<js-vanilla>
+<![CDATA[
+new DataTable('#example', {
+	fixedHeader: {
+		header: true,
+		footer: true
+	},
+	paging: false,
+	scrollCollapse: true,
+	scrollX: true,
+	scrollY: 300
+});
+
+]]>
+</js-vanilla>
+
 
 <title lib="FixedHeader">Scrolling Table</title>
 

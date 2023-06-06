@@ -4,13 +4,19 @@
 <css lib="datatables fixedheader" />
 <js lib="jquery semanticui datatables fixedheader">
 <![CDATA[
-$(document).ready(function() {
-	var table = $('#example').DataTable( {
-		fixedHeader: true
-	} );
-} );
+$('#example').DataTable({
+	fixedHeader: true
+});
 ]]>
 </js>
+
+<js-vanilla>
+<![CDATA[
+new DataTable('#example', {
+	fixedHeader: true
+});
+]]>
+</js-vanilla>
 
 <title lib="FixedHeader">Fomantic-UI (formally Semantic-UI) styling</title>
 

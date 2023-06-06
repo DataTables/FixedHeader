@@ -4,17 +4,25 @@
 <css lib="datatables fixedheader buttons" />
 <js lib="jquery datatables fixedheader buttons buttons-colvis">
 <![CDATA[
-$(document).ready(function() {
-	var table = $('#example').DataTable( {
-		fixedHeader: true,
-		dom: 'Bfrtip',
-		buttons: [
-			'colvis'
-		]
-	} );
-} );
+$('#example').DataTable({
+	buttons: ['colvis'],
+	dom: 'Bfrtip',
+	fixedHeader: true
+});
+
 ]]>
 </js>
+
+<js-vanilla>
+<![CDATA[
+new DataTable('#example', {
+	buttons: ['colvis'],
+	dom: 'Bfrtip',
+	fixedHeader: true
+});
+
+]]>
+</js-vanilla>
 
 <title lib="FixedHeader">Buttons columns visibility integration</title>
 

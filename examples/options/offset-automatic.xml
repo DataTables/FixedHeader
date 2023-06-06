@@ -8,13 +8,23 @@
 // There is a fixed position element which has a class of `fh-fixedHeader` which
 // FixedHeader will automatically detect. See the description above.
 
-$(document).ready(function() {
-	$('#example').DataTable( {
-		fixedHeader: true
-	} );
-} );
+$('#example').DataTable({
+	fixedHeader: true
+});
 ]]>
 </js>
+
+<js-vanilla>
+<![CDATA[
+// Note although the initialisation here is identical to the basic FixedHeader case
+// There is a fixed position element which has a class of `fh-fixedHeader` which
+// FixedHeader will automatically detect. See the description above.
+
+new DataTable('#example', {
+	fixedHeader: true
+});
+]]>
+</js-vanilla>
 
 <title lib="FixedHeader">Offset - automatic</title>
 

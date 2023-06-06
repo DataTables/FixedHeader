@@ -4,16 +4,27 @@
 <css lib="datatables fixedheader" />
 <js lib="jquery datatables fixedheader">
 <![CDATA[
-$(document).ready(function() {
-	$('#example').DataTable( {
-		fixedHeader: {
-			header: true,
-			headerOffset: $('#fixed').height()
-		}
-	} );
-} );
+$('#example').DataTable({
+	fixedHeader: {
+		header: true,
+		headerOffset: $('#fixed').height()
+	}
+});
+
 ]]>
 </js>
+
+<js-vanilla>
+<![CDATA[
+new DataTable('#example', {
+	fixedHeader: {
+		header: true,
+		headerOffset: $('#fixed').height()
+	}
+});
+
+]]>
+</js-vanilla>
 
 <title lib="FixedHeader">Offset - manual</title>
 

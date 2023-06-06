@@ -4,24 +4,41 @@
 <css lib="datatables fixedcolumns fixedheader"/>
 <js lib="jquery datatables fixedcolumns fixedheader">
 <![CDATA[
-$(document).ready(function() {
-	$('#example').DataTable( {
-		scrollY:        300,
-		scrollX:        true,
-		scrollCollapse: true,
-		paging:         false,
-		fixedColumns:   {
-			left: 1,
-			right: 1
-		},
-		fixedHeader:           {
-			header: true,
-			footer: true
-		}
-	} );
-} );
+$('#example').DataTable({
+	fixedColumns: {
+		left: 1,
+		right: 1
+	},
+	fixedHeader: {
+		header: true,
+		footer: true
+	},
+	paging: false,
+	scrollCollapse: true,
+	scrollX: true,
+	scrollY: 300
+});
 ]]>
 </js>
+
+<js-vanilla>
+<![CDATA[
+new DataTable('#example', {
+	fixedColumns: {
+		left: 1,
+		right: 1
+	},
+	fixedHeader: {
+		header: true,
+		footer: true
+	},
+	paging: false,
+	scrollCollapse: true,
+	scrollX: true,
+	scrollY: 300
+});
+]]>
+</js-vanilla>
 
 <title lib="FixedColumns">FixedColumns</title>
 
