@@ -60,7 +60,8 @@ var FixedHeader = function ( dt, config ) {
 			header: -1,
 			footer: -1
 		},
-		enable: true
+		enable: true,
+		autoDisable: false
 	};
 
 	this.dom = {
@@ -143,9 +144,11 @@ $.extend( FixedHeader.prototype, {
 	 *
 	 * @param  {boolean} enable `true` to enable, `false` to disable
 	 */
-	enable: function ( enable, update )
+	enable: function ( enable, update, type )
 	{
 		this.s.enable = enable;
+
+		this.s.enableType = type;
 
 		if ( update || update === undefined ) {
 			this._positions();
@@ -197,16 +200,19 @@ $.extend( FixedHeader.prototype, {
 	 */
 	update: function (force)
 	{
-		if (! this.s.enable) {
+		var table = this.s.dt.table().node();
+
+		// Update should only do something if enabled by the dev.
+		if (! this.s.enable && ! this.s.autoDisable) {
 			return;
 		}
 
-		var table = this.s.dt.table().node();
-
 		if ( $(table).is(':visible') ) {
+			this.s.autoDisable = false;
 			this.enable( true, false );
 		}
 		else {
+			this.s.autoDisable = true;
 			this.enable( false, false );
 		}
 
