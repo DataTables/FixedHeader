@@ -307,9 +307,6 @@ $.extend( FixedHeader.prototype, {
 			itemDom.floating.removeClass( 'fixedHeader-floating fixedHeader-locked' );
 		}
 		else {
-			var docScrollLeft = $(document).scrollLeft();
-			var docScrollTop = $(document).scrollTop();
-
 			if ( itemDom.floating ) {
 				if(itemDom.placeholder !== null) {
 					itemDom.placeholder.remove();
@@ -379,13 +376,6 @@ $.extend( FixedHeader.prototype, {
 
 			// Clone widths
 			this._matchWidths( itemDom.placeholder, itemDom.floating );
-
-			// The above action will remove the table header, potentially causing the table to
-			// collapse to a smaller size, before it is then re-inserted (append). The result
-			// can be that the document, if scrolling, can "jump".
-			$(document)
-				.scrollTop(docScrollTop)
-				.scrollLeft(docScrollLeft);
 		}
 	},
 
