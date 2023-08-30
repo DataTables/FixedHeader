@@ -32,7 +32,7 @@ declare module 'datatables.net' {
 		fixedHeader: ApiFixedHeaderMethods<T>;
 	}
 
-	interface ApiStatic {
+	interface DataTablesStatic {
 		/**
 		 * FixedHeader class
 		 */
