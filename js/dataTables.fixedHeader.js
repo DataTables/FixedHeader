@@ -691,16 +691,15 @@ $.extend(FixedHeader.prototype, {
 		position.tbodyHeight = scrollEnabled ? scrollBody.outerHeight() : tbody.outerHeight();
 		position.theadHeight = thead.outerHeight();
 		position.theadBottom = position.theadTop + position.theadHeight;
+		position.tfootTop = position.tbodyTop + position.tbodyHeight; //tfoot.offset().top;
 
 		if (tfoot.length) {
-			position.tfootTop = position.tbodyTop + position.tbodyHeight; //tfoot.offset().top;
 			position.tfootBottom = position.tfootTop + tfoot.outerHeight();
 			position.tfootHeight = tfoot.outerHeight();
 		}
 		else {
-			position.tfootTop = position.tbodyTop + tbody.outerHeight();
 			position.tfootBottom = position.tfootTop;
-			position.tfootHeight = position.tfootTop;
+			position.tfootHeight = 0;
 		}
 	},
 
