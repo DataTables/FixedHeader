@@ -346,7 +346,7 @@ $.extend(FixedHeader.prototype, {
 								bottom: this.c.footerOffset
 						  }
 				)
-				.addClass(item === 'footer' ? 'dtfh-floatingparentfoot' : 'dtfh-floatingparenthead')
+				.addClass(item === 'footer' ? 'dtfh-floatingparent-foot' : 'dtfh-floatingparent-head')
 				.append(itemDom.floating)
 				.appendTo('body');
 
@@ -609,7 +609,6 @@ $.extend(FixedHeader.prototype, {
 				.css(prop, val)
 				.css({
 					left: position.left,
-					height: item === 'header' ? position.theadHeight : position.tfootHeight,
 					'z-index': 2
 				})
 				.append(itemDom.floating);

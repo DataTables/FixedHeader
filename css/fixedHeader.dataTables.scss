@@ -1,30 +1,12 @@
 
 
-table.fixedHeader-floating {
-	background-color: white;
-}
-
-table.fixedHeader-floating.no-footer {
-	border-bottom-width: 0;
-}
-
+table.fixedHeader-floating,
 table.fixedHeader-locked {
-	position: absolute !important;
-	background-color: white;
+	background-color: var(--dt-html-background);
 }
 
 @media print {
     table.fixedHeader-floating {
         display: none;
     }
-}
-
-html.dark {
-	table.fixedHeader-floating {
-		background-color: var(--dt-html-background);
-	}
-
-	table.fixedHeader-locked {
-		background-color: var(--dt-html-background);
-	}
 }
