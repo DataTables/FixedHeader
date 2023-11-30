@@ -2,72 +2,74 @@
 <dt-example table-type="html" order="10">
 
 <css lib="datatables fixedheader">
-	thead input {
+	tfoot input {
 		width: 100%;
 	}
 </css>
 <js lib="jquery datatables fixedheader">
 <![CDATA[
-$(document).ready(function () {
-	// Setup - add a text input to each footer cell
-	$('#example thead tr')
-		.clone(true)
-		.addClass('filters')
-		.appendTo('#example thead');
-	var table = $('#example').DataTable({
-		orderCellsTop: true,
-		fixedHeader: true,
-		initComplete: function () {
-			var api = this.api();
-			// For each column
-			api
-				.columns()
-				.eq(0)
-				.each(function (colIdx) {
-					// Set the header cell to contain the input element
-					var cell = $('.filters th').eq(
-						$(api.column(colIdx).header()).index()
-					);
-					var title = $(cell).text();
-					$(cell).html('<input type="text" placeholder="' + title + '" />');
-					// On every keypress in this input
-					$(
-						'input',
-						$('.filters th').eq($(api.column(colIdx).header()).index())
-					)
-						.off('keyup change')
-						.on('keyup change', function (e) {
-							e.stopPropagation();
-							// Get the search value
-							$(this).attr('title', $(this).val());
-							var regexr = '({search})'; //$(this).parents('th').find('select').val();
-							var cursorPosition = this.selectionStart;
-							// Search the column for that value
-							api
-								.column(colIdx)
-								.search(
-									this.value != ''
-										? regexr.replace('{search}', '(((' + this.value + ')))')
-										: '',
-									this.value != '',
-									this.value == ''
-								)
-								.draw();
-							$(this)
-								.focus()[0]
-								.setSelectionRange(cursorPosition, cursorPosition);
-						});
-				});
-		}
-	});
+
+$('#example').DataTable({
+	initComplete: function () {
+		this.api()
+			.columns()
+			.every(function () {
+				var column = this;
+				var title = column.footer().textContent;
+
+				// Create input element and add event listener
+				$('<input type="text" placeholder="Search ' + title + '" />')
+					.appendTo($(column.footer()).empty())
+					.on('keyup change clear', function () {
+						if (column.search() !== this.value) {
+							column.search(this.value).draw();
+						}
+					});
+			});
+	},
+	fixedHeader: {
+		footer: true
+	}
 });
+
 ]]>
 </js>
+
+<js-vanilla><![CDATA[
+
+new DataTable('#example', {
+	initComplete: function () {
+		this.api()
+			.columns()
+			.every(function () {
+				let column = this;
+				let title = column.footer().textContent;
+
+				// Create input element
+				let input = document.createElement('input');
+				input.placeholder = title;
+				column.footer().replaceChildren(input);
+
+				// Event listener for user input
+				input.addEventListener('keyup', () => {
+					if (column.search() !== this.value) {
+						column.search(input.value).draw();
+					}
+				});
+			});
+	},
+	fixedHeader: {
+		footer: true
+	}
+});
+]]></js-vanilla>
 
 <title lib="FixedHeader">Column filtering</title>
 
 <info><![CDATA[
-This example demonstrates FixedHeader being used with individual column filters, placed into a second row of the table's header (using `$().clone()`).
+
+This example demonstrates FixedHeader being used with individual column filters, placed into the table's footer.
+
 ]]></info>
 
 </dt-example>
