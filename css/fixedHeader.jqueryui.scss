@@ -1,11 +1,8 @@
 
-
-table.fixedHeader-floating {
-	background-color: white;
-}
-
-table.fixedHeader-locked {
-	background-color: white;
+table.dataTable.fixedHeader-floating,
+table.dataTable.fixedHeader-locked {
+    position: relative !important;
+    background-color: white;
 }
 
 @media print {

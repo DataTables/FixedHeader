@@ -1,6 +1,7 @@
 
 table.dataTable.fixedHeader-floating,
 table.dataTable.fixedHeader-locked {
+    position: relative !important;
 	background-color: var(--bs-body-bg);
 	margin-top: 0 !important;
 	margin-bottom: 0 !important;
