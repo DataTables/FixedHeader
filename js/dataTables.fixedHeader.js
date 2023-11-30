@@ -483,11 +483,11 @@ $.extend(FixedHeader.prototype, {
 
 		// It isn't trivial to add a !important css attribute...
 		var importantWidth = function (w) {
-			itemDom.floating[0].style.setProperty('width', w + 'px', '!important');
+			itemDom.floating[0].style.setProperty('width', w + 'px', 'important');
 
 			// If not scrolling also have to update the floatingParent
 			if (!scrollEnabled) {
-				itemDom.floatingParent[0].style.setProperty('width', w + 'px', '!important');
+				itemDom.floatingParent[0].style.setProperty('width', w + 'px', 'important');
 			}
 		};
 
