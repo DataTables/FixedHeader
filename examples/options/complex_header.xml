@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html-complex-header" order="4">
+
+<css lib="datatables fixedheader" />
+<js lib="jquery datatables fixedheader">
+<![CDATA[
+$('#example').DataTable({
+	fixedHeader: true
+});
+
+]]>
+</js>
+
+<js-vanilla>
+<![CDATA[
+new DataTable('#example', {
+	fixedHeader: true
+});
+
+]]>
+</js-vanilla>
+
+<title lib="FixedHeader">Complex headers and footers</title>
+
+<info><![CDATA[
+
+This example demonstrates FixedHeader's ability to work with complex headers and footers (i.e. multiple rows and also `colspan` / `rowspan` attributes).
+
+No additional initialisation is required for this to work - complex headers are supported automatically.
+
+]]></info>
+
+</dt-example>
