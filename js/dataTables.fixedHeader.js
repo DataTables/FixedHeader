@@ -9,7 +9,6 @@
  * @version     4.0.0
  * @author      SpryMedia Ltd
  * @contact     datatables.net
- * @copyright   SpryMedia Ltd.
  *
  * This source file is free software, available under the following license:
  *   MIT license - http://datatables.net/license/mit
@@ -24,6 +23,10 @@
 var _instCounter = 0;
 
 var FixedHeader = function (dt, config) {
+	if (!DataTable.versionCheck('2')) {
+		throw 'Warning: FixedHeader requires DataTables 2 or newer';
+	}
+
 	// Sanity check - you just know it will happen
 	if (!(this instanceof FixedHeader)) {
 		throw "FixedHeader must be initialised with the 'new' keyword.";
