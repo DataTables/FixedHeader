@@ -28,7 +28,7 @@ new DataTable.FixedHeader(table, {
 
 <info><![CDATA[
 
-As well as initialisation through the `fh-init fixedHeader` configuration option when constructing the DataTable, FixedHeader can also be added to an existing DataTable using the `new $.fn.dataTable.FixedHeader()` constructor. The first argument should be the DataTable to enable FixedHeader on and the second is the options for the instance.
+As well as initialisation through the `fh-init fixedHeader` configuration option when constructing the DataTable, FixedHeader can also be added to an existing DataTable using the `new DataTable.FixedHeader()` constructor. The first argument should be the DataTable to enable FixedHeader on and the second is the options for the instance.
 
 In this example FixedHeader is attached to a DataTable with the `fh-init fixedHeader.footer` option also set.
 
