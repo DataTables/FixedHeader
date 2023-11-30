@@ -1,11 +1,8 @@
 
 
 table.fixedHeader-floating {
+	border-top-width: 0 !important;
 	border-bottom-width: 0 !important;
-}
-
-table.fixedHeader-locked {
-	position: absolute !important;
 }
 
 @media print {

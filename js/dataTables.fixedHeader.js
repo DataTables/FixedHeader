@@ -308,7 +308,7 @@ $.extend(FixedHeader.prototype, {
 				if (itemDom.placeholder !== null) {
 					itemDom.placeholder.remove();
 				}
-				this._unsize(item);
+
 				itemDom.floating.children().detach();
 				itemDom.floating.remove();
 			}
@@ -320,7 +320,6 @@ $.extend(FixedHeader.prototype, {
 			itemDom.floating = $(dt.table().node().cloneNode(false))
 				.attr('aria-hidden', 'true')
 				.css({
-					'table-layout': 'fixed',
 					top: 0,
 					left: 0
 				})
@@ -367,8 +366,8 @@ $.extend(FixedHeader.prototype, {
 
 			itemDom.host.prepend(itemDom.placeholder);
 
-			// Clone widths
-			this._matchWidths(itemDom.placeholder, itemDom.floating);
+			// Copy the `colgroup` element for widths
+			itemDom.placeholder.parent().find('colgroup').clone().appendTo(itemDom.floating);
 		}
 	},
 
@@ -406,69 +405,6 @@ $.extend(FixedHeader.prototype, {
 	},
 
 	/**
-	 * Copy widths from the cells in one element to another. This is required
-	 * for the footer as the footer in the main table takes its sizes from the
-	 * header columns. That isn't present in the footer so to have it still
-	 * align correctly, the sizes need to be copied over. It is also required
-	 * for the header when auto width is not enabled
-	 *
-	 * @param  {jQuery} from Copy widths from
-	 * @param  {jQuery} to   Copy widths to
-	 * @private
-	 */
-	_matchWidths: function (from, to) {
-		var get = function (name) {
-			return $(name, from)
-				.map(function () {
-					return (
-						$(this)
-							.css('width')
-							.replace(/[^\d\.]/g, '') * 1
-					);
-				})
-				.toArray();
-		};
-
-		var set = function (name, toWidths) {
-			$(name, to).each(function (i) {
-				$(this).css({
-					width: toWidths[i],
-					minWidth: toWidths[i]
-				});
-			});
-		};
-
-		var thWidths = get('th');
-		var tdWidths = get('td');
-
-		set('th', thWidths);
-		set('td', tdWidths);
-	},
-
-	/**
-	 * Remove assigned widths from the cells in an element. This is required
-	 * when inserting the footer back into the main table so the size is defined
-	 * by the header columns and also when auto width is disabled in the
-	 * DataTable.
-	 *
-	 * @param  {string} item The `header` or `footer`
-	 * @private
-	 */
-	_unsize: function (item) {
-		var el = this.dom[item].floating;
-
-		if (el && (item === 'footer' || (item === 'header' && !this.s.autoWidth))) {
-			$('th, td', el).css({
-				width: '',
-				minWidth: ''
-			});
-		}
-		else if (el && item === 'header') {
-			$('th, td', el).css('min-width', '');
-		}
-	},
-
-	/**
 	 * Reposition the floating elements to take account of horizontal page
 	 * scroll
 	 *
@@ -478,7 +414,6 @@ $.extend(FixedHeader.prototype, {
 	 */
 	_horizontal: function (item, scrollLeft) {
 		var itemDom = this.dom[item];
-		var position = this.s.position;
 		var lastScrollLeft = this.s.scrollLeft;
 
 		if (itemDom.floating && lastScrollLeft[item] !== scrollLeft) {
@@ -550,8 +485,6 @@ $.extend(FixedHeader.prototype, {
 				itemDom.placeholder.remove();
 				itemDom.placeholder = null;
 			}
-
-			this._unsize(item);
 
 			if (item === 'header') {
 				itemDom.host.prepend(tablePart);
@@ -798,7 +731,7 @@ $.extend(FixedHeader.prototype, {
 			height: 0
 		};
 
-		if (this.c.footer && this.dom.tfoot.length) {
+		if (this.c.footer && this.dom.tfoot.length && this.dom.tfoot.find('th, td').length) {
 			if (!this.s.enable) {
 				footerMode = 'in-place';
 			}

@@ -1,24 +1,19 @@
 
 table.dataTable.fixedHeader-floating,
 table.dataTable.fixedHeader-locked {
-	background-color: white;
+	background-color: var(--bs-body-bg);
 	margin-top: 0 !important;
 	margin-bottom: 0 !important;
 }
 
-table.dataTable.fixedHeader-locked {
-	position: absolute !important;
+div.dtfh-floatingparent-foot table {
+	border-top-color: var(--bs-border-color);
+	border-top-width: var(--bs-border-width);
+	border-top-style: solid;
 }
 
 @media print {
   table.fixedHeader-floating {
     display: none;
   }
-}
-
-html[data-bs-theme="dark"] {
-	table.dataTable.fixedHeader-floating,
-	table.dataTable.fixedHeader-locked {
-		background-color: var(--bs-body-bg);
-	}
 }
