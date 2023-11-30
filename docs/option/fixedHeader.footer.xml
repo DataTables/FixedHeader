@@ -17,13 +17,11 @@
 	</description>
 
 	<example title="Disable the header, but enable footer"><![CDATA[
-
-$('#example').DataTable( {
+new DataTable('#myTable', {
 	fixedHeader: {
 		header: false,
 		footer: true
 	}
-} );
-
+});
 ]]></example>
 </dt-option>

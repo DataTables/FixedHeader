@@ -5,9 +5,12 @@
 <js lib="jquery datatables fixedheader buttons buttons-colvis">
 <![CDATA[
 $('#example').DataTable({
-	buttons: ['colvis'],
-	dom: 'Bfrtip',
-	fixedHeader: true
+	fixedHeader: true,
+	layout: {
+		topStart: {
+			buttons: ['colvis']
+		}
+	}
 });
 
 ]]>
@@ -16,9 +19,12 @@ $('#example').DataTable({
 <js-vanilla>
 <![CDATA[
 new DataTable('#example', {
-	buttons: ['colvis'],
-	dom: 'Bfrtip',
-	fixedHeader: true
+	fixedHeader: true,
+	layout: {
+		topStart: {
+			buttons: ['colvis']
+		}
+	}
 });
 
 ]]>

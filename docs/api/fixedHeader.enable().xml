@@ -22,11 +22,9 @@
 	</description>
 
 	<example title="Disable the FixedHeader"><![CDATA[
+var table = new DataTable('#myTable');
 
-var table = $('#myTable').DataTable();
-
-table.fixedHeader.enable( false );
-
+table.fixedHeader.enable(false);
 ]]></example>
 
 	<related>-api fixedHeader.enable()</related>

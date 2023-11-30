@@ -27,20 +27,16 @@
 	</description>
 
 	<example title="Enable FixedHeader with default values"><![CDATA[
-
-$('#example').DataTable( {
+new DataTable('#myTable', {
 	fixedHeader: true
-} );
-
+});
 ]]></example>
 
 	<example title="Enable FixedHeader with footer also enabled"><![CDATA[
-
-$('#example').DataTable( {
+new DataTable('#myTable', {
 	fixedHeader: {
 		footer: true
 	}
-} );
-
+});
 ]]></example>
 </dt-option>
