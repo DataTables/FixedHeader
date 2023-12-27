@@ -21,10 +21,8 @@
 	</description>
 
 	<example title="Adjust the positioning of the fixed elements"><![CDATA[
-
-var table = $('#myTable').DataTable();
+var table = new DataTable('#myTable');
 
 table.fixedHeader.adjust();
-
 ]]></example>
 </dt-api>

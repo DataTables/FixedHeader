@@ -33,11 +33,9 @@
 	</description>
 
 	<example title="Set the header's offset"><![CDATA[
+var table = new DataTable('#myTable');
 
-var table = $('#myTable').DataTable();
-
-table.fixedHeader.headerOffset( 10 );
-
+table.fixedHeader.headerOffset(10);
 ]]></example>
 
 	<related>fh-init fixedHeader.headerOffset</related>

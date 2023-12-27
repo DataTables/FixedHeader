@@ -6,7 +6,6 @@
 <![CDATA[
 $('#example').DataTable({
 	ajax: '../data/2500.txt',
-	deferRender: true,
 	fixedHeader: {
 		header: true,
 		footer: true
@@ -23,7 +22,6 @@ $('#example').DataTable({
 <![CDATA[
 new DataTable('#example', {
 	ajax: '../data/2500.txt',
-	deferRender: true,
 	fixedHeader: {
 		header: true,
 		footer: true

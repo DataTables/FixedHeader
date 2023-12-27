@@ -19,25 +19,21 @@
 	</description>
 
 	<example title="Set the footer offset to a known value"><![CDATA[
-
-$('#example').DataTable( {
+new DataTable('#myTable', {
 	fixedHeader: {
 		footer: true,
 		footerOffset: 40
 	}
-} );
-
+});
 ]]></example>
 
 	<example title="Use jQuery to calculate a required offset"><![CDATA[
-
-$('#example').DataTable( {
+new DataTable('#myTable', {
 	fixedHeader: {
 		footer: true,
 		footerOffset: $('#navMenu').outerHeight()
 	}
-} );
-
+});
 ]]></example>
 
 	<related>fh-init fixedHeader.headerOffset</related>
