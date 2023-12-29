@@ -612,7 +612,7 @@ $.extend(FixedHeader.prototype, {
 				.css({
 					left: position.left,
 					height: item === 'header' ? position.theadHeight : position.tfootHeight,
-					'z-index': 2
+					'z-index': 3
 				})
 				.append(itemDom.floating);
 
