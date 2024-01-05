@@ -570,7 +570,7 @@ $.extend(FixedHeader.prototype, {
 				.css(prop, val)
 				.css({
 					left: position.left,
-					'z-index': 2
+					'z-index': 3
 				})
 				.append(itemDom.floating);
 
@@ -988,7 +988,7 @@ $(document).on('init.dt.dtfh', function (e, settings, json) {
 });
 
 // DataTables API methods
-DataTable.Api.register('fixedHeader()', function () {});
+DataTable.Api.register('fixedHeader()', function () { });
 
 DataTable.Api.register('fixedHeader.adjust()', function () {
 	return this.iterator('table', function (ctx) {

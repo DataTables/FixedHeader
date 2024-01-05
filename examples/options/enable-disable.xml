@@ -4,7 +4,7 @@
 <css lib="datatables fixedheader">
 	#float {
 		position: fixed;
-		top: 3em;
+		top: 7em;
 		right: 2em;
 		z-index: 100;
 	}
@@ -55,8 +55,8 @@ This example demonstrates this ability using two floating buttons (top right) wh
 
 <demo-html>
 	<div id="float">
-		<button id="enable">Enable FixedHeader</button>
-		<button id="disable">Disable FixedHeader</button>
+		<button id="enable" class="ui button btn btn-primary">Enable FixedHeader</button>
+		<button id="disable" class="ui button btn btn-primary">Disable FixedHeader</button>
 	</div>
 </demo-html>
 

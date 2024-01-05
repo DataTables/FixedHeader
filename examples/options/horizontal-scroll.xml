@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <dt-example table-type="html-wide" table-class="display nowrap" order="7">
 
-<css lib="datatables fixedheader"/>
+<css lib="datatables fixedheader">
+/* This is needed for Bulma only, which has overflow-x hidden by default */
+:root {
+	overflow-x: auto;
+}
+</css>
 <js lib="jquery datatables fixedheader">
 <![CDATA[
 $('#example').DataTable({
