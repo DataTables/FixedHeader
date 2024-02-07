@@ -330,8 +330,7 @@ $.extend(FixedHeader.prototype, {
 					top: 0,
 					left: 0
 				})
-				.removeAttr('id')
-				.append(itemElement);
+				.removeAttr('id');
 
 			itemDom.floatingParent
 				.css({
@@ -377,7 +376,10 @@ $.extend(FixedHeader.prototype, {
 			itemDom.placeholder = itemElement.clone(false);
 			itemDom.placeholder.find('*[id]').removeAttr('id');
 
+			// Move the thead / tfoot elements around - original into the floating
+			// element and clone into the original table
 			itemDom.host.prepend(itemDom.placeholder);
+			itemDom.floating.append(itemElement);
 
 			// Copy the `colgroup` element for widths
 			itemDom.placeholder
@@ -528,7 +530,7 @@ $.extend(FixedHeader.prototype, {
 			);
 		}
 		else if (mode === 'in') {
-			// Remove the header from the read header and insert into a fixed
+			// Remove the header from the real table and insert into a fixed
 			// positioned floating table clone
 			this._clone(item, forceChange);
 
