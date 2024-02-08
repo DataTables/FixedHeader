@@ -46,9 +46,11 @@ document.querySelector('#toggle').addEventListener('click', function () {
 
 <info><![CDATA[
 
-This example shows how FixedHeader can be enabled and disabled using the `fh-api fixedHeader.adjust()` API method. This can be particularly useful if FixedHeader is used for DataTables that are enclosed in tabs, so the header is disabled when the tab containing it is not visible, and also to realign the FixedHeader when the table is made visible again.
+This example shows how to handle the case when the host DataTable is visible or not. FixedHeader needs to "be informed" if the table is visible or not (or if its position has changed on the page) so it can recalculate its cached values that are used to quickly look up what state the fixed header should be in at any given point.
 
-This example shows a simple toggle button that changes the visibility of the DataTable. The `fh-api fixedHeader.adjust()` method is called whenever the table's visibility is changed, as it would be in a tab show event handler.
+This is achieved through the `-api fixedHeader.adjust()` API method.
+
+This example shows a simple toggle button that changes the visibility of the DataTable. The `-api fixedHeader.adjust()` method is called whenever the table's visibility is changed, as it would be in a tab show event handler.
 
 ]]></info>
 
