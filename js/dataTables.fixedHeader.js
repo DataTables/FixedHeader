@@ -422,19 +422,12 @@ $.extend(FixedHeader.prototype, {
 					var potential;
 
 					if (right !== 'auto' && !rtl) {
-						// New position either adds or dismisses the barWidth
-						potential =
-							+right.replace(/px/g, '') +
-							(sign === '-' ? -1 : 1) *
-								that.s.dt.settings()[0].oBrowser.barWidth;
+						potential = +right.replace(/px/g, '')
 
 						$(this).css('right', potential > 0 ? potential : 0);
 					}
 					else if (left !== 'auto' && rtl) {
-						potential =
-							+left.replace(/px/g, '') +
-							(sign === '-' ? -1 : 1) *
-								that.s.dt.settings()[0].oBrowser.barWidth;
+						potential = +left.replace(/px/g, '');
 
 						$(this).css('left', potential > 0 ? potential : 0);
 					}
