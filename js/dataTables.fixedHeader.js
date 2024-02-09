@@ -373,6 +373,32 @@ $.extend(FixedHeader.prototype, {
 			scrollLeftUpdate();
 			scrollBody.off('scroll.dtfh').on('scroll.dtfh', scrollLeftUpdate);
 
+			// Need padding on the header's container to allow for a scrollbar,
+			// just like how DataTables handles it
+			itemDom.floatingParent.children().css({
+				width: 'fit-content',
+				paddingRight: that.s.dt.settings()[0].oBrowser.barWidth
+			});
+
+			// Blocker to hide the table behind the scrollbar - this needs to use
+			// fixed positioning in the container since we don't have an outer wrapper
+			let blocker = $(
+				item === 'footer'
+					? 'div.dtfc-bottom-blocker'
+					: 'div.dtfc-top-blocker',
+				dt.table().container()
+			);
+
+			if (blocker.length) {
+				blocker
+					.clone()
+					.appendTo(itemDom.floatingParent)
+					.css({
+						position: 'fixed',
+						right: blocker.width()
+					});
+			}
+
 			// Insert a fake thead/tfoot into the DataTable to stop it jumping around
 			itemDom.placeholder = itemElement.clone(false);
 			itemDom.placeholder.find('*[id]').removeAttr('id');
@@ -529,6 +555,7 @@ $.extend(FixedHeader.prototype, {
 			}
 
 			if (itemDom.floatingParent) {
+				itemDom.floatingParent.find('div.dtfc-top-blocker').remove();
 				itemDom.floatingParent.remove();
 			}
 
@@ -753,6 +780,7 @@ $.extend(FixedHeader.prototype, {
 							position: 'fixed'
 						})
 						.children()
+						.eq(0)
 						.append(this.dom.header.floating);
 				}
 			}
