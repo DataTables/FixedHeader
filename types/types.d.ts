@@ -40,7 +40,7 @@ declare module 'datatables.net' {
 			/**
 			 * Create a new FixedHeader instance for the target DataTable
 			 */
-			new (dt: Api<any>, settings: boolean | ConfigFixedHeader): void;
+			new (dt: Api<any>, settings: boolean | ConfigFixedHeader): DataTablesStatic['FixedHeader'];
 
 			/**
 			 * FixedHeader version
