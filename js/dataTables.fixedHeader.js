@@ -222,6 +222,8 @@ $.extend(FixedHeader.prototype, {
 
 		this._positions();
 		this._scroll(force !== undefined ? force : true);
+		this._widths(this.dom.header);
+		this._widths(this.dom.footer);
 	},
 
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -409,25 +411,7 @@ $.extend(FixedHeader.prototype, {
 			itemDom.host.prepend(itemDom.placeholder);
 			itemDom.floating.append(itemElement);
 
-			// Copy the `colgroup` element to define the number of columns - needed
-			// for complex header cases where a column might not have a unique
-			// header 
-			var cols = itemDom.placeholder
-				.parent()
-				.find('colgroup')
-				.clone()
-				.appendTo(itemDom.floating)
-				.find('col');
-
-			// However, the widths defined in the colgroup from the DataTable might
-			// not exactly reflect the actual widths of the columns (content can
-			// force it to stretch). So we need to copy the actual widths into the
-			// colgroup / col's used for the floating header.
-			var widths = this.s.dt.columns(':visible').widths();
-
-			for (var i=0 ; i<widths.length ; i++) {
-				cols.eq(i).css('width', widths[i]);
-			}
+			this._widths(itemDom);
 		}
 	},
 
@@ -976,6 +960,46 @@ $.extend(FixedHeader.prototype, {
 			return true;
 		}
 		return false;
+	},
+
+	/**
+	 * Realign columns by using the colgroup tag and
+	 * checking column widths
+	 */
+	_widths: function (itemDom) {
+		if (! itemDom || ! itemDom.placeholder) {
+			return;
+		}
+
+		// Match the table overall width
+		var tableNode = $(this.s.dt.table().node());
+		var tableWidth = tableNode[0].offsetWidth;
+
+		itemDom.floatingParent.css('width', tableWidth);
+		itemDom.floating.css('width', tableWidth);
+
+		// Strip out the old colgroup
+		$('colgroup', itemDom.floating).remove();
+
+		// Copy the `colgroup` element to define the number of columns - needed
+		// for complex header cases where a column might not have a unique
+		// header
+		var cols = itemDom.placeholder
+			.parent()
+			.find('colgroup')
+			.clone()
+			.appendTo(itemDom.floating)
+			.find('col');
+
+		// However, the widths defined in the colgroup from the DataTable might
+		// not exactly reflect the actual widths of the columns (content can
+		// force it to stretch). So we need to copy the actual widths into the
+		// colgroup / col's used for the floating header.
+		var widths = this.s.dt.columns(':visible').widths();
+
+		for (var i=0 ; i<widths.length ; i++) {
+			cols.eq(i).css('width', widths[i]);
+		}
 	}
 });
 
