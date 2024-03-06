@@ -423,7 +423,7 @@ $.extend(FixedHeader.prototype, {
 			// not exactly reflect the actual widths of the columns (content can
 			// force it to stretch). So we need to copy the actual widths into the
 			// colgroup / col's used for the floating header.
-			var widths = this.s.dt.columns({visible:true}).widths();
+			var widths = this.s.dt.columns(':visible').widths();
 
 			for (var i=0 ; i<widths.length ; i++) {
 				cols.eq(i).css('width', widths[i]);
