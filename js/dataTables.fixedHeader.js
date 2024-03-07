@@ -973,10 +973,10 @@ $.extend(FixedHeader.prototype, {
 
 		// Match the table overall width
 		var tableNode = $(this.s.dt.table().node());
-		var tableWidth = tableNode[0].offsetWidth;
+		var scrollBody = $(tableNode.parent());
 
-		itemDom.floatingParent.css('width', tableWidth);
-		itemDom.floating.css('width', tableWidth);
+		itemDom.floatingParent.css('width', scrollBody[0].offsetWidth);
+		itemDom.floating.css('width', tableNode[0].offsetWidth);
 
 		// Strip out the old colgroup
 		$('colgroup', itemDom.floating).remove();
