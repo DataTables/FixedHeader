@@ -10,7 +10,8 @@ table.fixedHeader-locked {
 }
 
 @media print {
-    table.fixedHeader-floating {
+    table.fixedHeader-floating,
+    table.fixedHeader-locked {
         display: none;
     }
 }
