@@ -526,11 +526,13 @@ $.extend(FixedHeader.prototype, {
 				itemDom.placeholder = null;
 			}
 
-			if (item === 'header') {
-				itemDom.host.prepend(tablePart);
-			}
-			else {
-				itemDom.host.append(tablePart);
+			if (!$.contains(itemDom.host[0], tablePart[0])) {
+				if (item === 'header') {
+					itemDom.host.prepend(tablePart);
+				}
+				else {
+					itemDom.host.append(tablePart);
+				}
 			}
 
 			if (itemDom.floating) {
