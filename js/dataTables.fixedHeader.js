@@ -519,7 +519,11 @@ $.extend(FixedHeader.prototype, {
 			: null;
 		var scrollBody = $($(this.s.dt.table().node()).parent());
 
-		if (mode === 'in-place') {
+		if (mode === this.s[item + 'Mode'] && !forceChange) {
+			// Skip if already the current mode
+			return;
+		}
+		else if (mode === 'in-place') {
 			// Insert the header back into the table's real header
 			if (itemDom.placeholder) {
 				itemDom.placeholder.remove();
@@ -528,8 +532,7 @@ $.extend(FixedHeader.prototype, {
 
 			if (item === 'header') {
 				itemDom.host.prepend(tablePart);
-			}
-			else {
+			} else {
 				itemDom.host.append(tablePart);
 			}
 
