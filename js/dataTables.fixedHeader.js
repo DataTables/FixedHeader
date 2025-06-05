@@ -517,6 +517,7 @@ $.extend(FixedHeader.prototype, {
 	 * @private
 	 */
 	_modeChange: function (mode, item, forceChange) {
+		var dt = this.s.dt;
 		var itemDom = this.dom[item];
 		var position = this.s.position;
 
@@ -669,6 +670,8 @@ $.extend(FixedHeader.prototype, {
 		this.s.scrollLeft.header = -1;
 		this.s.scrollLeft.footer = -1;
 		this.s[item + 'Mode'] = mode;
+
+		dt.trigger('fixedheader-mode', [mode]);
 	},
 
 	/**

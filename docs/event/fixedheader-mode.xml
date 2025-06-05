@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-event library="FixedHeader">
+	<name>fixedheader-mode</name>
+	<summary>The display mode of the fixed header / footer has changed</summary>
+	<since>4.1.0</since>
+
+	<type type="function">
+		<signature>function( e, mode, item )</signature>
+		<parameter type="object" name="e">
+			jQuery event object
+		</parameter>
+		<parameter type="string" name="mode">
+			Defines which mode the item is moving into. This can be one of:
+
+			* `-string in-place` - in its non-floating position
+			* `-string in` - floating over the middle of the table
+			* `-string below` - used only for the header. The floating header is positioned at the bottom of the table body.
+			* `-string above` - used only for the footer. The floating footer is positioned at the top of the table body.
+		</parameter>
+		<parameter type="string" name="item">
+			Denotes if the header or footer is the item that is changing its float state. Can be either `-string header` or `-string footer`.
+		</parameter>
+		<scope>HTML table element</scope>
+	</type>
+
+	<description>
+		This event is triggered when a scroll of the page by the end user causes the header / footer of the DataTable to change its fixed (floating) state. It can be useful to know this if you have extra information in the header / footer that needs to be rerendered depending on the fixed state.
+	</description>
+</dt-event>
