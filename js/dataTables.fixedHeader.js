@@ -74,20 +74,41 @@ var FixedHeader = function (dt, config) {
 		tfoot: $(dt.table().footer()),
 		header: {
 			host: null,
+			scrollAdjust: null,
 			floating: null,
-			floatingParent: $('<div class="dtfh-floatingparent"><div></div></div>'),
+			floatingParent: $(
+				'<div class="dtfh-floatingparent">' + // location
+					'<div class="dtfh-floating-limiter">' + // hidden overflow / scrolling
+						'<div></div>' + // adjustment for scrollbar (padding)
+					'</div>' + 
+				'</div>'),
+			limiter: null,
 			placeholder: null
 		},
 		footer: {
 			host: null,
+			scrollAdjust: null,
 			floating: null,
-			floatingParent: $('<div class="dtfh-floatingparent"><div></div></div>'),
+			floatingParent: $(
+				'<div class="dtfh-floatingparent">' +
+					'<div class="dtfh-floating-limiter">' +
+						'<div></div>' +
+					'</div>' + 
+				'</div>'),
+			limiter: null,
 			placeholder: null
 		}
 	};
 
-	this.dom.header.host = this.dom.thead.parent();
-	this.dom.footer.host = this.dom.tfoot.parent();
+	var dom = this.dom;
+
+	dom.header.host = dom.thead.parent();
+	dom.header.limiter = dom.header.floatingParent.children();
+	dom.header.scrollAdjust = dom.header.limiter.children();
+
+	dom.footer.host = dom.tfoot.parent();
+	dom.footer.limiter = dom.footer.floatingParent.children();
+	dom.footer.scrollAdjust = dom.footer.limiter.children();
 
 	var dtSettings = dt.settings()[0];
 	if (dtSettings._fixedHeader) {
@@ -318,7 +339,7 @@ $.extend(FixedHeader.prototype, {
 					itemDom.placeholder.remove();
 				}
 
-				itemDom.floating.children().detach();
+				itemDom.scrollAdjust.detach();
 				itemDom.floating.remove();
 			}
 
@@ -337,8 +358,6 @@ $.extend(FixedHeader.prototype, {
 			itemDom.floatingParent
 				.css({
 					width: scrollBody[0].offsetWidth,
-					overflow: 'hidden',
-					height: 'fit-content',
 					position: 'fixed',
 					left: scrollEnabled
 						? tableNode.offset().left + scrollBody.scrollLeft()
@@ -362,7 +381,16 @@ $.extend(FixedHeader.prototype, {
 				)
 				.appendTo('body')
 				.children()
-				.eq(0)
+				.eq(0);
+
+			itemDom.limiter
+				.css({
+					width: '100%',
+					overflow: 'hidden',
+					height: 'fit-content'
+			});
+
+			itemDom.scrollAdjust
 				.append(itemDom.floating);
 
 			this._stickyPosition(itemDom.floating, '-');
@@ -370,7 +398,7 @@ $.extend(FixedHeader.prototype, {
 			var scrollLeftUpdate = function () {
 				var scrollLeft = scrollBody.scrollLeft();
 				that.s.scrollLeft = { footer: scrollLeft, header: scrollLeft };
-				itemDom.floatingParent.scrollLeft(that.s.scrollLeft.header);
+				itemDom.limiter.scrollLeft(that.s.scrollLeft.header);
 			};
 
 			scrollLeftUpdate();
@@ -378,7 +406,7 @@ $.extend(FixedHeader.prototype, {
 
 			// Need padding on the header's container to allow for a scrollbar,
 			// just like how DataTables handles it
-			itemDom.floatingParent.children().css({
+			itemDom.scrollAdjust.css({
 				width: 'fit-content',
 				paddingRight: that.s.dt.settings()[0].oBrowser.barWidth
 			});
