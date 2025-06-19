@@ -1,0 +1,7 @@
+
+@media print {
+    table.fixedHeader-floating,
+    table.fixedHeader-locked {
+        display: none;
+    }
+}

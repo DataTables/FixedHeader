@@ -7,8 +7,4 @@ table.dataTable.fixedHeader-locked {
 	margin-bottom: 0 !important;
 }
 
-@media print {
-  table.fixedHeader-floating {
-    display: none;
-  }
-}
+@import 'print.scss';

@@ -13,8 +13,4 @@ div.dtfh-floatingparent-foot table {
 	border-top-style: solid;
 }
 
-@media print {
-  table.fixedHeader-floating {
-    display: none;
-  }
-}
+@import 'print.scss';
