@@ -336,10 +336,10 @@ $.extend(FixedHeader.prototype, {
 		else {
 			if (itemDom.floating) {
 				if (itemDom.placeholder !== null) {
-					itemDom.placeholder.remove();
+					itemDom.placeholder.detach();
 				}
 
-				itemDom.floating.remove();
+				itemDom.floating.detach();
 			}
 
 			var tableNode = $(dt.table().node());
