@@ -1,3 +1,4 @@
+@use "sass:meta";
 
 table.dataTable.fixedHeader-floating,
 table.dataTable.fixedHeader-locked {
@@ -7,4 +8,4 @@ table.dataTable.fixedHeader-locked {
 	margin-bottom: 0 !important;
 }
 
-@import 'print.scss';
+@include meta.load-css('print.scss');

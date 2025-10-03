@@ -1,3 +1,4 @@
+@use "sass:meta";
 
 table.dataTable.fixedHeader-floating,
 table.dataTable.fixedHeader-locked {
@@ -13,4 +14,4 @@ div.dtfh-floatingparent-foot table {
 	border-top-style: solid;
 }
 
-@import 'print.scss';
+@include meta.load-css('print.scss');

@@ -1,3 +1,4 @@
+@use "sass:meta";
 
 
 table.fixedHeader-floating,
@@ -9,5 +10,5 @@ table.fixedHeader-locked {
 	background-color: var(--dt-html-background);
 }
 
-@import 'print.scss';
+@include meta.load-css('print.scss');
 
