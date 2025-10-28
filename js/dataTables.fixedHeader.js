@@ -439,6 +439,8 @@ $.extend(FixedHeader.prototype, {
 			itemDom.floating.append(itemElement);
 
 			this._widths(itemDom);
+
+			return scrollLeftUpdate;
 		}
 	},
 
@@ -581,7 +583,7 @@ $.extend(FixedHeader.prototype, {
 		else if (mode === 'in') {
 			// Remove the header from the real table and insert into a fixed
 			// positioned floating table clone
-			this._clone(item, forceChange);
+			let scrollLeftUpdate = this._clone(item, forceChange);
 
 			// Get useful position values
 			var scrollOffset = scrollBody.offset();
@@ -625,6 +627,7 @@ $.extend(FixedHeader.prototype, {
 				});
 
 			importantWidth(position.width);
+			scrollLeftUpdate();
 
 			if (item === 'footer') {
 				itemDom.floating.css('top', '');
