@@ -158,6 +158,8 @@ export interface InternalDom {
 		floatingParent: Dom;
 		limiter: Dom | null;
 		placeholder: Dom | null;
+		rightBlocker: Dom | null;
+		leftBlocker: Dom | null;
 	}
 	footer: {
 		host: Dom | null;
@@ -166,6 +168,8 @@ export interface InternalDom {
 		floatingParent: Dom;
 		limiter: Dom | null;
 		placeholder: Dom | null;
+		rightBlocker: Dom | null;
+		leftBlocker: Dom | null;
 	}
 }
 
