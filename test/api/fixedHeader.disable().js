@@ -25,7 +25,7 @@ describe('fixedHeader - api - fixedHeader.disable()', function() {
 
 	describe('Functional tests', function() {
 		dt.html('basic');
-		it('Just the header', async function(done) {
+		it('Just the header', async function() {
 			table = $('#example').DataTable({
 				fixedHeader: {
 					header: true
@@ -36,7 +36,6 @@ describe('fixedHeader - api - fixedHeader.disable()', function() {
 			await dt.scrollTop(2000);
 			expect($('table.dataTable').length).toBe(2);
 			expect($('table.fixedHeader-floating').length).toBe(1);
-			done();
 		});
 		it('... disappears when disabled', function() {
 			table.fixedHeader.disable();

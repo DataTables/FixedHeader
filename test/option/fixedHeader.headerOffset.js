@@ -21,10 +21,9 @@ describe('fixedHeader - options - fixedHeader.headerOffset', function() {
 			expect($('table.dataTable').length).toBe(1);
 			expect($('table.fixedHeader-floating').length).toBe(0);
 		});
-		it('... scrolling as expected', async function(done) {
+		it('... scrolling as expected', async function() {
 			await dt.scrollTop(400);
 			expect($('table.fixedHeader-floating').offset().top).toBe(400);
-			done();
 		});
 		it('destroy', function() {
 			table.destroy();
@@ -44,10 +43,9 @@ describe('fixedHeader - options - fixedHeader.headerOffset', function() {
 		it('... and at expected offset', function() {
 			expect($('table.fixedHeader-floating').offset().top).toBe(300);
 		});
-		it('... scrolling as expected', async function(done) {
+		it('... scrolling as expected', async function() {
 			await dt.scrollTop(400);
 			expect($('table.fixedHeader-floating').offset().top).toBe(700);
-			done();
 		});
 		it('destroy', function() {
 			table.destroy();

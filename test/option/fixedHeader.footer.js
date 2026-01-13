@@ -21,24 +21,21 @@ describe('fixedHeader - options - fixedHeader.footer', function() {
 			expect($('table.dataTable').length).toBe(2);
 			expect($('table.fixedHeader-floating').length).toBe(1);
 		});
-		it('... appears when scolling down (along with header)', async function(done) {
+		it('... appears when scolling down (along with header)', async function() {
 			await dt.scrollTop(1000);
 			expect($('table.dataTable').length).toBe(3);
 			expect($('table.fixedHeader-floating').length).toBe(2);
-			done();
 		});
-		it('... disappears when scolling all the way down', async function(done) {
+		it('... disappears when scolling all the way down', async function() {
 			await dt.scrollTop(2000);
 			expect($('table.dataTable').length).toBe(2);
 			expect($('table.fixedHeader-floating').length).toBe(1);
-			done();
 		});
-		it('Removed when table destroyed', async function(done) {
+		it('Removed when table destroyed', async function() {
 			await dt.scrollTop(0);
 			table.destroy();
 			expect($('table.dataTable').length).toBe(0);
 			expect($('table.fixedHeader-floating').length).toBe(0);
-			done();
 		});
 		it('destroy', function() {
 			table.destroy();
@@ -55,11 +52,10 @@ describe('fixedHeader - options - fixedHeader.footer', function() {
 			expect($('table.dataTable').length).toBe(1);
 			expect($('table.fixedHeader-floating').length).toBe(0);
 		});
-		it('... does not appear when scolling down', async function(done) {
+		it('... does not appear when scolling down', async function() {
 			await dt.scrollTop(2000);
 			expect($('table.dataTable').length).toBe(2);
 			expect($('table.fixedHeader-floating').length).toBe(1);
-			done();
 		});
 		it('destroy', function() {
 			table.destroy();

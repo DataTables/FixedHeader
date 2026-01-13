@@ -24,12 +24,11 @@ describe('fixedHeader - options - fixedHeader.footerOffset', function() {
 			expect($('table.dataTable').length).toBe(2);
 			expect($('table.fixedHeader-floating').length).toBe(1);
 		});
-		it('... scrolling as expected', async function(done) {
+		it('... scrolling as expected', async function() {
 			await dt.scrollTop(400);
 
 			var pos = 400 + $(window).height() - $('table.fixedHeader-floating').height();
 			expect($('table.fixedHeader-floating').offset().top).toBe(pos);
-			done();
 		});
 		it('destroy', function() {
 			table.destroy();
@@ -52,12 +51,11 @@ describe('fixedHeader - options - fixedHeader.footerOffset', function() {
 			var pos = $(window).height() - 400 - $('table.fixedHeader-floating').height();
 			expect($('table.fixedHeader-floating').offset().top).toBe(pos);
 		});
-		it('... scrolling as expected', async function(done) {
+		it('... scrolling as expected', async function() {
 			await dt.scrollTop(300);
 			var pos = $(window).height() - 400 + 300 - $('table.fixedHeader-floating').height();
 
 			expect($('table.fixedHeader-floating').offset().top).toBe(pos);
-			done();
 		});
 		it('destroy', function() {
 			table.destroy();

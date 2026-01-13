@@ -17,16 +17,14 @@ describe('fixedHeader - options - fixedHeader', function() {
 			expect($('table.dataTable').length).toBe(1);
 			expect($('table.fixedHeader-floating').length).toBe(0);
 		});
-		it('... appears when scolling down', async function(done) {
+		it('... appears when scolling down', async function() {
 			await dt.scrollTop(2000);
 			expect($('table.dataTable').length).toBe(2);
 			expect($('table.fixedHeader-floating').length).toBe(1);
-			done();
 		});
-		it('destroy', async function(done) {
+		it('destroy', async function() {
 			await dt.scrollTop(0);
 			table.destroy();
-			done();
 		});
 	});
 
@@ -43,12 +41,11 @@ describe('fixedHeader - options - fixedHeader', function() {
 			});
 		});
 
-		it('Position on scroll', async function(done) {
+		it('Position on scroll', async function() {
 			await dt.scrollTop(2000);
 			expect($('table.fixedHeader-floating').length).toBe(1);
 
 			pos = $(window).scrollTop();
-			done();
 		});
 
 		it('Position held after columns.adjust', function() {

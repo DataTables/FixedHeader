@@ -23,11 +23,10 @@ describe('fixedHeader - options - fixedHeader.header', function() {
 			expect($('table.dataTable').length).toBe(1);
 			expect($('table.fixedHeader-floating').length).toBe(0);
 		});
-		it('... appears when scolling down', async function(done) {
+		it('... appears when scolling down', async function() {
 			await dt.scrollTop(2000);
 			expect($('table.dataTable').length).toBe(2);
 			expect($('table.fixedHeader-floating').length).toBe(1);
-			done();
 		});
 		it('Removed when table destroyed', function() {
 			table.destroy();
@@ -50,11 +49,10 @@ describe('fixedHeader - options - fixedHeader.header', function() {
 			expect($('table.dataTable').length).toBe(1);
 			expect($('table.fixedHeader-floating').length).toBe(0);
 		});
-		it('... does not appear when scolling down', async function(done) {
+		it('... does not appear when scolling down', async function() {
 			await dt.scrollTop(2000);
 			expect($('table.dataTable').length).toBe(1);
 			expect($('table.fixedHeader-floating').length).toBe(0);
-			done();
 		});
 		it('destroy', function() {
 			table.destroy();
