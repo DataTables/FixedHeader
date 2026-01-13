@@ -19,7 +19,7 @@ $('#example').DataTable({
 new DataTable('#example', {
 	fixedHeader: {
 		header: true,
-		headerOffset: $('#fixed').height()
+		headerOffset: document.querySelector('#fixed').offsetHeight
 	}
 });
 

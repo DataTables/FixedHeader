@@ -15,7 +15,7 @@
  * For details please refer to: http://www.datatables.net
  */
 
-import DataTable, { Context, Dom } from 'datatables.net';
+import DataTable, { Api, Context, Dom } from 'datatables.net';
 import { Defaults, InternalDom, Options, Settings } from './interface';
 
 var _instCounter = 0;
@@ -167,7 +167,7 @@ export default class FixedHeader {
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 * Constructor
 	 */
-	constructor(ctx: Context, config: Options) {
+	constructor(ctx: Context | Api, config: Options) {
 		let dt = new DataTable.Api(ctx);
 
 		this.c = util.object.assign({}, FixedHeader.defaults, config);

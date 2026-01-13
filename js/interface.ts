@@ -39,22 +39,7 @@ declare module 'datatables.net' {
 		/**
 		 * FixedHeader class
 		 */
-		FixedHeader: {
-			/**
-			 * Create a new FixedHeader instance for the target DataTable
-			 */
-			new (dt: Context, settings: Options);
-
-			/**
-			 * FixedHeader version
-			 */
-			version: string;
-
-			/**
-			 * Default configuration values
-			 */
-			defaults: Options;
-		}
+		FixedHeader: typeof FixedHeader
 	}
 }
 
