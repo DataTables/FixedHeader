@@ -6,8 +6,8 @@ table.fixedHeader-locked {
     // The position is needed in case it is being used with Scroller which sets the
     // position of the main table to be `absolute`
     position: relative !important;
-	background-color: var(--dt-html-background);
-	background-color: var(--dt-html-background);
+	background-color: var(--dt-html_background);
+	background-color: var(--dt-html_background);
 }
 
 @include meta.load-css('print.scss');

@@ -446,7 +446,7 @@ export default class FixedHeader {
 
 			// Insert a fake thead/tfoot into the DataTable to stop it jumping
 			// around
-			itemDom.placeholder = itemElement.clone(false);
+			itemDom.placeholder = itemElement.clone(true);
 			itemDom.placeholder.find('*[id]').removeAttr('id');
 
 			// Move the thead / tfoot elements around - original into the
@@ -509,7 +509,8 @@ export default class FixedHeader {
 		var lastScrollLeft = this.s.scrollLeft;
 
 		if (itemDom.floating && lastScrollLeft[item] !== scrollLeft) {
-			// If scrolling is enabled we need to match the floating header to the body
+			// If scrolling is enabled we need to match the floating header to
+			// the body
 			if (this._scrollEnabled()) {
 				var newScrollLeft = dom
 					.s(this.s.dt.table().node().parentNode)
@@ -638,8 +639,9 @@ export default class FixedHeader {
 						: bodyTop + position.tfootHeight - windowBottom; // No
 			}
 			else {
-				// Otherwise must be a header so get the difference from the bottom of the
-				//  desired floating header and the bottom of the table body
+				// Otherwise must be a header so get the difference from the
+				// bottom of the desired floating header and the bottom of the
+				// table body
 				shuffle =
 					windowTop +
 					this.c.headerOffset +
@@ -761,7 +763,7 @@ export default class FixedHeader {
 	 * Mode calculation - determine what mode the fixed items should be placed
 	 * into.
 	 *
-	 * @param  {boolean} forceChange Force a redraw of the mode, even if already
+	 * @param forceChange Force a redraw of the mode, even if already
 	 *     in that mode.
 	 */
 	private _scroll(forceChange = false) {
@@ -799,7 +801,8 @@ export default class FixedHeader {
 				headerMode = 'in-place';
 			}
 			// The header is in it's normal place if the body top is lower than
-			//  the scroll of the window plus the headerOffset and the height of the header
+			// the scroll of the window plus the headerOffset and the height of
+			// the header
 			else if (
 				!position.visible ||
 				windowTop + this.c.headerOffset + position.theadHeight <=
@@ -809,17 +812,20 @@ export default class FixedHeader {
 			}
 			// The header should be floated if
 			else if (
-				// The scrolling plus the header offset plus the height of the header is lower than the top of the body
+				// The scrolling plus the header offset plus the height of the
+				// header is lower than the top of the body
 				windowTop + this.c.headerOffset + position.theadHeight >
 					bodyTop &&
-				// And the scrolling at the top plus the header offset is above the bottom of the body
+				// And the scrolling at the top plus the header offset is above
+				// the bottom of the body
 				windowTop + this.c.headerOffset + position.theadHeight <
 					bodyBottom
 			) {
 				headerMode = 'in';
 
-				// Further to the above, If the scrolling plus the header offset plus the header height is lower
-				// than the bottom of the table a shuffle is required so have to force the calculation
+				// Further to the above, If the scrolling plus the header offset
+				// plus the header height is lower than the bottom of the table
+				// a shuffle is required so have to force the calculation
 				if (
 					windowTop + this.c.headerOffset + position.theadHeight >
 						bodyBottom ||
@@ -910,15 +916,17 @@ export default class FixedHeader {
 
 			// If scrolling is enabled and the footer is off the screen
 			if (scrollEnabled && footer.offset.top > windowTop) {
-				// && footer.offset.top >= windowBottom) {
-				// Calculate the gap between the top of the scrollBody and the top of the window
+				// && footer.offset.top >= windowBottom) { Calculate the gap
+				// between the top of the scrollBody and the top of the window
 				var overlap = windowTop - scrollOffset.top;
 				// The new height is the bottom of the window
 				var newHeight =
 					windowBottom +
-					// If the gap between the top of the scrollbody and the window is more than
-					//  the height of the header then the top of the table is still visible so add that gap
-					// Doing this has effectively calculated the height from the top of the table to the bottom of the current page
+					// If the gap between the top of the scrollbody and the
+					//  window is more than the height of the header then the
+					//  top of the table is still visible so add that gap Doing
+					//  this has effectively calculated the height from the top
+					//  of the table to the bottom of the current page
 					(overlap > -header.height ? overlap : 0) -
 					// Take from that
 					// The top of the header plus
@@ -1076,7 +1084,7 @@ export default class FixedHeader {
 		var cols = itemDom.placeholder
 			.parent()
 			.find('colgroup')
-			.clone()
+			.clone(true)
 			.appendTo(itemDom.floating)
 			.find('col');
 
