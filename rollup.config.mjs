@@ -1,4 +1,4 @@
-// import { dts } from 'rollup-plugin-dts';
+import { dts } from 'rollup-plugin-dts';
 
 export default [
 	{
@@ -10,10 +10,10 @@ export default [
 		plugins: [],
 		external: ['datatables.net']
 	},
-	// {
-	// 	// Create a single .d.ts file
-	// 	input: './types/types.d.ts',
-	// 	output: [{ file: 'dist/types.d.ts', format: 'es' }],
-	// 	plugins: [dts()]
-	// }
+	{
+		// Create a single .d.ts file
+		input: './dist/interface.d.ts',
+		output: [{ file: 'dist/types.d.ts', format: 'es' }],
+		plugins: [dts()]
+	}
 ];

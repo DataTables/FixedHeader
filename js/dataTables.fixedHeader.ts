@@ -1,28 +1,41 @@
+import DataTable, { Context } from 'datatables.net';
+import FixedHeader from './FixedHeader';
+import './interface';
 
 if (!DataTable.versionCheck('3')) {
 	throw 'Warning: FixedHeader requires DataTables 3 or newer';
 }
+
+const dom = DataTable.dom;
+const util = DataTable.util;
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * DataTables interfaces
  */
 
 // Attach for constructor access
-$.fn.dataTable.FixedHeader = FixedHeader;
-$.fn.DataTable.FixedHeader = FixedHeader;
+DataTable.FixedHeader = FixedHeader;
 
 // DataTables creation - check if the FixedHeader option has been defined on the
 // table and if so, initialise
-$(document).on('init.dt.dtfh', function (e, settings, json) {
+dom.s(document).on('init.dt.dtfh', function (e, settings: Context) {
 	if (e.namespace !== 'dt') {
 		return;
 	}
 
-	var init = settings.oInit.fixedHeader;
+	var init = settings.init.fixedHeader;
 	var defaults = DataTable.defaults.fixedHeader;
 
 	if ((init || defaults) && !settings._fixedHeader) {
-		var opts = $.extend({}, defaults, init);
+		let opts = {};
+
+		if (util.is.plainObject(defaults)) {
+			util.object.assign(opts, defaults);
+		}
+
+		if (util.is.plainObject(init)) {
+			util.object.assign(opts, init);
+		}
 
 		if (init !== false) {
 			new FixedHeader(settings, opts);
@@ -48,6 +61,7 @@ DataTable.Api.register('fixedHeader.enable()', function (flag) {
 		var fh = ctx._fixedHeader;
 
 		flag = flag !== undefined ? flag : true;
+
 		if (fh && flag !== fh.enabled()) {
 			fh.enable(flag);
 		}
@@ -76,7 +90,7 @@ DataTable.Api.register('fixedHeader.disable()', function () {
 	});
 });
 
-$.each(['header', 'footer'], function (i, el) {
+['header', 'footer'].forEach(function (el) {
 	DataTable.Api.register('fixedHeader.' + el + 'Offset()', function (offset) {
 		var ctx = this.context;
 

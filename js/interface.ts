@@ -19,6 +19,13 @@ declare module 'datatables.net' {
         fixedHeader?: boolean | Options;
     }
 
+	interface Defaults {
+        /*
+         * FixedHeader extension options
+         */
+        fixedHeader?: boolean | Options;
+    }
+
 	interface Api<T> {
 		/**
 		 * FixedHeader methods container
@@ -36,7 +43,7 @@ declare module 'datatables.net' {
 			/**
 			 * Create a new FixedHeader instance for the target DataTable
 			 */
-			new (dt: Api<any>, settings: boolean | Options): DataTablesStatic['FixedHeader'];
+			new (dt: Context, settings: Options);
 
 			/**
 			 * FixedHeader version
