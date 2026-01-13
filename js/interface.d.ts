@@ -176,8 +176,11 @@ export interface InternalDom {
 export interface Settings {
 	dt: Api;
 	position: {
+		theadBottom: number;
 		theadTop: number;
 		tbodyTop: number;
+		tbodyHeight: number;
+		tbodyWidth: number;
 		tfootTop: number;
 		tfootBottom: number;
 		width: number;
@@ -187,8 +190,8 @@ export interface Settings {
 		windowHeight: number;
 		visible: boolean;
 	},
-	headerMode: null,
-	footerMode: null,
+	headerMode: string | null;
+	footerMode: string | null;
 	autoWidth: boolean;
 	namespace: string;
 	scrollLeft: {
