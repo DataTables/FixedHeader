@@ -139,6 +139,7 @@ $.extend(FixedHeader.prototype, {
 		var dom = this.dom;
 
 		this.s.dt.off('.dtfc');
+		$('body').off('.dtfc');
 		$(window).off(this.s.namespace);
 
 		// Remove clones of FC blockers
@@ -288,7 +289,9 @@ $.extend(FixedHeader.prototype, {
 			function (e, ctx) {
 				that.update();
 			}
-		).on('draw.dt.dtfc', function (e, ctx) {
+		);
+		
+		$('body').on('draw.dt.dtfc', function (e, ctx) {
 			// For updates from our own table, don't reclone, but for all others, do
 			that.update(ctx === dt.settings()[0] ? false : true);
 		});
