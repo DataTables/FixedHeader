@@ -49,6 +49,7 @@ export default class FixedHeader {
 	 */
 	public destroy() {
 		this.s.dt.off('.dtfc');
+		dom.s('body').off('.dtfc');
 		dom.w.off(this.s.namespace);
 
 		// Remove clones of FC blockers
@@ -301,7 +302,9 @@ export default class FixedHeader {
 			function (e, ctx) {
 				that.update();
 			}
-		).on('draw.dt.dtfc', function (e, ctx) {
+		);
+
+		dom.s('body').on('draw.dt.dtfc', function (e, ctx) {
 			// For updates from our own table, don't reclone, but for all others, do
 			that.update(ctx === dt.settings()[0] ? false : true);
 		});
