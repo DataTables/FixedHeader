@@ -49,7 +49,7 @@ $DT_SRC/node_modules/rollup/dist/bin/rollup \
 rsync -r dist/dataTables.fixedHeader.js $OUT_DIR/js/
 rsync -r js/integrations/fixedHeader.*.js $OUT_DIR/js/
 
-js_frameworks fixedheader $OUT_DIR/js "datatables.net-FW datatables.net-fixedheader"
+js_frameworks fixedHeader $OUT_DIR/js "datatables.net-FW datatables.net-fixedheader"
 js_wrap $OUT_DIR/js/dataTables.fixedHeader.js "datatables.net"
 
 # Move types across, single file was built by rollup
