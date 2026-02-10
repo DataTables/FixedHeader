@@ -457,6 +457,15 @@ export default class FixedHeader {
 			itemDom.host!.prepend(itemDom.placeholder);
 			itemDom.floating.append(itemElement);
 
+			// Move the thead / tfoot elements around - original into the
+			// floating element and clone into the original table. Note that the
+			// order is important in Chrome. It must be colgroup, thead, tbody,
+			// tfoot. Otherwise a "jitter" when scrolling will occur.
+			itemDom.placeholder.insertAfter(
+				itemDom.host.find(item === 'header' ? 'colgroup' : 'tbody')
+			);
+			itemDom.floating.append(itemElement);
+
 			this._widths(itemDom);
 
 			return scrollLeftUpdate;
@@ -591,7 +600,7 @@ export default class FixedHeader {
 			if (itemDom.host) {
 				if (!itemDom.host.contains(tablePart)) {
 					if (item === 'header') {
-						itemDom.host.prepend(tablePart);
+						tablePart.insertAfter(itemDom.host.find('colgroup'));
 					}
 					else {
 						itemDom.host.append(tablePart);
