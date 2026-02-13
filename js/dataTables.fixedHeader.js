@@ -1,4 +1,4 @@
-/*! FixedHeader 4.0.5
+/*! FixedHeader 4.0.6
  * © SpryMedia Ltd - datatables.net/license
  */
 
@@ -6,7 +6,7 @@
  * @summary     FixedHeader
  * @description Fix a table's header or footer, so it is always visible while
  *              scrolling
- * @version     4.0.5
+ * @version     4.0.6
  * @author      SpryMedia Ltd
  * @contact     datatables.net
  *
@@ -1060,7 +1060,7 @@ $.extend(FixedHeader.prototype, {
  * @type {String}
  * @static
  */
-FixedHeader.version = '4.0.5';
+FixedHeader.version = '4.0.6';
 
 /**
  * Defaults
