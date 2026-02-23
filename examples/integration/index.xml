@@ -3,7 +3,7 @@
 
 <title lib="FixedHeader">Integration with other DataTables extensions</title>
 
-<js lib="jquery" />
+<js lib="datatables" />
 <info><![CDATA[
 
 FixedHeader will work "out of the box" with most other DataTables extensions. The following examples show it being used with various other extensions.

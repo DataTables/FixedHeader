@@ -3,7 +3,7 @@
 
 <title lib="FixedHeader">Styling Examples</title>
 
-<js lib="jquery" />
+<js lib="datatables" />
 <info><![CDATA[
 
 The styling examples show FixedHeader being used with the various styling frameworks supported by DataTables and all of its extensions.
