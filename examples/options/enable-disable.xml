@@ -9,24 +9,7 @@
 		z-index: 100;
 	}
 </css>
-<js lib="jquery datatables fixedheader">
-<![CDATA[
-var table = $('#example').DataTable({
-	fixedHeader: true
-});
-
-$('#enable').on('click', function () {
-	table.fixedHeader.enable();
-});
-
-$('#disable').on('click', function () {
-	table.fixedHeader.disable();
-});
-
-]]>
-</js>
-
-<js-vanilla>
+<js lib="datatables fixedheader">
 <![CDATA[
 let table = new DataTable('#example', {
 	fixedHeader: true
@@ -41,7 +24,7 @@ document.querySelector('#disable').addEventListener('click', function () {
 });
 
 ]]>
-</js-vanilla>
+</js>
 
 <title lib="FixedHeader">Enable / disable FixedHeader</title>
 

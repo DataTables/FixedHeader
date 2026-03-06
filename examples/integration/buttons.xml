@@ -2,21 +2,7 @@
 <dt-example table-type="html" order="6">
 
 <css lib="datatables fixedheader buttons" />
-<js lib="jquery datatables fixedheader buttons buttons-colvis">
-<![CDATA[
-$('#example').DataTable({
-	fixedHeader: true,
-	layout: {
-		topStart: {
-			buttons: ['colvis']
-		}
-	}
-});
-
-]]>
-</js>
-
-<js-vanilla>
+<js lib="datatables fixedheader buttons buttons-colvis">
 <![CDATA[
 new DataTable('#example', {
 	fixedHeader: true,
@@ -28,7 +14,7 @@ new DataTable('#example', {
 });
 
 ]]>
-</js-vanilla>
+</js>
 
 <title lib="FixedHeader">Buttons columns visibility integration</title>
 

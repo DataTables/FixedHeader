@@ -7,21 +7,13 @@
 	overflow-x: auto;
 }
 </css>
-<js lib="jquery datatables fixedheader">
-<![CDATA[
-$('#example').DataTable({
-	fixedHeader: true
-});
-]]>
-</js>
-
-<js-vanilla>
+<js lib="datatables fixedheader">
 <![CDATA[
 new DataTable('#example', {
 	fixedHeader: true
 });
 ]]>
-</js-vanilla>
+</js>
 
 <title lib="FixedHeader">Horizontal page scrolling</title>
 

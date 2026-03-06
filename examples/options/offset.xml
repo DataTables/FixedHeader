@@ -2,19 +2,7 @@
 <dt-example table-type="html" order="5">
 
 <css lib="datatables fixedheader" />
-<js lib="jquery datatables fixedheader">
-<![CDATA[
-$('#example').DataTable({
-	fixedHeader: {
-		header: true,
-		headerOffset: $('#fixed').height()
-	}
-});
-
-]]>
-</js>
-
-<js-vanilla>
+<js lib="datatables fixedheader">
 <![CDATA[
 new DataTable('#example', {
 	fixedHeader: {
@@ -24,7 +12,7 @@ new DataTable('#example', {
 });
 
 ]]>
-</js-vanilla>
+</js>
 
 <title lib="FixedHeader">Offset - manual</title>
 

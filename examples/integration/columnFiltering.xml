@@ -6,36 +6,7 @@
 		width: 100%;
 	}
 </css>
-<js lib="jquery datatables fixedheader">
-<![CDATA[
-
-$('#example').DataTable({
-	initComplete: function () {
-		this.api()
-			.columns()
-			.every(function () {
-				var column = this;
-				var title = column.footer().textContent;
-
-				// Create input element and add event listener
-				$('<input type="text" placeholder="Search ' + title + '" />')
-					.appendTo($(column.footer()).empty())
-					.on('keyup change clear', function () {
-						if (column.search() !== this.value) {
-							column.search(this.value).draw();
-						}
-					});
-			});
-	},
-	fixedHeader: {
-		footer: true
-	}
-});
-
-]]>
-</js>
-
-<js-vanilla><![CDATA[
+<js lib="datatables fixedheader"><![CDATA[
 
 new DataTable('#example', {
 	initComplete: function () {
@@ -62,7 +33,7 @@ new DataTable('#example', {
 		footer: true
 	}
 });
-]]></js-vanilla>
+]]></js>
 
 <title lib="FixedHeader">Column filtering</title>
 

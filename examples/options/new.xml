@@ -2,18 +2,7 @@
 <dt-example table-type="html" order="11">
 
 <css lib="datatables fixedheader" />
-<js lib="jquery datatables fixedheader">
-<![CDATA[
-var table = $('#example').DataTable();
-
-new DataTable.FixedHeader(table, {
-	footer: true
-});
-
-]]>
-</js>
-
-<js-vanilla>
+<js lib="datatables fixedheader">
 <![CDATA[
 let table = new DataTable('#example');
 
@@ -22,7 +11,7 @@ new DataTable.FixedHeader(table, {
 });
 
 ]]>
-</js-vanilla>
+</js>
 
 <title lib="FixedHeader">Alternative initialisation</title>
 

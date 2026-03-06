@@ -2,23 +2,7 @@
 <dt-example table-type="scroller" order="4">
 
 <css lib="datatables fixedheader scroller" />
-<js lib="jquery datatables fixedheader scroller">
-<![CDATA[
-$('#example').DataTable({
-	ajax: '../data/2500.txt',
-	fixedHeader: {
-		header: true,
-		footer: true
-	},
-	scrollCollapse: true,
-	scrollY: 200,
-	scroller: true
-});
-
-]]>
-</js>
-
-<js-vanilla>
+<js lib="datatables fixedheader scroller">
 <![CDATA[
 new DataTable('#example', {
 	ajax: '../data/2500.txt',
@@ -32,7 +16,7 @@ new DataTable('#example', {
 });
 
 ]]>
-</js-vanilla>
+</js>
 
 <title lib="FixedHeader">Scroller</title>
 

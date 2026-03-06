@@ -2,17 +2,7 @@
 <dt-example table-type="html-wide" table-class="display nowrap" order="1">
 
 <css lib="datatables fixedheader responsive" />
-<js lib="jquery datatables fixedheader responsive">
-<![CDATA[
-$('#example').DataTable({
-	fixedHeader: true,
-	responsive: true
-});
-
-]]>
-</js>
-
-<js-vanilla>
+<js lib="datatables fixedheader responsive">
 <![CDATA[
 new DataTable('#example', {
 	fixedHeader: true,
@@ -20,7 +10,7 @@ new DataTable('#example', {
 });
 
 ]]>
-</js-vanilla>
+</js>
 
 <title lib="FixedHeader">Responsive integration</title>
 

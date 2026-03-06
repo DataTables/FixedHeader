@@ -2,21 +2,13 @@
 <dt-example table-type="html" order="4" framework="foundation">
 
 <css lib="datatables fixedheader" />
-<js lib="jquery datatables fixedheader">
-<![CDATA[
-$('#example').DataTable({
-	fixedHeader: true
-});
-]]>
-</js>
-
-<js-vanilla>
+<js lib="datatables fixedheader">
 <![CDATA[
 new DataTable('#example', {
 	fixedHeader: true
 });
 ]]>
-</js-vanilla>
+</js>
 
 <title lib="FixedHeader">Foundation</title>
 

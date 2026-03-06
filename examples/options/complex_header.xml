@@ -2,23 +2,14 @@
 <dt-example table-type="html-complex-header" order="4">
 
 <css lib="datatables fixedheader" />
-<js lib="jquery datatables fixedheader">
-<![CDATA[
-$('#example').DataTable({
-	fixedHeader: true
-});
-
-]]>
-</js>
-
-<js-vanilla>
+<js lib="datatables fixedheader">
 <![CDATA[
 new DataTable('#example', {
 	fixedHeader: true
 });
 
 ]]>
-</js-vanilla>
+</js>
 
 <title lib="FixedHeader">Complex headers and footers</title>
 

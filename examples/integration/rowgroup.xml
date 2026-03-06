@@ -2,20 +2,7 @@
 <dt-example table-type="html" order="3">
 
 <css lib="datatables fixedheader rowgroup" />
-<js lib="jquery datatables fixedheader rowgroup">
-<![CDATA[
-$('#example').DataTable({
-	fixedHeader: true,
-	order: [[2, 'asc']],
-	rowGroup: {
-		dataSrc: 2
-	}
-});
-
-]]>
-</js>
-
-<js-vanilla>
+<js lib="datatables fixedheader rowgroup">
 <![CDATA[
 new DataTable('#example', {
 	fixedHeader: true,
@@ -26,7 +13,7 @@ new DataTable('#example', {
 });
 
 ]]>
-</js-vanilla>
+</js>
 
 <title lib="FixedHeader">RowGroup</title>
 

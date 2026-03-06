@@ -2,21 +2,13 @@
 <dt-example table-type="html" order="5" framework="semanticui">
 
 <css lib="datatables fixedheader" />
-<js lib="jquery semanticui datatables fixedheader">
-<![CDATA[
-$('#example').DataTable({
-	fixedHeader: true
-});
-]]>
-</js>
-
-<js-vanilla>
+<js lib="semanticui datatables fixedheader">
 <![CDATA[
 new DataTable('#example', {
 	fixedHeader: true
 });
 ]]>
-</js-vanilla>
+</js>
 
 <title lib="FixedHeader">Fomantic-UI (formally Semantic-UI) styling</title>
 

@@ -2,23 +2,7 @@
 <dt-example table-type="html-wide" table-class="stripe row-border order-column nowrap" order="6">
 
 <css lib="datatables fixedheader"/>
-<js lib="jquery datatables fixedheader">
-<![CDATA[
-$('#example').DataTable({
-	fixedHeader: {
-		header: true,
-		footer: true
-	},
-	paging: false,
-	scrollCollapse: true,
-	scrollX: true,
-	scrollY: 300
-});
-
-]]>
-</js>
-
-<js-vanilla>
+<js lib="datatables fixedheader">
 <![CDATA[
 new DataTable('#example', {
 	fixedHeader: {
@@ -32,7 +16,7 @@ new DataTable('#example', {
 });
 
 ]]>
-</js-vanilla>
+</js>
 
 
 <title lib="FixedHeader">Scrolling Table</title>

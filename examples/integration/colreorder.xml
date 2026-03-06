@@ -2,17 +2,7 @@
 <dt-example table-type="html" order="5">
 
 <css lib="datatables fixedheader colreorder" />
-<js lib="jquery datatables fixedheader colreorder">
-<![CDATA[
-$('#example').DataTable({
-	fixedHeader: true,
-	colReorder: true
-});
-
-]]>
-</js>
-
-<js-vanilla>
+<js lib="datatables fixedheader colreorder">
 <![CDATA[
 new DataTable('#example', {
 	fixedHeader: true,
@@ -20,7 +10,7 @@ new DataTable('#example', {
 });
 
 ]]>
-</js-vanilla>
+</js>
 
 <title lib="FixedHeader">ColReorder integration</title>
 

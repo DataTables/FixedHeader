@@ -2,18 +2,7 @@
 <dt-example table-type="html-office-edin|html-office-london" table-id="" order="3">
 
 <css lib="datatables fixedheader" />
-<js lib="jquery datatables fixedheader">
-<![CDATA[
-$('table.display').DataTable({
-	fixedHeader: {
-		header: true,
-		footer: true
-	}
-});
-]]>
-</js>
-
-<js-vanilla>
+<js lib="datatables fixedheader">
 <![CDATA[
 new DataTable('table.display', {
 	fixedHeader: {
@@ -22,7 +11,7 @@ new DataTable('table.display', {
 	}
 });
 ]]>
-</js-vanilla>
+</js>
 
 <title lib="FixedHeader">Multiple tables</title>
 

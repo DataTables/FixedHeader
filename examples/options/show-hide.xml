@@ -2,27 +2,7 @@
 <dt-example table-type="html" order="9">
 
 <css lib="datatables fixedheader" />
-<js lib="jquery datatables fixedheader">
-<![CDATA[
-
-var table = $('#example').DataTable({
-	fixedHeader: true
-});
-
-var visible = true;
-var tableContainer = $(table.table().container());
-
-$('#toggle').on('click', function () {
-	tableContainer.css('display', visible ? 'none' : 'block');
-	table.fixedHeader.adjust();
-
-	visible = !visible;
-});
-
-]]>
-</js>
-
-<js-vanilla>
+<js lib="datatables fixedheader">
 <![CDATA[
 
 let table = new DataTable('#example', {
@@ -40,7 +20,7 @@ document.querySelector('#toggle').addEventListener('click', function () {
 });
 
 ]]>
-</js-vanilla>
+</js>
 
 <title lib="FixedHeader">Show / hide FixedHeader</title>
 

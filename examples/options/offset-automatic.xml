@@ -2,19 +2,7 @@
 <dt-example table-type="html" order="4">
 
 <css lib="datatables fixedheader" />
-<js lib="jquery datatables fixedheader">
-<![CDATA[
-// Note although the initialisation here is identical to the basic FixedHeader case
-// There is a fixed position element which has a class of `fh-fixedHeader` which
-// FixedHeader will automatically detect. See the description above.
-
-$('#example').DataTable({
-	fixedHeader: true
-});
-]]>
-</js>
-
-<js-vanilla>
+<js lib="datatables fixedheader">
 <![CDATA[
 // Note although the initialisation here is identical to the basic FixedHeader case
 // There is a fixed position element which has a class of `fh-fixedHeader` which
@@ -24,7 +12,7 @@ new DataTable('#example', {
 	fixedHeader: true
 });
 ]]>
-</js-vanilla>
+</js>
 
 <title lib="FixedHeader">Offset - automatic</title>
 
