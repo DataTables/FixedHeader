@@ -1,3 +1,3 @@
-/*! Bootstrap 3 styling wrapper for FixedHeader
- * © SpryMedia Ltd - datatables.net/license
+/*! FixedHeader Bootstrap 3 styling for DataTables
+ * Copyright (c) SpryMedia Ltd - datatables.net/license
  */

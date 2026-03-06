@@ -1,3 +1,3 @@
-/*! Foundation styling wrapper for FixedHeader
- * © SpryMedia Ltd - datatables.net/license
+/*! FixedHeader Foundation styling for DataTables
+ * Copyright (c) SpryMedia Ltd - datatables.net/license
  */

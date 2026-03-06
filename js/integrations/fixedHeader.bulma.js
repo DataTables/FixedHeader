@@ -1,3 +1,3 @@
-/*! Bulma styling wrapper for FixedHeader
- * © SpryMedia Ltd - datatables.net/license
+/*! FixedHeader Bulma styling for DataTables
+ * Copyright (c) SpryMedia Ltd - datatables.net/license
  */

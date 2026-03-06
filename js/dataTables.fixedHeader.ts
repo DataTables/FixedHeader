@@ -1,13 +1,14 @@
-import DataTable, { Context } from 'datatables.net';
+/*! Select for DataTables
+ * Copyright (c) SpryMedia Ltd - datatables.net/license
+ */
+
+import DataTable, { Context, Dom, util } from 'datatables.net';
 import FixedHeader from './FixedHeader';
 import './interface';
 
-if (!DataTable.versionCheck('3')) {
+if (!DataTable || !DataTable.versionCheck('3')) {
 	throw 'Warning: FixedHeader requires DataTables 3 or newer';
 }
-
-const dom = DataTable.dom;
-const util = DataTable.util;
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * DataTables interfaces
@@ -18,7 +19,7 @@ DataTable.FixedHeader = FixedHeader;
 
 // DataTables creation - check if the FixedHeader option has been defined on the
 // table and if so, initialise
-dom.s(document).on('init.dt.dtfh', function (e, settings: Context) {
+Dom.s(document).on('init.dt.dtfh', function (e, settings: Context) {
 	if (e.namespace !== 'dt') {
 		return;
 	}

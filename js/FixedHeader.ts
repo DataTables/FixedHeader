@@ -1,26 +1,7 @@
-/**
- * @summary     FixedHeader
- * @description Fix a table's header or footer, so it is always visible while
- *              scrolling
- * @version     5.0.0-dev
- * @author      SpryMedia Ltd (datatables.net)
- *
- * This source file is free software, available under the following license:
- *   MIT license - http://datatables.net/license/mit
- *
- * This source file is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE. See the license files for details.
- *
- * For details please refer to: http://www.datatables.net
- */
-
-import DataTable, { Api, Context, Dom } from 'datatables.net';
+import DataTable, { Api, Context, Dom, util } from 'datatables.net';
 import { Defaults, InternalDom, Options, Settings } from './interface';
 
 var _instCounter = 0;
-const dom = DataTable.dom;
-const util = DataTable.util;
 
 export default class FixedHeader {
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -49,8 +30,8 @@ export default class FixedHeader {
 	 */
 	public destroy() {
 		this.s.dt.off('.dtfc');
-		dom.s('body').off('.dtfc');
-		dom.w.off(this.s.namespace);
+		Dom.s('body').off('.dtfc');
+		Dom.w.off(this.s.namespace);
 
 		// Remove clones of FC blockers
 		if (this.dom.header.rightBlocker) {
@@ -135,7 +116,7 @@ export default class FixedHeader {
 			return;
 		}
 
-		if (dom.s(table).isVisible()) {
+		if (Dom.s(table).isVisible()) {
 			this.s.autoDisable = false;
 			this.enable(true, false);
 		}
@@ -146,7 +127,7 @@ export default class FixedHeader {
 
 		// Don't update if header is not in the document atm (due to
 		// async events)
-		if (dom.s(table).children('thead').count() === 0) {
+		if (Dom.s(table).children('thead').count() === 0) {
 			return;
 		}
 
@@ -204,21 +185,21 @@ export default class FixedHeader {
 
 		this.dom = {
 			floatingHeader: null,
-			thead: dom.s(dt.table().header()),
-			tbody: dom.s(dt.table().body()),
-			tfoot: dom.s(dt.table().footer()),
+			thead: Dom.s(dt.table().header()),
+			tbody: Dom.s(dt.table().body()),
+			tfoot: Dom.s(dt.table().footer()),
 			header: {
 				host: null,
 				scrollAdjust: null,
 				floating: null,
-				floatingParent: dom
+				floatingParent: Dom
 					.c('div')
 					.classAdd('dtfh-floatingparent')
 					.append(
 						// location
-						dom.c('div').classAdd('dtfh-floating-limiter').append(
+						Dom.c('div').classAdd('dtfh-floating-limiter').append(
 							// hidden overflow / scrolling
-							dom.c('div') // adjustment for scrollbar (padding)
+							Dom.c('div') // adjustment for scrollbar (padding)
 						)
 					),
 				limiter: null,
@@ -230,14 +211,14 @@ export default class FixedHeader {
 				host: null,
 				scrollAdjust: null,
 				floating: null,
-				floatingParent: dom
+				floatingParent: Dom
 					.c('div')
 					.classAdd('dtfh-floatingparent')
 					.append(
-						dom
+						Dom
 							.c('div')
 							.classAdd('dtfh-floating-limiter')
-							.append(dom.c('div'))
+							.append(Dom.c('div'))
 					),
 				limiter: null,
 				placeholder: null,
@@ -275,24 +256,24 @@ export default class FixedHeader {
 		var that = this;
 		var dt = this.s.dt;
 
-		dom.w.on('scroll' + this.s.namespace, function () {
+		Dom.w.on('scroll' + this.s.namespace, function () {
 			that._scroll();
 		});
 
-		dom.w.on(
+		Dom.w.on(
 			'resize' + this.s.namespace,
 			DataTable.util.throttle(function () {
-				that.s.position.windowHeight = dom.w.height();
+				that.s.position.windowHeight = Dom.w.height();
 				that.update();
 			}, 50)
 		);
 
-		var autoHeader = dom.s('.fh-fixedHeader');
+		var autoHeader = Dom.s('.fh-fixedHeader');
 		if (!this.c.headerOffset && autoHeader.count()) {
 			this.c.headerOffset = autoHeader.height('outer');
 		}
 
-		var autoFooter = dom.s('.fh-fixedFooter');
+		var autoFooter = Dom.s('.fh-fixedFooter');
 		if (!this.c.footerOffset && autoFooter.count()) {
 			this.c.footerOffset = autoFooter.height('outer');
 		}
@@ -304,7 +285,7 @@ export default class FixedHeader {
 			}
 		);
 
-		dom.s('body').on('draw.dt.dtfc', function (e, ctx) {
+		Dom.s('body').on('draw.dt.dtfc', function (e, ctx) {
 			// For updates from our own table, don't reclone, but for all others, do
 			that.update(ctx === dt.settings()[0] ? false : true);
 		});
@@ -357,11 +338,11 @@ export default class FixedHeader {
 				itemDom.floating.detach();
 			}
 
-			var tableNode = dom.s(dt.table().node());
+			var tableNode = Dom.s(dt.table().node());
 			var scrollBody = tableNode.parent();
 			var scrollEnabled = this._scrollEnabled();
 
-			itemDom.floating = dom
+			itemDom.floating = Dom
 				.s(dt.table().node().cloneNode(false))
 				.attr('aria-hidden', 'true')
 				.css({
@@ -429,7 +410,7 @@ export default class FixedHeader {
 			// Blocker to hide the table behind the scrollbar - this needs to
 			// use fixed positioning in the container since we don't have an
 			// outer wrapper
-			let blocker = dom
+			let blocker = Dom
 				.s(dt.table().container())
 				.find(
 					item === 'footer'
@@ -483,10 +464,10 @@ export default class FixedHeader {
 		if (this._scrollEnabled()) {
 			var that = this;
 			var rtl =
-				dom.s(that.s.dt.table().node()).css('direction') === 'rtl';
+				Dom.s(that.s.dt.table().node()).css('direction') === 'rtl';
 
 			el.find('th').each(function (el) {
-				let th = dom.s(el);
+				let th = Dom.s(el);
 
 				// Find out if fixed header has previously set this column
 				if (th.css('position') === 'sticky') {
@@ -524,7 +505,7 @@ export default class FixedHeader {
 			// If scrolling is enabled we need to match the floating header to
 			// the body
 			if (this._scrollEnabled()) {
-				var newScrollLeft = dom
+				var newScrollLeft = Dom
 					.s(this.s.dt.table().node().parentNode)
 					.scrollLeft();
 
@@ -588,7 +569,7 @@ export default class FixedHeader {
 		var focus = tablePart.find(document.activeElement).count()
 			? (document.activeElement as HTMLElement)
 			: null;
-		var scrollBody = dom.s(this.s.dt.table().node()).parent();
+		var scrollBody = Dom.s(this.s.dt.table().node()).parent();
 
 		if (mode === 'in-place') {
 			// Insert the header back into the table's real header
@@ -633,8 +614,8 @@ export default class FixedHeader {
 
 			// Get useful position values
 			var scrollOffset = scrollBody.offset();
-			var windowTop = dom.w.scrollTop();
-			var windowHeight = dom.w.height();
+			var windowTop = Dom.w.scrollTop();
+			var windowHeight = Dom.w.height();
 			var windowBottom = windowTop + windowHeight;
 			var bodyTop = scrollEnabled ? scrollOffset.top : position.tbodyTop;
 			var bodyBottom = scrollEnabled
@@ -736,14 +717,14 @@ export default class FixedHeader {
 		var dt = this.s.dt;
 		var table = dt.table();
 		var position = this.s.position;
-		var tableNode = dom.s(table.node());
+		var tableNode = Dom.s(table.node());
 		var scrollEnabled = this._scrollEnabled();
 
 		// Need to use the header and footer that are in the main table,
 		// regardless of if they are clones, since they hold the positions we
 		// want to measure from
-		var thead = dom.s(dt.table().header());
-		var tfoot = dom.s(dt.table().footer());
+		var thead = Dom.s(dt.table().header());
+		var tfoot = Dom.s(dt.table().footer());
 		var tbody = this.dom.tbody;
 		var scrollBody = tableNode.parent();
 
@@ -785,14 +766,14 @@ export default class FixedHeader {
 
 		// ScrollBody details
 		var scrollEnabled = this._scrollEnabled();
-		var scrollBody = dom.s(this.s.dt.table().node()).parent();
+		var scrollBody = Dom.s(this.s.dt.table().node()).parent();
 		var scrollOffset = scrollBody.offset();
 		var scrollHeight = scrollBody.height('outer');
 
 		// Window details
-		var windowLeft = dom.w.scrollLeft();
-		var windowTop = dom.w.scrollTop();
-		var windowHeight = dom.w.height();
+		var windowLeft = Dom.w.scrollLeft();
+		var windowTop = Dom.w.scrollTop();
+		var windowHeight = Dom.w.height();
 		var windowBottom = windowHeight + windowTop;
 
 		var position = this.s.position;
@@ -1000,7 +981,7 @@ export default class FixedHeader {
 				el: Dom | null
 			) {
 				if (el === undefined) {
-					var blocker = dom.s(
+					var blocker = Dom.s(
 						'div.dtfc-' + side + '-' + end + '-blocker'
 					);
 
@@ -1078,7 +1059,7 @@ export default class FixedHeader {
 		}
 
 		// Match the table overall width
-		var tableNode = dom.s(this.s.dt.table().node());
+		var tableNode = Dom.s(this.s.dt.table().node());
 		var scrollBody = tableNode.parent();
 
 		itemDom.floatingParent.css(
