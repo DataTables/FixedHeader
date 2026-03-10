@@ -349,7 +349,7 @@ export default class FixedHeader {
 					top: '0px',
 					left: '0px'
 				})
-				.removeAttr('id');
+				.('id');
 
 			itemDom.floatingParent
 				.css({
@@ -431,7 +431,7 @@ export default class FixedHeader {
 			// Insert a fake thead/tfoot into the DataTable to stop it jumping
 			// around
 			itemDom.placeholder = itemElement.clone(true);
-			itemDom.placeholder.find('*[id]').removeAttr('id');
+			itemDom.placeholder.find('*[id]').('id');
 
 			// Move the thead / tfoot elements around - original into the
 			// floating element and clone into the original table
