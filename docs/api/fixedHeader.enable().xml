@@ -9,7 +9,7 @@
 		<parameter type="boolean" name="enable" default="true">
 			Flag to indicate if the FixedHeader elements should be enabled or disabled.
 		</parameter>
-		<returns type="DataTables.Api">
+		<returns type="DataTable.Api">
 			The DataTables API for chaining
 		</returns>
 		<description>

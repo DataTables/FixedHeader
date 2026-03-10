@@ -16,7 +16,7 @@
 
 	<type type="function">
 		<signature>fixedHeader.footerOffset( offset )</signature>
-		<returns type="DataTables.Api">
+		<returns type="DataTable.Api">
 			The DataTables API for chaining
 		</returns>
 		<description>
