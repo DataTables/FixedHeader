@@ -183,7 +183,9 @@ export interface Settings {
 		visible: boolean;
 	},
 	headerMode: string | null;
+    headerOffset: number;
 	footerMode: string | null;
+    footerOffset: number;
 	autoWidth: boolean;
 	namespace: string;
 	scrollLeft: {

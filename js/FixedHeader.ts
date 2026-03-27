@@ -85,10 +85,11 @@ export default class FixedHeader {
 	public headerOffset(offset: number) {
 		if (offset !== undefined) {
 			this.c.headerOffset = offset;
+			this.s.headerOffset = offset;
 			this.update();
 		}
 
-		return this.c.headerOffset;
+		return this.s.headerOffset;
 	}
 
 	/**
@@ -99,10 +100,11 @@ export default class FixedHeader {
 	public footerOffset(offset: number) {
 		if (offset !== undefined) {
 			this.c.footerOffset = offset;
+			this.s.footerOffset = offset;
 			this.update();
 		}
 
-		return this.c.footerOffset;
+		return this.s.footerOffset;
 	}
 
 	/**
@@ -172,7 +174,9 @@ export default class FixedHeader {
 				visible: true
 			},
 			headerMode: null,
+			headerOffset: 0,
 			footerMode: null,
+			footerOffset: 0,
 			autoWidth: dt.settings()[0].features.autoWidth,
 			namespace: '.dtfc' + _instCounter++,
 			scrollLeft: {
@@ -268,16 +272,6 @@ export default class FixedHeader {
 			}, 50)
 		);
 
-		var autoHeader = Dom.s('.fh-fixedHeader');
-		if (!this.c.headerOffset && autoHeader.count()) {
-			this.c.headerOffset = autoHeader.height('outer');
-		}
-
-		var autoFooter = Dom.s('.fh-fixedFooter');
-		if (!this.c.footerOffset && autoFooter.count()) {
-			this.c.footerOffset = autoFooter.height('outer');
-		}
-
 		dt.on(
 			'column-reorder.dt.dtfc column-visibility.dt.dtfc column-sizing.dt.dtfc responsive-display.dt.dtfc',
 			function (e, ctx) {
@@ -364,12 +358,12 @@ export default class FixedHeader {
 				.css(
 					item === 'header'
 						? {
-								top: this.c.headerOffset + 'px',
+								top: this.s.headerOffset + 'px',
 								bottom: ''
 						  }
 						: {
 								top: '',
-								bottom: this.c.footerOffset + 'px'
+								bottom: this.s.footerOffset + 'px'
 						  }
 				)
 				.classAdd(
@@ -637,7 +631,7 @@ export default class FixedHeader {
 				// table body
 				shuffle =
 					windowTop +
-					this.c.headerOffset +
+					this.s.headerOffset +
 					position.theadHeight -
 					bodyBottom;
 			}
@@ -645,7 +639,7 @@ export default class FixedHeader {
 			// Set the top or bottom based off of the offset and the shuffle value
 			var prop = item === 'header' ? 'top' : 'bottom';
 			var val =
-				(this.c as any)[item + 'Offset'] - (shuffle > 0 ? shuffle : 0);
+				(this.s as any)[item + 'Offset'] - (shuffle > 0 ? shuffle : 0);
 
 			itemDom.floating?.classAdd('fixedHeader-floating');
 			itemDom.floatingParent.css({
@@ -719,6 +713,23 @@ export default class FixedHeader {
 		var position = this.s.position;
 		var tableNode = Dom.s(table.node());
 		var scrollEnabled = this._scrollEnabled();
+
+		// Offsets
+		var autoHeader = Dom.s('.fh-fixedHeader');
+		if (!this.c.headerOffset && autoHeader.count()) {
+			this.s.headerOffset = autoHeader.height('outer');
+		}
+		else {
+			this.s.headerOffset = this.c.headerOffset;
+		}
+
+		var autoFooter = Dom.s('.fh-fixedFooter');
+		if (!this.c.footerOffset && autoFooter.count()) {
+			this.s.footerOffset = autoFooter.height('outer');
+		}
+		else {
+			this.s.footerOffset = this.c.footerOffset;
+		}
 
 		// Need to use the header and footer that are in the main table,
 		// regardless of if they are clones, since they hold the positions we
@@ -798,7 +809,7 @@ export default class FixedHeader {
 			// the header
 			else if (
 				!position.visible ||
-				windowTop + this.c.headerOffset + position.theadHeight <=
+				windowTop + this.s.headerOffset + position.theadHeight <=
 					bodyTop
 			) {
 				headerMode = 'in-place';
@@ -807,11 +818,11 @@ export default class FixedHeader {
 			else if (
 				// The scrolling plus the header offset plus the height of the
 				// header is lower than the top of the body
-				windowTop + this.c.headerOffset + position.theadHeight >
+				windowTop + this.s.headerOffset + position.theadHeight >
 					bodyTop &&
 				// And the scrolling at the top plus the header offset is above
 				// the bottom of the body
-				windowTop + this.c.headerOffset + position.theadHeight <
+				windowTop + this.s.headerOffset + position.theadHeight <
 					bodyBottom
 			) {
 				headerMode = 'in';
@@ -820,7 +831,7 @@ export default class FixedHeader {
 				// plus the header height is lower than the bottom of the table
 				// a shuffle is required so have to force the calculation
 				if (
-					windowTop + this.c.headerOffset + position.theadHeight >
+					windowTop + this.s.headerOffset + position.theadHeight >
 						bodyBottom ||
 					this.dom.header.floatingParent === undefined
 				) {
@@ -829,7 +840,7 @@ export default class FixedHeader {
 				else {
 					var child = this.dom.header.floatingParent
 						.css({
-							top: this.c.headerOffset + 'px',
+							top: this.s.headerOffset + 'px',
 							position: 'fixed'
 						})
 						.children()
@@ -871,14 +882,14 @@ export default class FixedHeader {
 			}
 			else if (
 				!position.visible ||
-				position.tfootBottom + this.c.footerOffset <= windowBottom
+				position.tfootBottom + this.s.footerOffset <= windowBottom
 			) {
 				footerMode = 'in-place';
 			}
 			else if (
-				bodyBottom + position.tfootHeight + this.c.footerOffset >
+				bodyBottom + position.tfootHeight + this.s.footerOffset >
 					windowBottom &&
-				bodyTop + this.c.footerOffset < windowBottom
+				bodyTop + this.s.footerOffset < windowBottom
 			) {
 				footerMode = 'in';
 				forceChange = true;
