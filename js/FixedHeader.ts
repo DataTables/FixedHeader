@@ -19,7 +19,7 @@ export default class FixedHeader {
 	};
 
 	/** Version */
-	static version = '5.0.0-dev';
+	static version = '5.0.0-beta.1';
 
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 * Public methods (exposed via the DataTables API below)
