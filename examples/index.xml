@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <dt-example table-type="html" order="0">
 
-<title lib="FixedHeader">Examples index</title>
+<title lib="FixedHeader">FixedHeader examples</title>
 
 <js lib="datatables" />
 <info><![CDATA[
