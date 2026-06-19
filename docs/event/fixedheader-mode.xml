@@ -7,7 +7,7 @@
 	<type type="function">
 		<signature>function( e, mode, item )</signature>
 		<parameter type="object" name="e">
-			jQuery event object
+			Event object
 		</parameter>
 		<parameter type="string" name="mode">
 			Defines which mode the item is moving into. This can be one of:
