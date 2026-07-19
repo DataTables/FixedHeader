@@ -2,7 +2,7 @@
 <dt-example table-type="html" order="6">
 
 <css lib="datatables fixedheader buttons" />
-<js lib="datatables fixedheader buttons buttons-colvis">
+<js lib="datatables fixedheader buttons">
 <![CDATA[
 new DataTable('#example', {
 	fixedHeader: true,
