@@ -12,7 +12,7 @@ declare module 'datatables.net' {
 		_fixedHeader: FixedHeader;
 	}
 
-	interface Config {
+	interface Options {
         /*
          * FixedHeader extension options
          */
