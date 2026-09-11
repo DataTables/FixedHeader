@@ -1,4 +1,4 @@
-/*! Select for DataTables
+/*! FixedHeader for DataTables
  * Copyright (c) SpryMedia Ltd - datatables.net/license
  */
 
