@@ -6,8 +6,8 @@ import DataTable, { Context, Dom, util } from 'datatables.net';
 import FixedHeader from './FixedHeader';
 import './interface';
 
-if (!DataTable || !DataTable.versionCheck('3')) {
-	throw 'Warning: FixedHeader requires DataTables 3 or newer';
+if (!DataTable || !DataTable.versionCheck('3.1')) {
+	throw 'Warning: FixedHeader requires DataTables 3.1 or newer';
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -19,7 +19,7 @@ DataTable.FixedHeader = FixedHeader;
 
 // DataTables creation - check if the FixedHeader option has been defined on the
 // table and if so, initialise
-Dom.s(document).on('init.dt.dtfh', function (e, settings: Context) {
+Dom.on('init.dt.dtfh', function (e, settings: Context) {
 	if (e.namespace !== 'dt') {
 		return;
 	}
