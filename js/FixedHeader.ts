@@ -437,7 +437,7 @@ export default class FixedHeader {
 			// order is important in Chrome. It must be colgroup, thead, tbody,
 			// tfoot. Otherwise a "jitter" when scrolling will occur.
 			itemDom.placeholder.insertAfter(
-				itemDom.host.find(item === 'header' ? 'colgroup' : 'tbody')
+				itemDom.host.children(item === 'header' ? 'colgroup' : 'tbody')
 			);
 			itemDom.floating.append(itemElement);
 
@@ -575,7 +575,7 @@ export default class FixedHeader {
 			if (itemDom.host) {
 				if (!itemDom.host.contains(tablePart)) {
 					if (item === 'header') {
-						tablePart.insertAfter(itemDom.host.find('colgroup'));
+						tablePart.insertAfter(itemDom.host.children('colgroup'));
 					}
 					else {
 						itemDom.host.append(tablePart);
@@ -1087,7 +1087,7 @@ export default class FixedHeader {
 		// header
 		var cols = itemDom.placeholder
 			.parent()
-			.find('colgroup')
+			.children('colgroup')
 			.clone(true)
 			.appendTo(itemDom.floating)
 			.find('col');
