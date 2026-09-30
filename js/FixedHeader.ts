@@ -341,7 +341,8 @@ export default class FixedHeader {
 				.attr('aria-hidden', 'true')
 				.css({
 					top: '0px',
-					left: '0px'
+					left: '0px',
+					'table-layout': 'fixed'
 				})
 				.attrRemove('id');
 
